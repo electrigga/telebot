@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
+from telepot.loop import MessageLoop
+from pprint import pprint
 
 # Variablen aus der Config holen
 from config import apikey
@@ -36,6 +38,26 @@ def ownerinfo(msg,owner):
 	except:
 	    print("Benachrichtigung Owner ging schief")
 
+# Lasthearedfunktion
+def lastheared(suchstring):
+    if suchstring == '':
+	suchstring = "received RF voice header"
+    else:
+        suchstring = "received RF voice header from " +suchstring
+    heared = []
+    dateiname = "/var/log/mmdvm/mmdvm-"+(time.strftime("%Y-%m-%d"))+".log"
+    file = open(dateiname, "r")
+    for line in file:
+        if line.find(suchstring) > 1:
+	    string = (line.rstrip())
+	    string = string.split(" ")
+	    heared.append(string)
+    file.close()
+    if not heared:
+	return "Heute nicht aufgetaucht..."
+    else:
+        return heared[-1][2] + " " + heared[-1][4] + " " + heared[-1][5] + " " + heared[-1][11] + " " + heared[-1][13] + " " + heared[-1][14]
+
 # Prozesskiller
 def prockiller(prozess):
     os.system('pkill '+prozess)
@@ -69,29 +91,39 @@ def prozesschecker(prozess):
 def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
     #print(content_type, chat_type, chat_id)
+    #pprint(msg)
 
     vorname = msg['from']['first_name']
     username = msg['from']['username']
     id = msg['from']['id']
     msg['text'] = msg['text'].lower()
 
-    # print(msg)
+    # print(msg['text'])
 
     if msg['text'] in ["/start","/start start", "start", "hallo", "Hallo", "Hi", "Start"]:
 	bot.sendMessage(chat_id, "Herzlich willkommen bei " + botcall + " " + vorname + "!" + \
 				 "\nUm Hilfe zu erhalten, schreib /hilfe. Informationen und Hinweise bitte an @dl2ajb.")
 
-    elif msg['text'] in ["/hilfe"]:
+    elif msg['text'] in ["/hilfe", "hilfe"]:
 	hilfetext = "Informationen und Kommandos:\n/status Gibt den Status des Repeaters aus\n/hilfe Hilfetext mit der" \
-                    " Liste der Kommandos\n/tg Listet die in DMR geschalteten TG auf"
+                    " Liste der Kommandos\n/tg Listet die in DMR geschalteten TG auf\n/lheared Gibt aus, wer als letztes lokal gehört wurde."
         if id in grant:
-            hilfetext += "\n/killmmdvm Stoppt MMDVM\n/startmmdvm Startet MMDVM\n/killdmrgw Stoppt das DMRGateway\n/startdmrgw Startet DMRGateway" \
+            hilfetext += "\n\n/killmmdvm Stoppt MMDVM\n/startmmdvm Startet MMDVM\n/killdmrgw Stoppt das DMRGateway\n/startdmrgw Startet DMRGateway" \
 			 "\n/txan Schaltet den Sender an\n/txaus Schaltet den Sender aus\n/rxan Schaltet den RX ein" \
 			 "\n/rxaus Schaltet den RX an\n/reboot start den Rechner neu"
         bot.sendMessage(chat_id,botcall + " " + hilfetext)
 
     elif msg['text'] in ["/tg"]:
 	bot.sendMessage(chat_id, talkgroups())
+
+    elif "/lheared" in msg['text']:
+	if msg['text'] == "/lheared":
+            heared = lastheared('')
+            bot.sendMessage(chat_id,heared)
+	else:
+	    suche = msg['text'].split(" ")
+	    heared = lastheared(suche[1].upper())
+	    bot.sendMessage(chat_id,heared)
 
     elif msg['text'] in ["/killmmdvm"]:
 	if id in grant:
@@ -184,7 +216,7 @@ bot = telepot.Bot(apikey)
 
 try:
     ownerinfo("Ich bin wieder da...",owner)
-    bot.message_loop(handle)
+    MessageLoop(bot,handle).run_as_thread()
 except:
     print("Irgendwas stimmt mit dem Bot nicht....")
 
