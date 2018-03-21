@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
+import re, csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.loop import MessageLoop
 from pprint import pprint
 
@@ -18,17 +19,43 @@ grantfehler = "Du darfst das nicht!"
 mmdvmaufruf = "/usr/bin/screen /home/pi/MMDVMHost/MMDVMHost /home/pi/MMDVMHost/MMDVM-DB0ASE.ini"
 dmrgwaufruf = "/usr/bin/screen /home/pi/DMRGateway/DMRGateway /home/pi/DMRGateway/DMRGateway-DB0ASE.ini"
 
+befehlsliste_usr = "/lh /status /tg /hilfe\n"
+befehlsliste_syop = "/txaus /txan /rxaus /rxan \n/killmmdvm /startmmdvm /killdmrgw /startdmrgw"
+
 # GPIO Settings
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(13, GPIO.OUT)
 GPIO.setup(15, GPIO.OUT)
 
+# define pathes to 1-wire sensor data
+sensors = [
+  ["/sys/bus/w1/devices/28-03b429126461/w1_slave","Erster Sensor"],
+  ["/sys/bus/w1/devices/28-559d29126461/w1_slave","Zweiter Sensor"],
+  ["/sys/bus/w1/devices/28-a4ad29126461/w1_slave","Dritter Sensor"]
+]
+
 # Loggingfunktion
 def botlog(logtext):
     file = open(logfile, "a+")
     file.write(time.strftime("%d.%m. %H:%M:%S") + ": " + logtext + '\n')
     file.close()
+
+# function to read temp-sensors
+def read_sensor(path):
+  value = "U"
+  try:
+      f = open(path[0], "r")
+      line = f.readline()
+      if re.match(r"([0-9a-f]{2} ){9}: crc=[0-9a-f]{2} YES", line):
+          line = f.readline()
+          m = re.match(r"([0-9a-f]{2} ){9}t=([+-]?[0-9]+)", line)
+      if m:
+          value = str(float(m.group(2)) / 1000.0)
+      f.close()
+  except (IOError), e:
+    print time.strftime("%x %X"), "Error reading", path, ": ", e
+  return path[1] + ": " + value
 
 # Funktion zur Information des/der Botowner
 def ownerinfo(msg,owner):
@@ -62,16 +89,26 @@ def lastheared(suchstring):
 def prockiller(prozess):
     os.system('pkill '+prozess)
 
+# Funktion Ausgabe Befehle
+def befehlsliste(id):
+    if id in grant:
+	return "\n" + befehlsliste_usr + befehlsliste_syop
+    else:
+	return "\n" + befehlsliste_usr
+
 # Funktion zum Abruf der Abbonierten TG
 def talkgroups():
     r = requests.get("http://api.brandmeister.network/v1.0/repeater/?action=profile&q=" + dmrid)
     try:
         data = r.json()
+        pprint(data)
         tgs = 'Talkgroups:'
         for tg in data['staticSubscriptions']:
             tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot'])
         for tg in data['clusters']:
             tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot']) + " (" + str(tg['extTalkgroup']) + ")"
+        for tg in data['timedSubscriptions']:
+	    tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot'])
         if tgs == 'Talkgroups:':
             tgs = "Keine Talkgroups statisch geschaltet."
     except:
@@ -90,8 +127,6 @@ def prozesschecker(prozess):
 
 def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
-    #print(content_type, chat_type, chat_id)
-    #pprint(msg)
 
     vorname = msg['from']['first_name']
     username = msg['from']['username']
@@ -99,6 +134,7 @@ def handle(msg):
     msg['text'] = msg['text'].lower()
 
     # print(msg['text'])
+    # print(msg)
 
     if msg['text'] in ["/start","/start start", "start", "hallo", "Hallo", "Hi", "Start"]:
 	bot.sendMessage(chat_id, "Herzlich willkommen bei " + botcall + " " + vorname + "!" + \
@@ -106,7 +142,7 @@ def handle(msg):
 
     elif msg['text'] in ["/hilfe", "hilfe"]:
 	hilfetext = "Informationen und Kommandos:\n/status Gibt den Status des Repeaters aus\n/hilfe Hilfetext mit der" \
-                    " Liste der Kommandos\n/tg Listet die in DMR geschalteten TG auf\n/lheared Gibt aus, wer als letztes lokal gehört wurde."
+                    " Liste der Kommandos\n/tg Listet die in DMR geschalteten TG auf\n/lh Gibt aus, wer als letztes lokal gehört wurde.\n/lh CALL Gibt aus, wann das CALL heute gehört wurde."
         if id in grant:
             hilfetext += "\n\n/killmmdvm Stoppt MMDVM\n/startmmdvm Startet MMDVM\n/killdmrgw Stoppt das DMRGateway\n/startdmrgw Startet DMRGateway" \
 			 "\n/txan Schaltet den Sender an\n/txaus Schaltet den Sender aus\n/rxan Schaltet den RX ein" \
@@ -116,8 +152,8 @@ def handle(msg):
     elif msg['text'] in ["/tg"]:
 	bot.sendMessage(chat_id, talkgroups())
 
-    elif "/lheared" in msg['text']:
-	if msg['text'] == "/lheared":
+    elif "/lh" in msg['text']:
+	if msg['text'] == "/lh":
             heared = lastheared('')
             bot.sendMessage(chat_id,heared)
 	else:
@@ -175,6 +211,13 @@ def handle(msg):
 	tempC = temp/1000
 	status += "\nCPU Temperatur " + str(tempC)
 
+	# read the sensors
+	i = 0
+	for row in sensors:
+    	    status += '\n'
+    	    status += read_sensor(sensors[i])
+    	    i = i + 1
+
         bot.sendMessage(chat_id, status)
 
     elif msg['text'] in ["/txaus"]:
@@ -211,6 +254,8 @@ def handle(msg):
             bot.sendMessage(chat_id,grantfehler)
     else:
 	bot.sendMessage(chat_id, 'Mit "' + msg['text'] + '" kann ich nichts anfangen, '+ vorname + "!\nEine Liste der Befehle bekommst du mit /hilfe.")
+
+    bot.sendMessage(chat_id, befehlsliste(id))
 
 bot = telepot.Bot(apikey)
 
