@@ -3,8 +3,8 @@
 # Hier den API Schlüssel eintragen, den man vom Botfather erhalten hat
 apikey = ""
 
-# ACL für die Steuerung
-grant = []
+# ACL für die Steuerung User ID here
+grant = [,]
 
 # ID des Botowner / der Botowner (die bekommen Nachrichten über Statusänderungen)
 owner = []
@@ -13,7 +13,10 @@ owner = []
 botcall = ""
 
 # Liste mit zu prüfenden Prozessen
-prozesse=[]
+prozesse=["","",""]
 
 # ID des Repeaters
 dmrid = ""
+
+# folder which contains mmdvm-logs
+mmdvmlogs = "/var/log/mmdvm"

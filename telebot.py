@@ -12,6 +12,7 @@ from config import owner
 from config import botcall
 from config import prozesse
 from config import dmrid
+from config import mmdvmlogs
 
 logfile = "botlog.txt"
 userfile = "users.csv"
@@ -72,7 +73,7 @@ def lastheared(suchstring):
     else:
         suchstring = "received RF voice header from " +suchstring
     heared = []
-    dateiname = "/var/log/mmdvm/mmdvm-"+(time.strftime("%Y-%m-%d"))+".log"
+    dateiname = mmdvmlogs + "/mmdvm-"+(time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:
