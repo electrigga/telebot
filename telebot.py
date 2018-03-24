@@ -5,6 +5,14 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.loop import MessageLoop
 from pprint import pprint
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+import gettext
+
+trans = gettext.translation("telebot", "locale", ["sl"])
+trans.install()
+
 # Variablen aus der Config holen
 from config import apikey
 from config import grant
@@ -13,28 +21,22 @@ from config import botcall
 from config import prozesse
 from config import dmrid
 from config import mmdvmlogs
+from config import sensors
 
 logfile = "botlog.txt"
 userfile = "users.csv"
-grantfehler = "Du darfst das nicht!"
+grantfehler = _("granterror")
 mmdvmaufruf = "/usr/bin/screen /home/pi/MMDVMHost/MMDVMHost /home/pi/MMDVMHost/MMDVM-DB0ASE.ini"
 dmrgwaufruf = "/usr/bin/screen /home/pi/DMRGateway/DMRGateway /home/pi/DMRGateway/DMRGateway-DB0ASE.ini"
 
-befehlsliste_usr = "/lh /status /tg /hilfe\n"
-befehlsliste_syop = "/txaus /txan /rxaus /rxan \n/killmmdvm /startmmdvm /killdmrgw /startdmrgw"
+befehlsliste_usr = "/lh /status /tg /help\n"
+befehlsliste_syop = "/gpio /sw /svx"
 
 # GPIO Settings
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(13, GPIO.OUT)
 GPIO.setup(15, GPIO.OUT)
-
-# define pathes to 1-wire sensor data
-sensors = [
-  ["/sys/bus/w1/devices/28-03b429126461/w1_slave","Erster Sensor"],
-  ["/sys/bus/w1/devices/28-559d29126461/w1_slave","Zweiter Sensor"],
-  ["/sys/bus/w1/devices/28-a4ad29126461/w1_slave","Dritter Sensor"]
-]
 
 # Loggingfunktion
 def botlog(logtext):
@@ -52,7 +54,7 @@ def read_sensor(path):
           line = f.readline()
           m = re.match(r"([0-9a-f]{2} ){9}t=([+-]?[0-9]+)", line)
       if m:
-          value = str(float(m.group(2)) / 1000.0)
+          value = str(round(float(m.group(2)) / 1000.0,1)) + "°C"
       f.close()
   except (IOError), e:
     print time.strftime("%x %X"), "Error reading", path, ": ", e
@@ -64,27 +66,27 @@ def ownerinfo(msg,owner):
 	try:
             bot.sendMessage(x,msg)
 	except:
-	    print("Benachrichtigung Owner ging schief")
+	    print_(("owner_msg_fails"))
 
-# Lasthearedfunktion
-def lastheared(suchstring):
+# Lastheardfunktion
+def lastheard(suchstring):
     if suchstring == '':
 	suchstring = "received RF voice header"
     else:
         suchstring = "received RF voice header from " +suchstring
-    heared = []
+    heard = []
     dateiname = mmdvmlogs + "/mmdvm-"+(time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:
 	    string = (line.rstrip())
 	    string = string.split(" ")
-	    heared.append(string)
+	    heard.append(string)
     file.close()
-    if not heared:
-	return "Heute nicht aufgetaucht..."
+    if not heard:
+	return _("not_seen_today")
     else:
-        return heared[-1][2] + " " + heared[-1][4] + " " + heared[-1][5] + " " + heared[-1][11] + " " + heared[-1][13] + " " + heared[-1][14]
+        return heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " " + heard[-1][14]
 
 # Prozesskiller
 def prockiller(prozess):
@@ -111,9 +113,9 @@ def talkgroups():
         for tg in data['timedSubscriptions']:
 	    tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot'])
         if tgs == 'Talkgroups:':
-            tgs = "Keine Talkgroups statisch geschaltet."
+            tgs = _("no_static_tg")
     except:
-        print("Abruf der Talkgroups ging schief....")
+        print_(("read_tg_fails"))
     r.close()
     return tgs
 
@@ -121,12 +123,72 @@ def talkgroups():
 def prozesschecker(prozess):
     proc = ([p.info for p in psutil.process_iter(attrs=['pid','name']) if prozess in p.info['name']])
     if proc != []:
-	status = "Läuft"
+	status = _("runs")
     else:
-	status = "Läuft nicht"
+	status = _("runs_not")
     return status
 
-def handle(msg):
+def on_callback_query(msg):
+    query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
+    print('Callback Query:', query_id, from_id, query_data)
+
+    if query_data == "/txon":
+	if from_id in grant:
+            GPIO.output(13, GPIO.LOW)
+            bot.answerCallbackQuery(query_id,_("tx_is_on"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/txoff":
+        if from_id in grant:
+            GPIO.output(13, GPIO.HIGH)
+            bot.answerCallbackQuery(query_id,_("tx_is_off"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/rxon":
+        if from_id in grant:
+            GPIO.output(15, GPIO.LOW)
+            bot.answerCallbackQuery(query_id,_("rx_is_on"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/rxoff":
+        if from_id in grant:
+            GPIO.output(15, GPIO.HIGH)
+            bot.answerCallbackQuery(query_id,_("rx_is_off"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/killmmdvm":
+        if from_id in grant:
+            prockiller("MMDVMHost")
+            bot.answerCallbackQuery(query_id,_("stop_mmdvm"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/startmmdvm":
+        if from_id in grant:
+            os.system(mmdvmaufruf)
+            bot.answerCallbackQuery(query_id,_("start_mmdvm"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/killdmrgw":
+        if from_id in grant:
+            prockiller("DMRGateway")
+            bot.answerCallbackQuery(query_id,_("stop_dmrgw"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/startdmrgw":
+        if from_id in grant:
+            os.system(dmrgwaufruf)
+            bot.answerCallbackQuery(query_id,_("start_dmrgw"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+def on_chat_message(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
 
     vorname = msg['from']['first_name']
@@ -134,20 +196,20 @@ def handle(msg):
     id = msg['from']['id']
     msg['text'] = msg['text'].lower()
 
+    keyboard = ""
+
     # print(msg['text'])
     # print(msg)
 
     if msg['text'] in ["/start","/start start", "start", "hallo", "Hallo", "Hi", "Start"]:
-	bot.sendMessage(chat_id, "Herzlich willkommen bei " + botcall + " " + vorname + "!" + \
-				 "\nUm Hilfe zu erhalten, schreib /hilfe. Informationen und Hinweise bitte an @dl2ajb.")
+	bot.sendMessage(chat_id, _("welcome") + " " + botcall + " " + vorname + "!" + \
+				 "\n" + _("toget_help_write_/help"))
 
-    elif msg['text'] in ["/hilfe", "hilfe"]:
-	hilfetext = "Informationen und Kommandos:\n/status Gibt den Status des Repeaters aus\n/hilfe Hilfetext mit der" \
-                    " Liste der Kommandos\n/tg Listet die in DMR geschalteten TG auf\n/lh Gibt aus, wer als letztes lokal gehört wurde.\n/lh CALL Gibt aus, wann das CALL heute gehört wurde."
+    elif msg['text'] in ["/help", "hilfe", "help", "/hilfe"]:
+	hilfetext = _("info_commands") + "\n" + "/status " + _("status_help") + "\n" + "/help " + _("help_help") + "\n" + \
+		    "/tg " + _("tg_help") + "\n" + "/lh " + _("lh_help") + "\n" + "/lh CALL " + _("lh_CALL_help")
         if id in grant:
-            hilfetext += "\n\n/killmmdvm Stoppt MMDVM\n/startmmdvm Startet MMDVM\n/killdmrgw Stoppt das DMRGateway\n/startdmrgw Startet DMRGateway" \
-			 "\n/txan Schaltet den Sender an\n/txaus Schaltet den Sender aus\n/rxan Schaltet den RX ein" \
-			 "\n/rxaus Schaltet den RX an\n/reboot start den Rechner neu"
+            hilfetext += "\n\n" + "/gpio " + _("gpio_help") + "\n" + "/sw " + _("sw_help") + "\n" + "/svx " + _("svx_help")
         bot.sendMessage(chat_id,botcall + " " + hilfetext)
 
     elif msg['text'] in ["/tg"]:
@@ -155,52 +217,62 @@ def handle(msg):
 
     elif "/lh" in msg['text']:
 	if msg['text'] == "/lh":
-            heared = lastheared('')
-            bot.sendMessage(chat_id,heared)
+            heard = lastheard('')
+            bot.sendMessage(chat_id,heard)
 	else:
 	    suche = msg['text'].split(" ")
-	    heared = lastheared(suche[1].upper())
-	    bot.sendMessage(chat_id,heared)
+	    heard = lastheard(suche[1].upper())
+	    bot.sendMessage(chat_id,heard)
 
-    elif msg['text'] in ["/killmmdvm"]:
+    elif msg['text'] in ["/svx"]:
+	    bot.sendMessage(chat_id,_("not_yet_implemented"))
+
+    elif msg['text'] in ["/sw"]:
 	if id in grant:
-	    prockiller("MMDVMHost")
-	    bot.sendMessage(chat_id,"Beende MMDVM...")
-        else:
-	    bot.sendMessage(chat_id,grantfehler)
-
-    elif msg['text'] in ["/startmmdvm"]:
-        if id in grant:
-	    os.system(mmdvmaufruf)
-	    bot.sendMessage(chat_id,"Starte MMDVM")
+	    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+			[
+                                InlineKeyboardButton(text=_('btn_start_mmdvm'), callback_data='/startmmdvm'),
+				InlineKeyboardButton(text=_('btn_stop_mmdvm'), callback_data='/killmmdvm')
+			],
+                        [
+                                InlineKeyboardButton(text=_('btn_start_dmrgw'), callback_data='/startdmrgw'),
+                                InlineKeyboardButton(text=_('btn_stop_dmrgw'), callback_data='/killdmrgw')
+                        ],
+                        [
+                                InlineKeyboardButton(text=_('btn_reboot'), callback_data='/reboot')
+                        ]
+		    ])
+	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
 	else:
 	    bot.sendMessage(chat_id,grantfehler)
 
-    elif msg['text'] in ["/killdmrgw"]:
-        if id in grant:
-            prockiller("DMRGateway")
-            bot.sendMessage(chat_id,"Beende DMRGateway...")
-        else:
-            bot.sendMessage(chat_id,grantfehler)
-
-    elif msg['text'] in ["/startdmrgw"]:
-        if id in grant:
-            os.system(dmrgwaufruf)
-            bot.sendMessage(chat_id,"Starte DMRGateway")
-        else:
+    elif msg['text'] in ["/gpio"]:
+	if id in grant:
+	    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+			   [
+				InlineKeyboardButton(text=_('btn_tx_on'), callback_data='/txon'),
+				InlineKeyboardButton(text=_('btn_tx_off'), callback_data='/txoff')
+			   ],
+			   [
+				InlineKeyboardButton(text=_('btn_rx_on'), callback_data='/rxon'),
+				InlineKeyboardButton(text=_('btn_rx_off'), callback_data='/rxoff')
+			   ]
+			])
+	    bot.sendMessage(chat_id,_('keyboard_gpio'), reply_markup=keyboard)
+	else:
             bot.sendMessage(chat_id,grantfehler)
 
     elif msg['text'] in ["/status"]:
 	status = ''
 	# Eingänge lesen
         if GPIO.input(13) == GPIO.HIGH:
-	    status += "TX ist aus\n"
+	    status += _("tx_is_off") + "\n"
         else:
-            status += "TX is an\n"
+            status += _("tx_is_on") + "\n"
         if GPIO.input(15) == GPIO.HIGH:
-            status += "RX ist aus"
+            status += _("rx_is_off")
         else:
-            status += "RX ist an"
+            status += _("rx_is_on")
 	# Laufende Prozesse testen
 	for proc in prozesse:
 	    status += "\n" + proc + " " + prozesschecker(proc)
@@ -210,7 +282,7 @@ def handle(msg):
 	tFile = open('/sys/class/thermal/thermal_zone0/temp')
 	temp = float(tFile.read())
 	tempC = temp/1000
-	status += "\nCPU Temperatur " + str(tempC)
+	status += "\n" + _("cpu_temp") + " " + str(round(tempC,1)) + "°C"
 
 	# read the sensors
 	i = 0
@@ -221,56 +293,32 @@ def handle(msg):
 
         bot.sendMessage(chat_id, status)
 
-    elif msg['text'] in ["/txaus"]:
-        if id in grant:
-            GPIO.output(13, GPIO.HIGH)
-	    bot.sendMessage(chat_id,"Sender ist aus!")
-        else:
-	    bot.sendMessage(chat_id,grantfehler)
-    elif msg['text'] in ["/txan"]:
-        if id in grant:
-            GPIO.output(13, GPIO.LOW)
-            bot.sendMessage(chat_id,"Sender ist wieder an!")
-        else:
-            bot.sendMessage(chat_id,grantfehler)
-
-    elif msg['text'] in ["/rxaus"]:
-        if id in grant:
-            GPIO.output(15, GPIO.HIGH)
-            bot.sendMessage(chat_id,"Empfang ist aus!")
-        else:
-            bot.sendMessage(chat_id,grantfehler)
-    elif msg['text'] in ["/rxan"]:
-        if id in grant:
-            GPIO.output(15, GPIO.LOW)
-            bot.sendMessage(chat_id,"Empfang ist wieder an!")
-        else:
-            bot.sendMessage(chat_id,grantfehler)
-
     elif msg['text'] in ["/reboot"]:
 	if id in grant:
-	    bot.sendMessage(chat_id,"Starte das System neu.")
-	    os.system('sudo shutdown -r now')
+	    bot.sendMessage(chat_id,_("rebooting_system"))
+    	    os.system('sudo shutdown -r now')
 	else:
             bot.sendMessage(chat_id,grantfehler)
     else:
-	bot.sendMessage(chat_id, 'Mit "' + msg['text'] + '" kann ich nichts anfangen, '+ vorname + "!\nEine Liste der Befehle bekommst du mit /hilfe.")
+	bot.sendMessage(chat_id, _("no_idea_command") + msg['text'] + " "  + vorname + "!\n" + _("cmd_list_with /help."))
 
     bot.sendMessage(chat_id, befehlsliste(id))
 
 bot = telepot.Bot(apikey)
 
 try:
-    ownerinfo("Ich bin wieder da...",owner)
-    MessageLoop(bot,handle).run_as_thread()
+    ownerinfo(_("start_msg_owner"),owner)
+    # MessageLoop(bot,handle).run_as_thread()
+    MessageLoop(bot, {'chat': on_chat_message,
+                  'callback_query': on_callback_query}).run_as_thread()
 except:
-    print("Irgendwas stimmt mit dem Bot nicht....")
+    print(_("bot_is_wrong"))
 
 try:
     while 1:
         time.sleep(10)
 
 except:
-    print("Tschüss....")
-    ownerinfo("Der Bot wird beendet...",owner)
+    print(_("bot_shutdown"))
+    ownerinfo(_("bye_msg_owner"),owner)
     # GPIO.cleanup()

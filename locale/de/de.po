@@ -1,0 +1,218 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-03-24 21:39+CET\n"
+"PO-Revision-Date: 2018-03-24 22:02+0100\n"
+"Last-Translator: Jens Bremeier\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: telebot_dev.py:28
+msgid "granterror"
+msgstr "Das darfst du nicht!"
+
+#: telebot_dev.py:87
+msgid "not_seen_today"
+msgstr "Heute noch nicht aufgetaucht….."
+
+#: telebot_dev.py:116
+msgid "no_static_tg"
+msgstr "Keine statischen Talkgroups."
+
+#: telebot_dev.py:126
+msgid "runs"
+msgstr "läuft…"
+
+#: telebot_dev.py:128
+msgid "runs_not"
+msgstr "läuft nicht…"
+
+#: telebot_dev.py:138 telebot_dev.py:271
+msgid "tx_is_on"
+msgstr "Sender ist an."
+
+#: telebot_dev.py:145 telebot_dev.py:269
+msgid "tx_is_off"
+msgstr "Sender ist aus."
+
+#: telebot_dev.py:152 telebot_dev.py:275
+msgid "rx_is_on"
+msgstr "Empfänger ist an."
+
+#: telebot_dev.py:159 telebot_dev.py:273
+msgid "rx_is_off"
+msgstr "Empfänger ist aus."
+
+#: telebot_dev.py:166
+msgid "stop_mmdvm"
+msgstr "Beende MMDVMHost…."
+
+#: telebot_dev.py:173
+msgid "start_mmdvm"
+msgstr "Starte MMDVMHost…."
+
+#: telebot_dev.py:180
+msgid "stop_dmrgw"
+msgstr "Beende das DMRGateway…."
+
+#: telebot_dev.py:187
+msgid "start_dmrgw"
+msgstr "Starte das DMRGateway…."
+
+#: telebot_dev.py:205
+msgid "welcome"
+msgstr "Herzlich willkommen bei"
+
+#: telebot_dev.py:206
+msgid "toget_help_write_/help"
+msgstr "Um Hilfe zu erhalten, gib /help ein."
+
+#: telebot_dev.py:209
+msgid "help_help"
+msgstr "Eine Liste der Kommandos und Funktionen."
+
+#: telebot_dev.py:209
+msgid "info_commands"
+msgstr "Informationen und Kommandos."
+
+#: telebot_dev.py:209
+msgid "status_help"
+msgstr "Gibt den Status des Repeaters aus."
+
+#: telebot_dev.py:210
+msgid "lh_CALL_help"
+msgstr "Gibt aus, wann CALL heute das letzte mal gehört wurde."
+
+#: telebot_dev.py:210
+msgid "lh_help"
+msgstr "Wer wurde heute als letztes lokal gehört."
+
+#: telebot_dev.py:210
+msgid "tg_help"
+msgstr "Listet die statisch geschalteten TG auf."
+
+#: telebot_dev.py:212
+msgid "gpio_help"
+msgstr "Funktionen zur Steuerung der GPIO"
+
+#: telebot_dev.py:212
+msgid "svx_help"
+msgstr "Funktionen zur Steuerung von SVX-Link"
+
+#: telebot_dev.py:212
+msgid "sw_help"
+msgstr "Funktionen zur Steuerung der Software"
+
+#: telebot_dev.py:228
+msgid "not_yet_implemented"
+msgstr "Noch nicht implementiert."
+
+#: telebot_dev.py:234
+msgid "btn_start_mmdvm"
+msgstr "MMDVM an"
+
+#: telebot_dev.py:235
+msgid "btn_stop_mmdvm"
+msgstr "MMDVM aus"
+
+#: telebot_dev.py:238
+msgid "btn_start_dmrgw"
+msgstr "DMRGw an"
+
+#: telebot_dev.py:239
+msgid "btn_stop_dmrgw"
+msgstr "DMRGw aus"
+
+#: telebot_dev.py:242
+msgid "keyboard_software"
+msgstr "Funktionen zur Steuerung der Software und des Rechners"
+
+#: telebot_dev.py:250
+msgid "btn_tx_on"
+msgstr "TX an"
+
+#: telebot_dev.py:251
+msgid "btn_tx_off"
+msgstr "TX aus"
+
+#: telebot_dev.py:254
+msgid "btn_rx_on"
+msgstr "RX an"
+
+#: telebot_dev.py:255
+msgid "btn_rx_off"
+msgstr "RX aus"
+
+#: telebot_dev.py:258
+msgid "btn_reboot"
+msgstr "Reboot"
+
+#: telebot_dev.py:261
+msgid "keyboard_gpio"
+msgstr "Funktionen zur Steuerung der Relaisplatine"
+
+#: telebot_dev.py:285
+msgid "cpu_temp"
+msgstr "CPU-Temperatur"
+
+#: telebot_dev.py:298
+msgid "rebooting_system"
+msgstr "Starte das System neu"
+
+#: telebot_dev.py:303
+msgid "cmd_list_with /help."
+msgstr "Eine Liste der Kommandos bekommst du mit /help"
+
+#: telebot_dev.py:303
+msgid "no_idea_command"
+msgstr "Ich weiß nicht, was du damit meinst: "
+
+#: telebot_dev.py:310
+msgid "start_msg_owner"
+msgstr "Ich bin wieder da…."
+
+#: telebot_dev.py:315
+msgid "bot_is_wrong"
+msgstr "Irgendwas stimmt mit dem Bot nicht."
+
+#: telebot_dev.py:322
+msgid "bot_shutdown"
+msgstr "Tschüss…."
+
+#: telebot_dev.py:323
+msgid "bye_msg_owner"
+msgstr "Ich bin dann mal weg…."
+
+#~ msgid "killdmrgw_help"
+#~ msgstr "Beendet das DMRGateway"
+
+#~ msgid "killmmdvm_help"
+#~ msgstr "Beendet MMDVMHost"
+
+#~ msgid "startdmrgw_help"
+#~ msgstr "Startet das DMRGateway"
+
+#~ msgid "startmmdvm_help"
+#~ msgstr "Startet MMDVMHost"
+
+#~ msgid "txoff_help"
+#~ msgstr "Schaltet den Sender aus."
+
+#~ msgid "txon_help"
+#~ msgstr "Schaltet den Sender ein."
+
+#~ msgid "reboot_help"
+#~ msgstr "Startet das System neu."
+
+#~ msgid "rxoff_help"
+#~ msgstr "Schaltet den Empfänger aus."

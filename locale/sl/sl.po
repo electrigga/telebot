@@ -1,0 +1,219 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-03-24 21:39+CET\n"
+"PO-Revision-Date: 2018-03-24 22:14+0100\n"
+"Last-Translator: Jens Bremeier\n"
+"Language-Team: \n"
+"Language: sl_SI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
+
+#: telebot_dev.py:28
+msgid "granterror"
+msgstr "Nimaš dovoljenja za to dejanje!"
+
+#: telebot_dev.py:87
+msgid "not_seen_today"
+msgstr "Nikogar ni bilo danes..."
+
+#: telebot_dev.py:116
+msgid "no_static_tg"
+msgstr "Ni statičnih TG."
+
+#: telebot_dev.py:126
+msgid "runs"
+msgstr "Zagnan"
+
+#: telebot_dev.py:128
+msgid "runs_not"
+msgstr "Ni zagnan"
+
+#: telebot_dev.py:138 telebot_dev.py:271
+msgid "tx_is_on"
+msgstr "Oddajanje je vklopljeno"
+
+#: telebot_dev.py:145 telebot_dev.py:269
+msgid "tx_is_off"
+msgstr "Oddajanje je izklopljeno"
+
+#: telebot_dev.py:152 telebot_dev.py:275
+msgid "rx_is_on"
+msgstr "Sprejem je vklopljen"
+
+#: telebot_dev.py:159 telebot_dev.py:273
+msgid "rx_is_off"
+msgstr "Sprejem je izklopljen"
+
+#: telebot_dev.py:166
+msgid "stop_mmdvm"
+msgstr "Zaustavi MMDVM"
+
+#: telebot_dev.py:173
+msgid "start_mmdvm"
+msgstr "Zaženi MMDVM"
+
+#: telebot_dev.py:180
+msgid "stop_dmrgw"
+msgstr "Ustavi DMRGateway"
+
+#: telebot_dev.py:187
+msgid "start_dmrgw"
+msgstr "Zaženi DMRGateway"
+
+#: telebot_dev.py:205
+msgid "welcome"
+msgstr "Dobrodošel v"
+
+#: telebot_dev.py:206
+msgid "toget_help_write_/help"
+msgstr "Za pomoč vtipkaj /help. Vse informacije in predloge pošlji na @dl2ajb."
+
+#: telebot_dev.py:209
+msgid "help_help"
+msgstr "Prikaže ukaze."
+
+#: telebot_dev.py:209
+msgid "info_commands"
+msgstr "Informacije in ukazi:"
+
+#: telebot_dev.py:209
+msgid "status_help"
+msgstr "Stanje repetitorja"
+
+#: telebot_dev.py:210
+msgid "lh_CALL_help"
+msgstr "Pokaže kater klicni znak je bil danes nazadnje sprejet."
+
+#: telebot_dev.py:210
+msgid "lh_help"
+msgstr "Pokaže kdo je bil zadnji slišan lokalno."
+
+#: telebot_dev.py:210
+msgid "tg_help"
+msgstr "Seznam TG v DMR"
+
+#: telebot_dev.py:212
+msgid "gpio_help"
+msgstr "GPIO pomoč"
+
+#: telebot_dev.py:212
+msgid "svx_help"
+msgstr "SVXLink pomoč"
+
+#: telebot_dev.py:212
+msgid "sw_help"
+msgstr "DMR pomoč"
+
+#: telebot_dev.py:228
+msgid "not_yet_implemented"
+msgstr "Ni še implementirano..."
+
+#: telebot_dev.py:234
+msgid "btn_start_mmdvm"
+msgstr "Zaženi MMDVM"
+
+#: telebot_dev.py:235
+msgid "btn_stop_mmdvm"
+msgstr "Zaustavi MMDVM"
+
+#: telebot_dev.py:238
+msgid "btn_start_dmrgw"
+msgstr "Zaženi DMRGateway"
+
+#: telebot_dev.py:239
+msgid "btn_stop_dmrgw"
+msgstr "Zaustavi DMRGateway"
+
+#: telebot_dev.py:242
+msgid "keyboard_software"
+msgstr "DMR tipkovnica"
+
+#: telebot_dev.py:250
+msgid "btn_tx_on"
+msgstr "Vklopi oddajanje"
+
+#: telebot_dev.py:251
+msgid "btn_tx_off"
+msgstr "Izklopi oddajanje"
+
+#: telebot_dev.py:254
+msgid "btn_rx_on"
+msgstr "Vklopi sprejemanje"
+
+#: telebot_dev.py:255
+msgid "btn_rx_off"
+msgstr "Izklopi sprejemanje"
+
+#: telebot_dev.py:258
+msgid "btn_reboot"
+msgstr "Ponovni zagon"
+
+#: telebot_dev.py:261
+msgid "keyboard_gpio"
+msgstr "GPIO tipkovnica"
+
+#: telebot_dev.py:285
+msgid "cpu_temp"
+msgstr "Temperatura procesorja"
+
+#: telebot_dev.py:298
+msgid "rebooting_system"
+msgstr "Siestem se bo ponovno zagnal..."
+
+#: telebot_dev.py:303
+msgid "cmd_list_with /help."
+msgstr "Za seznam ukazov vpiši /pomoč"
+
+#: telebot_dev.py:303
+msgid "no_idea_command"
+msgstr "Nisem prepričan kaj želiš:"
+
+#: telebot_dev.py:310
+msgid "start_msg_owner"
+msgstr "Vrnil sem se..."
+
+#: telebot_dev.py:315
+msgid "bot_is_wrong"
+msgstr "Nekaj je narobe z botom..."
+
+#: telebot_dev.py:322
+msgid "bot_shutdown"
+msgstr "Nasvidenje..."
+
+#: telebot_dev.py:323
+msgid "bye_msg_owner"
+msgstr "Bot se zaustavlja..."
+
+#~ msgid "killdmrgw_help"
+#~ msgstr "Zaustavi DMRGateway"
+
+#~ msgid "killmmdvm_help"
+#~ msgstr "Zaustavi MMDVM"
+
+#~ msgid "startdmrgw_help"
+#~ msgstr "Zažene DMRGateway"
+
+#~ msgid "startmmdvm_help"
+#~ msgstr "Zažene MMDVM"
+
+#~ msgid "txoff_help"
+#~ msgstr "Izklopi oddajanje"
+
+#~ msgid "txon_help"
+#~ msgstr "Vklopi oddajanje"
+
+#~ msgid "reboot_help"
+#~ msgstr "Zaustavitev sistema"
+
+#~ msgid "rxoff_help"
+#~ msgstr "Izklopi sprejemanje"

@@ -1,0 +1,218 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-03-24 21:39+CET\n"
+"PO-Revision-Date: 2018-03-24 21:55+0100\n"
+"Last-Translator: Jens Bremeier\n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: telebot_dev.py:28
+msgid "granterror"
+msgstr "You are not permitted to do this!"
+
+#: telebot_dev.py:87
+msgid "not_seen_today"
+msgstr "Not seen today…"
+
+#: telebot_dev.py:116
+msgid "no_static_tg"
+msgstr "No talkgroups statically linked."
+
+#: telebot_dev.py:126
+msgid "runs"
+msgstr "Runs"
+
+#: telebot_dev.py:128
+msgid "runs_not"
+msgstr "Runs not"
+
+#: telebot_dev.py:138 telebot_dev.py:271
+msgid "tx_is_on"
+msgstr "TX is switched on"
+
+#: telebot_dev.py:145 telebot_dev.py:269
+msgid "tx_is_off"
+msgstr "TX is switched off"
+
+#: telebot_dev.py:152 telebot_dev.py:275
+msgid "rx_is_on"
+msgstr "RX is switched on"
+
+#: telebot_dev.py:159 telebot_dev.py:273
+msgid "rx_is_off"
+msgstr "RX is switched off"
+
+#: telebot_dev.py:166
+msgid "stop_mmdvm"
+msgstr "Stop MMDVM…"
+
+#: telebot_dev.py:173
+msgid "start_mmdvm"
+msgstr "Starting MMDVM"
+
+#: telebot_dev.py:180
+msgid "stop_dmrgw"
+msgstr "Stop DMRGateway…"
+
+#: telebot_dev.py:187
+msgid "start_dmrgw"
+msgstr "Start DMRGateway"
+
+#: telebot_dev.py:205
+msgid "welcome"
+msgstr "Welcome to "
+
+#: telebot_dev.py:206
+msgid "toget_help_write_/help"
+msgstr "To get help type /help. Information and hints to @dl2ajb."
+
+#: telebot_dev.py:209
+msgid "help_help"
+msgstr "Shows the commands."
+
+#: telebot_dev.py:209
+msgid "info_commands"
+msgstr "Information and commands:"
+
+#: telebot_dev.py:209
+msgid "status_help"
+msgstr "Repeater’s status"
+
+#: telebot_dev.py:210
+msgid "lh_CALL_help"
+msgstr "Shows when CALL was last heard today."
+
+#: telebot_dev.py:210
+msgid "lh_help"
+msgstr "Shows who was last heard locally."
+
+#: telebot_dev.py:210
+msgid "tg_help"
+msgstr "Lists linked TG in DMR"
+
+#: telebot_dev.py:212
+msgid "gpio_help"
+msgstr "Controls for the GPIO"
+
+#: telebot_dev.py:212
+msgid "svx_help"
+msgstr "Controls for SVX-Link"
+
+#: telebot_dev.py:212
+msgid "sw_help"
+msgstr "Controls for software"
+
+#: telebot_dev.py:228
+msgid "not_yet_implemented"
+msgstr "Not yet available"
+
+#: telebot_dev.py:234
+msgid "btn_start_mmdvm"
+msgstr "MMDVM on"
+
+#: telebot_dev.py:235
+msgid "btn_stop_mmdvm"
+msgstr "MMDVM off"
+
+#: telebot_dev.py:238
+msgid "btn_start_dmrgw"
+msgstr "DMRGateway on"
+
+#: telebot_dev.py:239
+msgid "btn_stop_dmrgw"
+msgstr "DMRGateway off"
+
+#: telebot_dev.py:242
+msgid "keyboard_software"
+msgstr "Controls for the software and the host"
+
+#: telebot_dev.py:250
+msgid "btn_tx_on"
+msgstr "TX on"
+
+#: telebot_dev.py:251
+msgid "btn_tx_off"
+msgstr "TX off"
+
+#: telebot_dev.py:254
+msgid "btn_rx_on"
+msgstr "RX on"
+
+#: telebot_dev.py:255
+msgid "btn_rx_off"
+msgstr "RX off"
+
+#: telebot_dev.py:258
+msgid "btn_reboot"
+msgstr "Reboot"
+
+#: telebot_dev.py:261
+msgid "keyboard_gpio"
+msgstr "Controls for the relais board"
+
+#: telebot_dev.py:285
+msgid "cpu_temp"
+msgstr "CPU temperature"
+
+#: telebot_dev.py:298
+msgid "rebooting_system"
+msgstr "Rebooting the system…."
+
+#: telebot_dev.py:303
+msgid "cmd_list_with /help."
+msgstr "A list of commands you get with /help"
+
+#: telebot_dev.py:303
+msgid "no_idea_command"
+msgstr "I am not sure what you mean: "
+
+#: telebot_dev.py:310
+msgid "start_msg_owner"
+msgstr "I am back….."
+
+#: telebot_dev.py:315
+msgid "bot_is_wrong"
+msgstr "Something is wrong with the bot…."
+
+#: telebot_dev.py:322
+msgid "bot_shutdown"
+msgstr "Bye….."
+
+#: telebot_dev.py:323
+msgid "bye_msg_owner"
+msgstr "The bot is shutting down…."
+
+#~ msgid "killdmrgw_help"
+#~ msgstr "Stops DMRGateway"
+
+#~ msgid "killmmdvm_help"
+#~ msgstr "Stops MMDVM"
+
+#~ msgid "startdmrgw_help"
+#~ msgstr "Starts DMRGateway"
+
+#~ msgid "startmmdvm_help"
+#~ msgstr "Starts MMDVM"
+
+#~ msgid "txoff_help"
+#~ msgstr "Switches TX off"
+
+#~ msgid "txon_help"
+#~ msgstr "Switches TX on"
+
+#~ msgid "reboot_help"
+#~ msgstr "Reboot the system"
+
+#~ msgid "rxoff_help"
+#~ msgstr "Switches RX off"
