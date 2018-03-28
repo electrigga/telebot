@@ -10,33 +10,26 @@ sys.setdefaultencoding('utf8')
 
 import gettext
 
-trans = gettext.translation("telebot", "locale", ["sl"])
+trans = gettext.translation("telebot", "locale", ["de"])
 trans.install()
 
 # Variablen aus der Config holen
-from config import apikey
-from config import grant
-from config import owner
-from config import botcall
-from config import prozesse
-from config import dmrid
-from config import mmdvmlogs
-from config import sensors
+from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
+		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports)
 
-logfile = "botlog.txt"
-userfile = "users.csv"
+# include own functions
+# from userfunction import (function1, function2.......)
+
 grantfehler = _("granterror")
-mmdvmaufruf = "/usr/bin/screen /home/pi/MMDVMHost/MMDVMHost /home/pi/MMDVMHost/MMDVM-DB0ASE.ini"
-dmrgwaufruf = "/usr/bin/screen /home/pi/DMRGateway/DMRGateway /home/pi/DMRGateway/DMRGateway-DB0ASE.ini"
-
 befehlsliste_usr = "/lh /status /tg /help\n"
 befehlsliste_syop = "/gpio /sw /svx"
+query_data = ''
 
 # GPIO Settings
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(13, GPIO.OUT)
-GPIO.setup(15, GPIO.OUT)
+for gio in gpioports:
+    GPIO.setup(gio[0], GPIO.OUT)
 
 # Loggingfunktion
 def botlog(logtext):
@@ -66,7 +59,7 @@ def ownerinfo(msg,owner):
 	try:
             bot.sendMessage(x,msg)
 	except:
-	    print_(("owner_msg_fails"))
+	    print(_("owner_msg_fails"))
 
 # Lastheardfunktion
 def lastheard(suchstring):
@@ -75,7 +68,7 @@ def lastheard(suchstring):
     else:
         suchstring = "received RF voice header from " +suchstring
     heard = []
-    dateiname = mmdvmlogs + "/mmdvm-"+(time.strftime("%Y-%m-%d"))+".log"
+    dateiname = mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:
@@ -87,6 +80,21 @@ def lastheard(suchstring):
 	return _("not_seen_today")
     else:
         return heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " " + heard[-1][14]
+
+# function to test master connection in gw
+def testgw():
+    gwerror = []
+    suchstring = "Connection to the master has timed out"
+    dateiname = gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
+    file = open(dateiname, "r")
+    for line in file:
+        if line.find(suchstring) > 1:
+            string = (line.rstrip())
+            # string = string.split(" ")
+            gwerror.append(string)
+    file.close()
+    print(gwerror)
+    return _("gw_error")
 
 # Prozesskiller
 def prockiller(prozess):
@@ -128,39 +136,32 @@ def prozesschecker(prozess):
 	status = _("runs_not")
     return status
 
+###### Callback-Query-Handler Start ######
+
 def on_callback_query(msg):
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
     print('Callback Query:', query_id, from_id, query_data)
 
-    if query_data == "/txon":
-	if from_id in grant:
-            GPIO.output(13, GPIO.LOW)
-            bot.answerCallbackQuery(query_id,_("tx_is_on"))
-        else:
-            bot.answerCallbackQuery(query_id,grantfehler)
+### GPIO switcher ###
 
-    elif query_data == "/txoff":
-        if from_id in grant:
-            GPIO.output(13, GPIO.HIGH)
-            bot.answerCallbackQuery(query_id,_("tx_is_off"))
-        else:
-            bot.answerCallbackQuery(query_id,grantfehler)
+    command = query_data.split("_")
+    for i in range(len(gpioports)):
+        if command[0] in gpioports[i]:
+            print(str(gpioports[i][0])+str(gpioports[i][1])+str(gpioports[i][2]))
+            if command[1] == "on" and gpioports[i][2] == 0:
+            	GPIO.output(gpioports[i][0], GPIO.HIGH)
+            	bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
+            elif command[1] == "on" and gpioports[i][2] == 1:
+                GPIO.output(gpioports[i][0], GPIO.LOW)
+		bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
+            elif command[1] == "off" and gpioports[i][2] == 0:
+                GPIO.output(gpioports[i][0], GPIO.LOW)
+		bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
+            elif command[1] == "off" and gpioports[i][2] == 1:
+                GPIO.output(gpioports[i][0], GPIO.HIGH)
+		bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
 
-    elif query_data == "/rxon":
-        if from_id in grant:
-            GPIO.output(15, GPIO.LOW)
-            bot.answerCallbackQuery(query_id,_("rx_is_on"))
-        else:
-            bot.answerCallbackQuery(query_id,grantfehler)
-
-    elif query_data == "/rxoff":
-        if from_id in grant:
-            GPIO.output(15, GPIO.HIGH)
-            bot.answerCallbackQuery(query_id,_("rx_is_off"))
-        else:
-            bot.answerCallbackQuery(query_id,grantfehler)
-
-    elif query_data == "/killmmdvm":
+    if query_data == "/killmmdvm":
         if from_id in grant:
             prockiller("MMDVMHost")
             bot.answerCallbackQuery(query_id,_("stop_mmdvm"))
@@ -187,6 +188,10 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,_("start_dmrgw"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
+
+###### Callback-Query-Handler End ######
+
+###### Chat-Message-Handler Start ######
 
 def on_chat_message(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
@@ -238,6 +243,10 @@ def on_chat_message(msg):
                                 InlineKeyboardButton(text=_('btn_start_dmrgw'), callback_data='/startdmrgw'),
                                 InlineKeyboardButton(text=_('btn_stop_dmrgw'), callback_data='/killdmrgw')
                         ],
+			[
+                                InlineKeyboardButton(text=_('btn_start_ysfgw'), callback_data='/startysfgw'),
+                                InlineKeyboardButton(text=_('btn_stop_ysfgw'), callback_data='/killysfgw')
+                        ],
                         [
                                 InlineKeyboardButton(text=_('btn_reboot'), callback_data='/reboot')
                         ]
@@ -246,33 +255,32 @@ def on_chat_message(msg):
 	else:
 	    bot.sendMessage(chat_id,grantfehler)
 
+    #### GPIO handle ####
     elif msg['text'] in ["/gpio"]:
 	if id in grant:
-	    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-			   [
-				InlineKeyboardButton(text=_('btn_tx_on'), callback_data='/txon'),
-				InlineKeyboardButton(text=_('btn_tx_off'), callback_data='/txoff')
-			   ],
-			   [
-				InlineKeyboardButton(text=_('btn_rx_on'), callback_data='/rxon'),
-				InlineKeyboardButton(text=_('btn_rx_off'), callback_data='/rxoff')
-			   ]
-			])
-	    bot.sendMessage(chat_id,_('keyboard_gpio'), reply_markup=keyboard)
+	    keyboard = []
+	    buttons = []
+	    on = _("on")
+	    off = _("off")
+	    buttons = [[InlineKeyboardButton(text=gpo[1] + ' ' + on, callback_data=gpo[1] + "_on"),InlineKeyboardButton(text=gpo[1] + ' ' + off, callback_data=gpo[1] + "_off")] for gpo in gpioports]
+	    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
+	    del keyboard, buttons
 	else:
             bot.sendMessage(chat_id,grantfehler)
+
+    elif msg['text'] in ["/testgw"]:
+	testgwmc()
 
     elif msg['text'] in ["/status"]:
 	status = ''
 	# Eingänge lesen
-        if GPIO.input(13) == GPIO.HIGH:
-	    status += _("tx_is_off") + "\n"
-        else:
-            status += _("tx_is_on") + "\n"
-        if GPIO.input(15) == GPIO.HIGH:
-            status += _("rx_is_off")
-        else:
-            status += _("rx_is_on")
+        for gio in gpioports:
+           if GPIO.input(gio[0]) == GPIO.HIGH:
+	       status += gio[1].upper() + " " + _("is_on") + "\n"
+           else:
+	       status += gio[1].upper() + " " + _("is_off") + "\n"
+
 	# Laufende Prozesse testen
 	for proc in prozesse:
 	    status += "\n" + proc + " " + prozesschecker(proc)
@@ -304,6 +312,8 @@ def on_chat_message(msg):
 
     bot.sendMessage(chat_id, befehlsliste(id))
 
+###### Chat-Message-Handler Start ######
+
 bot = telepot.Bot(apikey)
 
 try:
@@ -316,8 +326,8 @@ except:
 
 try:
     while 1:
+	# testgwmc()
         time.sleep(10)
-
 except:
     print(_("bot_shutdown"))
     ownerinfo(_("bye_msg_owner"),owner)
