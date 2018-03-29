@@ -1,0 +1,194 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-03-24 21:39+CET\n"
+"PO-Revision-Date: 2018-03-26 22:12+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it_IT\n"
+
+#: telebot_dev.py:28
+msgid "granterror"
+msgstr "non ti è permesso farlo"
+
+#: telebot_dev.py:87
+msgid "not_seen_today"
+msgstr "non visto oggi"
+
+#: telebot_dev.py:116
+msgid "no_static_tg"
+msgstr "no statistiche dei tg"
+
+#: telebot_dev.py:126
+msgid "runs"
+msgstr "correre"
+
+#: telebot_dev.py:128
+msgid "runs_not"
+msgstr "non correre"
+
+#: telebot_dev.py:138 telebot_dev.py:271
+msgid "tx_is_on"
+msgstr "trasmissione accesa"
+
+#: telebot_dev.py:145 telebot_dev.py:269
+msgid "tx_is_off"
+msgstr "trasmissione spenta"
+
+#: telebot_dev.py:152 telebot_dev.py:275
+msgid "rx_is_on"
+msgstr "in ricezione"
+
+#: telebot_dev.py:159 telebot_dev.py:273
+msgid "rx_is_off"
+msgstr "non in ricezione"
+
+#: telebot_dev.py:166
+msgid "stop_mmdvm"
+msgstr "mmdvm non avviato"
+
+#: telebot_dev.py:173
+msgid "start_mmdvm"
+msgstr "mmdvm avviato"
+
+#: telebot_dev.py:180
+msgid "stop_dmrgw"
+msgstr "dmrgateway  non avviato"
+
+#: telebot_dev.py:187
+msgid "start_dmrgw"
+msgstr "mmdvm avviato"
+
+#: telebot_dev.py:205
+msgid "welcome"
+msgstr "benvenuto"
+
+#: telebot_dev.py:206
+msgid "toget_help_write_/help"
+msgstr "per ottenete aiuto scrivere/aiuto"
+
+#: telebot_dev.py:209
+msgid "help_help"
+msgstr "aiuto"
+
+#: telebot_dev.py:209
+msgid "info_commands"
+msgstr "informazione dei comandi"
+
+#: telebot_dev.py:209
+msgid "status_help"
+msgstr "aiuto sullo stato"
+
+#: telebot_dev.py:210
+msgid "lh_CALL_help"
+msgstr "lh  aiuto qrz"
+
+#: telebot_dev.py:210
+msgid "lh_help"
+msgstr "lh aiuto"
+
+#: telebot_dev.py:210
+msgid "tg_help"
+msgstr "tg aiuto"
+
+#: telebot_dev.py:212
+msgid "gpio_help"
+msgstr "gpio aiuto"
+
+#: telebot_dev.py:212
+msgid "svx_help"
+msgstr "svx aiuto"
+
+#: telebot_dev.py:212
+msgid "sw_help"
+msgstr "sw aiuto"
+
+#: telebot_dev.py:228
+msgid "not_yet_implemented"
+msgstr "non ancora implementato"
+
+#: telebot_dev.py:234
+msgid "btn_start_mmdvm"
+msgstr "btn avviato in  mmdvm"
+
+#: telebot_dev.py:235
+msgid "btn_stop_mmdvm"
+msgstr "btn non avviato in  mmdvm"
+
+#: telebot_dev.py:238
+msgid "btn_start_dmrgw"
+msgstr "btn avviato in dmrgateway"
+
+#: telebot_dev.py:239
+msgid "btn_stop_dmrgw"
+msgstr "btn  non avviato in dmrgateway"
+
+#: telebot_dev.py:242
+msgid "keyboard_software"
+msgstr "software per la tasiera"
+
+#: telebot_dev.py:250
+msgid "btn_tx_on"
+msgstr "btn trasmissione accesa"
+
+#: telebot_dev.py:251
+msgid "btn_tx_off"
+msgstr "btn trasmissione spenta"
+
+#: telebot_dev.py:254
+msgid "btn_rx_on"
+msgstr "btn  ricezione accesa"
+
+#: telebot_dev.py:255
+msgid "btn_rx_off"
+msgstr "btn riceziona spenta"
+
+#: telebot_dev.py:258
+msgid "btn_reboot"
+msgstr "btn  riavvio"
+
+#: telebot_dev.py:261
+msgid "keyboard_gpio"
+msgstr "tastiera gpio"
+
+#: telebot_dev.py:285
+msgid "cpu_temp"
+msgstr "temperatura della cpu"
+
+#: telebot_dev.py:298
+msgid "rebooting_system"
+msgstr "riavvio sistema"
+
+#: telebot_dev.py:303
+msgid "cmd_list_with /help."
+msgstr "lista cmd/aiuto"
+
+#: telebot_dev.py:303
+msgid "no_idea_command"
+msgstr "nessuna idea per questo commando"
+
+#: telebot_dev.py:310
+msgid "start_msg_owner"
+msgstr "avvia  un messaggio con il propietario"
+
+#: telebot_dev.py:315
+msgid "bot_is_wrong"
+msgstr "il bot é sbagliato"
+
+#: telebot_dev.py:322
+msgid "bot_shutdown"
+msgstr "arresto del bot"
+
+#: telebot_dev.py:323
+msgid "bye_msg_owner"
+msgstr "saluta il propietario con un messaggio"
