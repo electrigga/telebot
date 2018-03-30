@@ -174,7 +174,8 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,'SVX' + " " + _("is_on"))
 	elif query_data == "/lhecho":
             lhecho = subprocess.check_output('grep "EchoLink QSO state changed to CONNECTED" ' + svx_log + ' | tail -1 | cut -d: -f4', shell=True)
-            bot.answerCallbackQuery(query_id,_("last_in_echolink") + lhecho)
+            bot.answerCallbackQuery(query_id,_("last_in_echolink") + ":" + lhecho)
+	    bot.sendMessage(from_id,_("last_in_echolink") + ": " + lhecho)
 
 	for i in range(len(svxcommands)):
 	    if command[0] in svxcommands[i]:
@@ -188,9 +189,12 @@ def on_callback_query(msg):
 		    bot.answerCallbackQuery(query_id,svxcommands[i][1] + " " + _('svx_failure'))
 	for i in range(len(svxlh)):
 	    if query_data in svxlh[i]:
-		lh = subprocess.check_output('grep ' + svxlh[i][0] + ": Talker" +  svx_log + ' | tail -1 | cut -d: -f6', shell=True)
-		print(lh)
+		string = svxlh[i][0] + ": Talker"
+		print(string)
+		lh = subprocess.check_output('grep \"string\" ' + svx_log + '| tail -1 | cut -d: -f6', shell=True)
+		# print(lh)
 		bot.answerCallbackQuery(query_id, _("last_heard") + " " + _("im") + svxlh[i][0] + " " + lh)
+		bot.sendMessage(from_id, _("last_heard") + " " + _("im") + " " + svxlh[i][0] + " " + lh)
 
 ### Software Handler ####
     if query_data == "/killmmdvm":
