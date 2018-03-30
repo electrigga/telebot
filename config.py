@@ -10,13 +10,13 @@ grant = [123456789]
 owner = [123456789]
 
 # Call of repeater
-botcall = "BOTCALL"
+botcall = "DB0SBN"
 
 # Liste mit zu prüfenden Prozessen
 prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd"]
 
 # ID des Repeaters
-dmrid = "47110815"
+dmrid = "4711"
 
 # folder which contains mmdvm-logs
 mmdvmlogs = "/var/log/mmdvm"
@@ -43,8 +43,8 @@ userfile = "users.csv"
 
 # define pathes to 1-wire sensor data
 sensors = [
-  ["/sys/bus/w1/devices/28-24d329126461/w1_slave","TX Temp"],
-  ["/sys/bus/w1/devices/28-a78d29126461/w1_slave","NT Temp"]
+  ["/sys/bus/w1/devices/28-24d329126461/w1_slave","KA 1"],
+  ["/sys/bus/w1/devices/28-a78d29126461/w1_slave","KA 2"]
 ]
 
 # define gpio ports
@@ -54,3 +54,7 @@ gpioports = [
   [12,"RX",0],
   [13,"NS1",0],
 ]
+
+#### SVXLink Settings
+svxactive = 1
+svxlogic = "/home/pi/remote/svx_pty.RepeaterLogic"

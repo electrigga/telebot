@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import re, csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
+import subprocess, re, csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.loop import MessageLoop
 from pprint import pprint
@@ -15,7 +15,12 @@ trans.install()
 
 # Variablen aus der Config holen
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
-		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports)
+		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports,svxactive)
+
+# Include SVX-Logic
+if svxactive == 1:
+    from config import (svxlogic)
+    from svxlink import (svxcommands,rep_logic,SVXOff,SVXOn,svx_log,svxlh)
 
 # include own functions
 # from userfunction import (function1, function2.......)
@@ -56,12 +61,10 @@ def read_sensor(path):
 # Funktion zur Information des/der Botowner
 def ownerinfo(msg,owner):
     for x in owner:
-	try:
-            bot.sendMessage(x,msg)
-	except:
-	    print(_("owner_msg_fails"))
+	bot.sendMessage(x,msg)
+	#print(_("owner_msg_fails"))
 
-# Lastheardfunktion
+# Lastheardfunktion (DMR im log)
 def lastheard(suchstring):
     if suchstring == '':
 	suchstring = "received RF voice header"
@@ -142,9 +145,9 @@ def on_callback_query(msg):
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
     print('Callback Query:', query_id, from_id, query_data)
 
-### GPIO switcher ###
-
     command = query_data.split("_")
+
+### GPIO switcher ###
     for i in range(len(gpioports)):
         if command[0] in gpioports[i]:
             print(str(gpioports[i][0])+str(gpioports[i][1])+str(gpioports[i][2]))
@@ -161,6 +164,37 @@ def on_callback_query(msg):
                 GPIO.output(gpioports[i][0], GPIO.HIGH)
 		bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
 
+### SVX Handler ####
+    if svxactive == 1:
+	if query_data == "/killsvx":
+	    os.system(SVXOff)
+	    bot.answerCallbackQuery(query_id,'SVX' + " " + _("is_off"))
+	elif query_data == "/startsvx":
+	    os.system(SVXOn)
+            bot.answerCallbackQuery(query_id,'SVX' + " " + _("is_on"))
+	elif query_data == "/lhecho":
+            lhecho = subprocess.check_output('grep "EchoLink QSO state changed to CONNECTED" ' + svx_log + ' | tail -1 | cut -d: -f4', shell=True)
+            bot.answerCallbackQuery(query_id,_("last_in_echolink") + ":" + lhecho)
+	    bot.sendMessage(from_id,_("last_in_echolink") + ": " + lhecho)
+
+	for i in range(len(svxcommands)):
+	    if command[0] in svxcommands[i]:
+	    	#print("CMD"+svxcommands[i][0])
+	      	svxcmd = "echo " + svxcommands[i][1] + " > " + rep_logic
+		print(svxcmd)
+		try:
+		    os.system(svxcmd)
+		    bot.answerCallbackQuery(query_id,svxcommands[i][1] + " " + _('done'))
+		except:
+		    bot.answerCallbackQuery(query_id,svxcommands[i][1] + " " + _('svx_failure'))
+	for i in range(len(svxlh)):
+	    if query_data in svxlh[i]:
+		string = "grep" + " \"" + svxlh[i][0] + ": Talker" + "\" " + svx_log + '| tail -1 | cut -d: -f6'
+		lh = subprocess.check_output(string, shell=True)
+		bot.answerCallbackQuery(query_id, _("last_heard") + " " + _("im") + svxlh[i][0] + " " + lh)
+		bot.sendMessage(from_id, _("last_heard") + " " + _("im") + " " + svxlh[i][0] + " " + lh)
+
+### Software Handler ####
     if query_data == "/killmmdvm":
         if from_id in grant:
             prockiller("MMDVMHost")
@@ -229,9 +263,31 @@ def on_chat_message(msg):
 	    heard = lastheard(suche[1].upper())
 	    bot.sendMessage(chat_id,heard)
 
+    ### SVX Handle ###
     elif msg['text'] in ["/svx"]:
-	    bot.sendMessage(chat_id,_("not_yet_implemented"))
+	    if svxactive == 1:
+		svxkey = InlineKeyboardMarkup(inline_keyboard=[
+			   [
+				InlineKeyboardButton(text=_('btn_start_svxlink'), callback_data='/startsvx'),
+				InlineKeyboardButton(text=_('btn_stop_svxlink'), callback_data='/killsvx')
+			   ],
+			   [
+				InlineKeyboardButton(text=_('lh_echolink'), callback_data='/lhecho')
+			   ]
+			])
+		bot.sendMessage(chat_id,_('keyboard_svxlink'), reply_markup=svxkey)
+		# dynamic section for logics
+		btnlogic = [[InlineKeyboardButton(text=logic[0], callback_data=logic[0])] for logic in svxlh]
+		keyboard = InlineKeyboardMarkup(inline_keyboard=btnlogic)
+		bot.sendMessage(chat_id,_('keyboard_svxlink'), reply_markup=keyboard)
+		# dynamic section for DTMF-List
+		buttons = [[InlineKeyboardButton(text=cmd[0], callback_data=cmd[1])] for cmd in svxcommands]
+		keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+            	bot.sendMessage(chat_id,_('keyboard_svxlink'), reply_markup=keyboard)
+	    else:
+	        bot.sendMessage(chat_id,_("not_activ"))
 
+    ### SW Handle ###
     elif msg['text'] in ["/sw"]:
 	if id in grant:
 	    keyboard = InlineKeyboardMarkup(inline_keyboard=[
