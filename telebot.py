@@ -15,7 +15,7 @@ trans.install()
 
 # Variablen aus der Config holen
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
-		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports,svxactive)
+		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, svxactive)
 
 # Include SVX-Logic
 if svxactive == 1:
@@ -31,10 +31,11 @@ befehlsliste_syop = "/gpio /sw /svx"
 query_data = ''
 
 # GPIO Settings
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
-for gio in gpioports:
-    GPIO.setup(gio[0], GPIO.OUT)
+if gpioactive == 1:
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BOARD)
+    for gio in gpioports:
+    	GPIO.setup(gio[0], GPIO.OUT)
 
 # Loggingfunktion
 def botlog(logtext):
@@ -148,21 +149,22 @@ def on_callback_query(msg):
     command = query_data.split("_")
 
 ### GPIO switcher ###
-    for i in range(len(gpioports)):
-        if command[0] in gpioports[i]:
-            print(str(gpioports[i][0])+str(gpioports[i][1])+str(gpioports[i][2]))
-            if command[1] == "on" and gpioports[i][2] == 0:
-            	GPIO.output(gpioports[i][0], GPIO.HIGH)
-            	bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
-            elif command[1] == "on" and gpioports[i][2] == 1:
-                GPIO.output(gpioports[i][0], GPIO.LOW)
-		bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
-            elif command[1] == "off" and gpioports[i][2] == 0:
-                GPIO.output(gpioports[i][0], GPIO.LOW)
-		bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
-            elif command[1] == "off" and gpioports[i][2] == 1:
-                GPIO.output(gpioports[i][0], GPIO.HIGH)
-		bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
+    if gpioactive == 1:
+        for i in range(len(gpioports)):
+            if command[0] in gpioports[i]:
+                print(str(gpioports[i][0])+str(gpioports[i][1])+str(gpioports[i][2]))
+                if command[1] == "on" and gpioports[i][2] == 0:
+            	    GPIO.output(gpioports[i][0], GPIO.HIGH)
+            	    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
+                elif command[1] == "on" and gpioports[i][2] == 1:
+                    GPIO.output(gpioports[i][0], GPIO.LOW)
+		    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
+                elif command[1] == "off" and gpioports[i][2] == 0:
+                    GPIO.output(gpioports[i][0], GPIO.LOW)
+		    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
+                elif command[1] == "off" and gpioports[i][2] == 1:
+                    GPIO.output(gpioports[i][0], GPIO.HIGH)
+		    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
 
 ### SVX Handler ####
     if svxactive == 1:
@@ -313,17 +315,20 @@ def on_chat_message(msg):
 
     #### GPIO handle ####
     elif msg['text'] in ["/gpio"]:
-	if id in grant:
-	    keyboard = []
-	    buttons = []
-	    on = _("on")
-	    off = _("off")
-	    buttons = [[InlineKeyboardButton(text=gpo[1] + ' ' + on, callback_data=gpo[1] + "_on"),InlineKeyboardButton(text=gpo[1] + ' ' + off, callback_data=gpo[1] + "_off")] for gpo in gpioports]
-	    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
-	    del keyboard, buttons
+	if gpioactive == 1:
+	    if id in grant:
+	        keyboard = []
+	        buttons = []
+	        on = _("on")
+	        off = _("off")
+	        buttons = [[InlineKeyboardButton(text=gpo[1] + ' ' + on, callback_data=gpo[1] + "_on"),InlineKeyboardButton(text=gpo[1] + ' ' + off, callback_data=gpo[1] + "_off")] for gpo in gpioports]
+	        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
+	        bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
+	        del keyboard, buttons
+	    else:
+                bot.sendMessage(chat_id,grantfehler)
 	else:
-            bot.sendMessage(chat_id,grantfehler)
+	    	bot.sendMessage(chat_id,_("not_activ"))
 
     elif msg['text'] in ["/testgw"]:
 	testgwmc()
@@ -331,11 +336,12 @@ def on_chat_message(msg):
     elif msg['text'] in ["/status"]:
 	status = ''
 	# Eingänge lesen
-        for gio in gpioports:
-           if GPIO.input(gio[0]) == GPIO.HIGH:
-	       status += gio[1].upper() + " " + _("is_on") + "\n"
-           else:
-	       status += gio[1].upper() + " " + _("is_off") + "\n"
+	if gpioactive == 1:
+            for gio in gpioports:
+               if GPIO.input(gio[0]) == GPIO.HIGH:
+	           status += gio[1].upper() + " " + _("is_on") + "\n"
+               else:
+	           status += gio[1].upper() + " " + _("is_off") + "\n"
 
 	# Laufende Prozesse testen
 	for proc in prozesse:

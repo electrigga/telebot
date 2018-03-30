@@ -10,13 +10,13 @@ grant = [123456789]
 owner = [123456789]
 
 # Call of repeater
-botcall = "DB0SBN"
+botcall = "CALL"
 
 # Liste mit zu prüfenden Prozessen
 prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd"]
 
 # ID des Repeaters
-dmrid = "4711"
+dmrid = "2621"
 
 # folder which contains mmdvm-logs
 mmdvmlogs = "/var/log/mmdvm"
@@ -48,6 +48,7 @@ sensors = [
 ]
 
 # define gpio ports
+gpioactive = 1
 gpioports = [
   # [gpio number,"name",invers]
   [11,"TX",0],
@@ -56,5 +57,5 @@ gpioports = [
 ]
 
 #### SVXLink Settings
-svxactive = 1
+svxactive = 0
 svxlogic = "/home/pi/remote/svx_pty.RepeaterLogic"
