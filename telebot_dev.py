@@ -189,10 +189,8 @@ def on_callback_query(msg):
 		    bot.answerCallbackQuery(query_id,svxcommands[i][1] + " " + _('svx_failure'))
 	for i in range(len(svxlh)):
 	    if query_data in svxlh[i]:
-		string = svxlh[i][0] + ": Talker"
-		print(string)
-		lh = subprocess.check_output('grep \"string\" ' + svx_log + '| tail -1 | cut -d: -f6', shell=True)
-		# print(lh)
+		string = "grep" + " \"" + svxlh[i][0] + ": Talker" + "\" " + svx_log + '| tail -1 | cut -d: -f6'
+		lh = subprocess.check_output(string, shell=True)
 		bot.answerCallbackQuery(query_id, _("last_heard") + " " + _("im") + svxlh[i][0] + " " + lh)
 		bot.sendMessage(from_id, _("last_heard") + " " + _("im") + " " + svxlh[i][0] + " " + lh)
 
