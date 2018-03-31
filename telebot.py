@@ -105,7 +105,11 @@ def lastheard(suchstring):
     if not heard:
 	return _("not_seen_today")
     else:
-        return heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " " + heard[-1][14]
+	print(heard)
+	found = heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " "
+	if len(heard[-1]) > 14:
+	    found = found + heard[-1][14]
+        return heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " "
 
 # function to test master connection in gw
 def testgw():
