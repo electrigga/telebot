@@ -169,7 +169,6 @@ def on_callback_query(msg):
     print('Callback Query:', query_id, from_id, query_data)
 
     command = query_data.split("_")
-    print(chatnr)
 
 ### GPIO switcher ###
     if gpioactive == 1:
@@ -346,7 +345,7 @@ def on_chat_message(msg):
 	        off = _("off")
 	        buttons = [[InlineKeyboardButton(text=gpo[1] + ' ' + on, callback_data=gpo[1] + "_on"),InlineKeyboardButton(text=gpo[1] + ' ' + off, callback_data=gpo[1] + "_off")] for gpo in gpioports]
 	        keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-	        bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
+	        bot.sendMessage(chat_id,_('gpio'), reply_markup=keyboard)
 	        del keyboard, buttons
 	    else:
                 bot.sendMessage(chat_id,grantfehler)
