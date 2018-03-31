@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import subprocess, re, csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ForceReply
 from telepot.loop import MessageLoop
 from pprint import pprint
 
@@ -18,19 +19,38 @@ from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, s
 trans = gettext.translation("telebot", "locale", [language])
 trans.install()
 
-
 # Include SVX-Logic
 if svxactive == 1:
     from config import (svxlogic)
     from svxlink import (svxcommands,rep_logic,SVXOff,SVXOn,svx_log,svxlh)
 
-# include own functions
-# from userfunction import (function1, function2.......)
-
 grantfehler = _("granterror")
-befehlsliste_usr = "/lh /status /tg /help\n"
+befehlsliste_usr = ['/lh'],['/status'],['/tg'],['/help']
 befehlsliste_syop = "/gpio /sw /svx"
 query_data = ''
+chatcount = 0
+
+# Initial Keyboard
+def initialkb(chat_id,id):
+    if chatcount == 0:
+	if id in grant:
+	    #### Keyboard with init functions
+    	    markup = ReplyKeyboardMarkup(keyboard=[
+            	    ['/lh', '/status'],
+                    ['/tg', '/help'],
+		    ['/gpio', '/sw', '/svx']
+                 ])
+    	    bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
+    	else:
+	    #### Keyboard with init functions
+            markup = ReplyKeyboardMarkup(keyboard=[
+                    ['/lh', '/status'],
+                    ['/tg', '/help']
+                 ])
+            bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
+	# global chatcount
+	# chatcount = chatcount + 1
+	globals().update(chatcount=1)
 
 # GPIO Settings
 if gpioactive == 1:
@@ -149,6 +169,7 @@ def on_callback_query(msg):
     print('Callback Query:', query_id, from_id, query_data)
 
     command = query_data.split("_")
+    print(chatnr)
 
 ### GPIO switcher ###
     if gpioactive == 1:
@@ -242,7 +263,7 @@ def on_chat_message(msg):
     keyboard = ""
 
     # print(msg['text'])
-    # print(msg)
+    print(msg)
 
     if msg['text'] in ["/start","/start start", "start", "hallo", "Hallo", "Hi", "Start"]:
 	bot.sendMessage(chat_id, _("welcome") + " " + botcall + " " + vorname + "!" + \
@@ -374,15 +395,15 @@ def on_chat_message(msg):
     else:
 	bot.sendMessage(chat_id, _("no_idea_command") + msg['text'] + " "  + vorname + "!\n" + _("cmd_list_with /help."))
 
-    bot.sendMessage(chat_id, befehlsliste(id))
+    # bot.sendMessage(chat_id, befehlsliste(id))
+    initialkb(chat_id,id)
 
-###### Chat-Message-Handler Start ######
+###### Chat-Message-Handler End ######
 
 bot = telepot.Bot(apikey)
 
 try:
     ownerinfo(_("start_msg_owner"),owner)
-    # MessageLoop(bot,handle).run_as_thread()
     MessageLoop(bot, {'chat': on_chat_message,
                   'callback_query': on_callback_query}).run_as_thread()
 except:
