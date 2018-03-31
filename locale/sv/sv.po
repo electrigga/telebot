@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2018-03-28 19:50+UTC\n"
-"PO-Revision-Date: 2018-03-28 22:07+0200\n"
+"PO-Revision-Date: 2018-03-31 19:37+0200\n"
 "Last-Translator: Jens Bremeier\n"
 "Language-Team: \n"
 "Language: sv_SE\n"
@@ -20,12 +20,12 @@ msgstr ""
 #: callback.py:15 callback.py:24 message.py:84 telebot.py:153 telebot.py:162
 #: telebot.py:280
 msgid "is_on"
-msgstr ""
+msgstr "aktiv"
 
 #: callback.py:18 callback.py:21 message.py:86 telebot.py:156 telebot.py:159
 #: telebot.py:282
 msgid "is_off"
-msgstr ""
+msgstr "deaktiv"
 
 #: callback.py:29 telebot.py:167
 msgid "stop_mmdvm"
@@ -93,31 +93,31 @@ msgstr "Ännu inte genomförd"
 
 #: message.py:44 telebot.py:239
 msgid "btn_start_mmdvm"
-msgstr "MMDVM startat "
+msgstr "Start MMDVM"
 
 #: message.py:45 telebot.py:240
 msgid "btn_stop_mmdvm"
-msgstr "MMDVM avstängt"
+msgstr "Avstäng MMDVM"
 
 #: message.py:48 telebot.py:243
 msgid "btn_start_dmrgw"
-msgstr "DMRGateway startat"
+msgstr "Start DMRGateway"
 
 #: message.py:49 telebot.py:244
 msgid "btn_stop_dmrgw"
-msgstr "DMRGateway avstängt"
+msgstr "Avstäng DMRGateway"
 
 #: message.py:52 telebot.py:247
 msgid "btn_start_ysfgw"
-msgstr ""
+msgstr "Start YSFGateway"
 
 #: message.py:53 telebot.py:248
 msgid "btn_stop_ysfgw"
-msgstr ""
+msgstr "Avstäng YSFGateway"
 
 #: message.py:56 telebot.py:251
 msgid "btn_reboot"
-msgstr "Starta om "
+msgstr "Starta om systemet"
 
 #: message.py:59 message.py:71 telebot.py:254 telebot.py:267
 msgid "keyboard_software"
@@ -125,15 +125,15 @@ msgstr "Funktioner för styrning av programvaran och datorn"
 
 #: message.py:67 telebot.py:263
 msgid "on"
-msgstr ""
+msgstr "På"
 
 #: message.py:68 telebot.py:264
 msgid "off"
-msgstr ""
+msgstr "Av"
 
 #: message.py:97 telebot.py:293
 msgid "cpu_temp"
-msgstr "Processor temperatur"
+msgstr "CPU temperatur"
 
 #: message.py:110 telebot.py:306
 msgid "rebooting_system"
@@ -153,7 +153,7 @@ msgstr "Det kan du inne göra"
 
 #: telebot.py:62
 msgid "owner_msg_fails"
-msgstr ""
+msgstr "Meddelandet kom inte fram"
 
 #: telebot.py:80
 msgid "not_seen_today"
@@ -161,7 +161,7 @@ msgstr "Inte sett i dag"
 
 #: telebot.py:97
 msgid "gw_error"
-msgstr ""
+msgstr "Gateway error"
 
 #: telebot.py:124
 msgid "no_static_tg"
@@ -169,11 +169,11 @@ msgstr "Ingen permanenta talgrupper "
 
 #: telebot.py:134
 msgid "runs"
-msgstr "kör…"
+msgstr "aktiv…"
 
 #: telebot.py:136
 msgid "runs_not"
-msgstr "kör inte…"
+msgstr "deaktiv…"
 
 #: telebot.py:320
 msgid "start_msg_owner"

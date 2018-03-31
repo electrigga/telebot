@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-03-28 19:50+UTC\n"
-"PO-Revision-Date: 2018-03-28 21:53+0200\n"
+"POT-Creation-Date: 2018-03-31 21:00+UTC\n"
+"PO-Revision-Date: 2018-03-31 23:02+0200\n"
 "Last-Translator: Jens Bremeier\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -17,179 +17,271 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: callback.py:15 callback.py:24 message.py:84 telebot.py:153 telebot.py:162
-#: telebot.py:280
-msgid "is_on"
-msgstr "ist an."
-
-#: callback.py:18 callback.py:21 message.py:86 telebot.py:156 telebot.py:159
-#: telebot.py:282
-msgid "is_off"
-msgstr "ist aus."
-
-#: callback.py:29 telebot.py:167
-msgid "stop_mmdvm"
-msgstr "Beende MMDVMHost…."
-
-#: callback.py:36 telebot.py:174
-msgid "start_mmdvm"
-msgstr "Starte MMDVMHost…."
-
-#: callback.py:43 telebot.py:181
-msgid "stop_dmrgw"
-msgstr "Beende das DMRGateway…."
-
-#: callback.py:50 telebot.py:188
-msgid "start_dmrgw"
-msgstr "Starte das DMRGateway…."
-
-#: message.py:15 telebot.py:210
-msgid "welcome"
-msgstr "Herzlich willkommen bei"
-
-#: message.py:16 telebot.py:211
-msgid "toget_help_write_/help"
-msgstr "Um Hilfe zu erhalten, gib /help ein."
-
-#: message.py:19 telebot.py:214
-msgid "help_help"
-msgstr "Eine Liste der Kommandos und Funktionen."
-
-#: message.py:19 telebot.py:214
-msgid "info_commands"
-msgstr "Informationen und Kommandos."
-
-#: message.py:19 telebot.py:214
-msgid "status_help"
-msgstr "Gibt den Status des Repeaters aus."
-
-#: message.py:20 telebot.py:215
-msgid "lh_CALL_help"
-msgstr "Gibt aus, wann CALL heute das letzte mal gehört wurde."
-
-#: message.py:20 telebot.py:215
-msgid "lh_help"
-msgstr "Wer wurde heute als letztes lokal gehört."
-
-#: message.py:20 telebot.py:215
-msgid "tg_help"
-msgstr "Listet die statisch geschalteten TG auf."
-
-#: message.py:22 telebot.py:217
-msgid "gpio_help"
-msgstr "Funktionen zur Steuerung der GPIO"
-
-#: message.py:22 telebot.py:217
-msgid "svx_help"
-msgstr "Funktionen zur Steuerung von SVX-Link"
-
-#: message.py:22 telebot.py:217
-msgid "sw_help"
-msgstr "Funktionen zur Steuerung der Software"
-
-#: message.py:38 telebot.py:233
-msgid "not_yet_implemented"
-msgstr "Noch nicht implementiert."
-
-#: message.py:44 telebot.py:239
-msgid "btn_start_mmdvm"
-msgstr "MMDVM an"
-
-#: message.py:45 telebot.py:240
-msgid "btn_stop_mmdvm"
-msgstr "MMDVM aus"
-
-#: message.py:48 telebot.py:243
-msgid "btn_start_dmrgw"
-msgstr "DMRGw an"
-
-#: message.py:49 telebot.py:244
-msgid "btn_stop_dmrgw"
-msgstr "DMRGw aus"
-
-#: message.py:52 telebot.py:247
-msgid "btn_start_ysfgw"
-msgstr "YSFGw an"
-
-#: message.py:53 telebot.py:248
-msgid "btn_stop_ysfgw"
-msgstr "YSFGw aus"
-
-#: message.py:56 telebot.py:251
-msgid "btn_reboot"
-msgstr "Reboot"
-
-#: message.py:59 message.py:71 telebot.py:254 telebot.py:267
-msgid "keyboard_software"
-msgstr "Funktionen zur Steuerung der Software und des Rechners"
-
-#: message.py:67 telebot.py:263
-msgid "on"
-msgstr "an"
-
-#: message.py:68 telebot.py:264
-msgid "off"
-msgstr "aus"
-
-#: message.py:97 telebot.py:293
-msgid "cpu_temp"
-msgstr "CPU-Temperatur"
-
-#: message.py:110 telebot.py:306
-msgid "rebooting_system"
-msgstr "Starte das System neu"
-
-#: message.py:115 telebot.py:311
-msgid "cmd_list_with /help."
-msgstr "Eine Liste der Kommandos bekommst du mit /help"
-
-#: message.py:115 telebot.py:311
-msgid "no_idea_command"
-msgstr "Ich weiß nicht, was du damit meinst: "
-
-#: telebot.py:23
+#: telebot.py:27
 msgid "granterror"
 msgstr "Das darfst du nicht!"
 
-#: telebot.py:62
-msgid "owner_msg_fails"
-msgstr "Benachrichtigung Owner schlug fehl."
+#: telebot.py:43 telebot.py:50
+msgid "basic_commands"
+msgstr "Grundlegende Kommandos"
 
-#: telebot.py:80
+#: telebot.py:115
 msgid "not_seen_today"
 msgstr "Heute noch nicht aufgetaucht….."
 
-#: telebot.py:97
+#: telebot.py:136
 msgid "gw_error"
 msgstr "GW funktioniert nicht richtig"
 
-#: telebot.py:124
+#: telebot.py:163 telebot.py:252 telebot.py:253
+msgid "im"
+msgstr "im"
+
+#: telebot.py:164
+msgid "every"
+msgstr "jeden"
+
+#: telebot.py:166
+msgid "monday"
+msgstr "Montag"
+
+#: telebot.py:168
+msgid "tuesday"
+msgstr "Dienstag"
+
+#: telebot.py:170
+msgid "wednesday"
+msgstr "Mittwoch"
+
+#: telebot.py:172
+msgid "thursday"
+msgstr "Donnerstag"
+
+#: telebot.py:174
+msgid "friday"
+msgstr "Freitag"
+
+#: telebot.py:176
+msgid "saturday"
+msgstr "Sonnabend"
+
+#: telebot.py:178
+msgid "sunday"
+msgstr "Sonntag"
+
+#: telebot.py:179
+msgid "subscribtion_starttime"
+msgstr "von"
+
+#: telebot.py:180
+msgid "subscribtion_stoptime"
+msgstr "bis"
+
+#: telebot.py:181
+msgid "subscribtion_startdate"
+msgstr "vom"
+
+#: telebot.py:182
+msgid "subscribtion_enddate"
+msgstr "bis"
+
+#: telebot.py:186
 msgid "no_static_tg"
 msgstr "Keine statischen Talkgroups."
 
-#: telebot.py:134
+#: telebot.py:194
 msgid "runs"
 msgstr "läuft…"
 
-#: telebot.py:136
+#: telebot.py:196
 msgid "runs_not"
 msgstr "läuft nicht…"
 
-#: telebot.py:320
+#: telebot.py:214 telebot.py:223 telebot.py:232 telebot.py:398
+msgid "is_on"
+msgstr "ist an."
+
+#: telebot.py:217 telebot.py:220 telebot.py:229 telebot.py:400
+msgid "is_off"
+msgstr "ist aus."
+
+#: telebot.py:235 telebot.py:236
+msgid "last_in_echolink"
+msgstr "Zuletzt gehört in Echolink"
+
+#: telebot.py:245
+msgid "done"
+msgstr "Fertig"
+
+#: telebot.py:247
+msgid "svx_failure"
+msgstr "SVX Fehler"
+
+#: telebot.py:252 telebot.py:253
+msgid "last_heard"
+msgstr "Zuletzt gehört"
+
+#: telebot.py:259
+msgid "stop_mmdvm"
+msgstr "Beende MMDVMHost…."
+
+#: telebot.py:266
+msgid "start_mmdvm"
+msgstr "Starte MMDVMHost…."
+
+#: telebot.py:273
+msgid "stop_dmrgw"
+msgstr "Beende das DMRGateway…."
+
+#: telebot.py:280
+msgid "start_dmrgw"
+msgstr "Starte das DMRGateway…."
+
+#: telebot.py:302
+msgid "welcome"
+msgstr "Herzlich willkommen bei"
+
+#: telebot.py:303
+msgid "toget_help_write_/help"
+msgstr "Um Hilfe zu erhalten, gib /help ein."
+
+#: telebot.py:306
+msgid "help_help"
+msgstr "Eine Liste der Kommandos und Funktionen."
+
+#: telebot.py:306
+msgid "info_commands"
+msgstr "Informationen und Kommandos."
+
+#: telebot.py:306
+msgid "status_help"
+msgstr "Gibt den Status des Repeaters aus."
+
+#: telebot.py:307
+msgid "lh_CALL_help"
+msgstr "Gibt aus, wann CALL heute das letzte mal gehört wurde."
+
+#: telebot.py:307
+msgid "lh_help"
+msgstr "Wer wurde heute als letztes lokal gehört."
+
+#: telebot.py:307
+msgid "tg_help"
+msgstr "Listet die statisch geschalteten TG auf."
+
+#: telebot.py:309
+msgid "gpio_help"
+msgstr "Funktionen zur Steuerung der GPIO"
+
+#: telebot.py:309
+msgid "svx_help"
+msgstr "Funktionen zur Steuerung von SVX-Link"
+
+#: telebot.py:309
+msgid "sw_help"
+msgstr "Funktionen zur Steuerung der Software"
+
+#: telebot.py:329
+msgid "btn_start_svxlink"
+msgstr "SVX Link starten"
+
+#: telebot.py:330
+msgid "btn_stop_svxlink"
+msgstr "SVX Link stoppen"
+
+#: telebot.py:333
+msgid "lh_echolink"
+msgstr "Zuletzt gehört Echolink"
+
+#: telebot.py:336 telebot.py:340 telebot.py:344
+msgid "keyboard_svxlink"
+msgstr "SVXLink Sysop"
+
+#: telebot.py:346 telebot.py:387
+msgid "not_activ"
+msgstr "Nicht aktiv"
+
+#: telebot.py:353
+msgid "btn_start_mmdvm"
+msgstr "MMDVM an"
+
+#: telebot.py:354
+msgid "btn_stop_mmdvm"
+msgstr "MMDVM aus"
+
+#: telebot.py:357
+msgid "btn_start_dmrgw"
+msgstr "DMRGw an"
+
+#: telebot.py:358
+msgid "btn_stop_dmrgw"
+msgstr "DMRGw aus"
+
+#: telebot.py:361
+msgid "btn_start_ysfgw"
+msgstr "YSFGw an"
+
+#: telebot.py:362
+msgid "btn_stop_ysfgw"
+msgstr "YSFGw aus"
+
+#: telebot.py:365
+msgid "btn_reboot"
+msgstr "Reboot"
+
+#: telebot.py:368
+msgid "keyboard_software"
+msgstr "Funktionen zur Steuerung der Software und des Rechners"
+
+#: telebot.py:378
+msgid "on"
+msgstr "an"
+
+#: telebot.py:379
+msgid "off"
+msgstr "aus"
+
+#: telebot.py:382
+msgid "gpio"
+msgstr "Funktionen zur Steuerung der GPIO"
+
+#: telebot.py:411
+msgid "cpu_temp"
+msgstr "CPU-Temperatur"
+
+#: telebot.py:424
+msgid "rebooting_system"
+msgstr "Starte das System neu"
+
+#: telebot.py:429
+msgid "cmd_list_with /help."
+msgstr "Eine Liste der Kommandos bekommst du mit /help"
+
+#: telebot.py:429
+msgid "no_idea_command"
+msgstr "Ich weiß nicht, was du damit meinst: "
+
+#: telebot.py:439
 msgid "start_msg_owner"
 msgstr "Ich bin wieder da…."
 
-#: telebot.py:325
+#: telebot.py:443
 msgid "bot_is_wrong"
 msgstr "Irgendwas stimmt mit dem Bot nicht."
 
-#: telebot.py:332
+#: telebot.py:450
 msgid "bot_shutdown"
 msgstr "Tschüss…."
 
-#: telebot.py:333
+#: telebot.py:451
 msgid "bye_msg_owner"
 msgstr "Ich bin dann mal weg…."
+
+#~ msgid "not_yet_implemented"
+#~ msgstr "Noch nicht implementiert."
+
+#~ msgid "owner_msg_fails"
+#~ msgstr "Benachrichtigung Owner schlug fehl."
 
 #~ msgid "rx_is_on"
 #~ msgstr "Empfänger ist an."
@@ -208,9 +300,6 @@ msgstr "Ich bin dann mal weg…."
 
 #~ msgid "btn_rx_off"
 #~ msgstr "RX aus"
-
-#~ msgid "keyboard_gpio"
-#~ msgstr "Funktionen zur Steuerung der Relaisplatine"
 
 #~ msgid "killdmrgw_help"
 #~ msgstr "Beendet das DMRGateway"

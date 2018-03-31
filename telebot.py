@@ -81,6 +81,15 @@ def read_sensor(path):
     print time.strftime("%x %X"), "Error reading", path, ": ", e
   return path[1] + ": " + value
 
+
+# Timemanipulation
+def formdate(datum):
+    dat = datetime.datetime.fromtimestamp(datum).strftime('%d.%m.%Y')
+    return dat
+def formtime(zeit):
+    tim = datetime.datetime.fromtimestamp(zeit).strftime('%H:%M')
+    return tim
+
 # Funktion zur Information des/der Botowner
 def ownerinfo(msg,owner):
     for x in owner:
@@ -109,7 +118,7 @@ def lastheard(suchstring):
 	found = heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " "
 	if len(heard[-1]) > 14:
 	    found = found + heard[-1][14]
-        return heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " "
+        return found
 
 # function to test master connection in gw
 def testgw():
@@ -140,20 +149,41 @@ def befehlsliste(id):
 # Funktion zum Abruf der Abbonierten TG
 def talkgroups():
     r = requests.get("http://api.brandmeister.network/v1.0/repeater/?action=profile&q=" + dmrid)
-    try:
-        data = r.json()
-        pprint(data)
-        tgs = 'Talkgroups:'
-        for tg in data['staticSubscriptions']:
-            tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot'])
-        for tg in data['clusters']:
-            tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot']) + " (" + str(tg['extTalkgroup']) + ")"
-        for tg in data['timedSubscriptions']:
-	    tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot'])
-        if tgs == 'Talkgroups:':
-            tgs = _("no_static_tg")
-    except:
-        print_(("read_tg_fails"))
+    data = r.json()
+    pprint(data)
+    tgs = 'Talkgroups:'
+    for tg in data['staticSubscriptions']:
+        tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot'])
+    for tg in data['clusters']:
+        tgs += "\n" + str(tg['talkgroup']) + " im TS" + str(tg['slot']) + " (" + str(tg['extTalkgroup']) + ")"
+    lang = (len(data['timedSubscriptions']))
+    i = 0
+    while i < lang:
+	tgs += "\n"
+    	tgs += str(data['timedSubscriptions'][i]['talkgroup']) + " " + _("im") + " TS" + \
+               str(data['timedSubscriptions'][i]['slot']) + " " + _("every") + " "
+    	if data['timedSubscriptions'][i]['data']['monday'] == 1:
+            tgs += _("monday") + " "
+    	elif data['timedSubscriptions'][i]['data']['tuesday'] == 1:
+            tgs += _("tuesday") + " "
+    	elif data['timedSubscriptions'][i]['data']['wednesday'] == 1:
+            tgs += _("wednesday") + " "
+    	elif data['timedSubscriptions'][i]['data']['thursday'] == 1:
+            tgs += _("thursday") + " "
+    	elif data['timedSubscriptions'][i]['data']['friday'] == 1:
+            tgs += _("friday") + " "
+    	elif data['timedSubscriptions'][i]['data']['saturday'] == 1:
+            tgs += _("saturday") + " "
+    	elif data['timedSubscriptions'][i]['data']['sunday'] == 1:
+            tgs += _("sunday") + " "
+        tgs += _("subscribtion_starttime") + " " + str(formtime(data['timedSubscriptions'][i]['data']['start'])) + " UTC "
+        tgs += _("subscribtion_stoptime") + " " + str(formtime(data['timedSubscriptions'][i]['data']['stop'])) + " UTC "
+    	tgs += _("subscribtion_startdate") + " " + formdate(data['timedSubscriptions'][i]['data']['startDate'])
+    	tgs += " " + _("subscribtion_enddate") + " " + formdate(data['timedSubscriptions'][i]['data']['endDate'])
+    	i = i+1
+
+    if tgs == 'Talkgroups:':
+        tgs = _("no_static_tg")
     r.close()
     return tgs
 

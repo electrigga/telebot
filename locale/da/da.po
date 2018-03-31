@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2018-03-28 19:50+UTC\n"
-"PO-Revision-Date: 2018-03-28 22:04+0200\n"
+"PO-Revision-Date: 2018-03-31 19:37+0200\n"
 "Last-Translator: Jens Bremeier\n"
 "Language-Team: \n"
 "Language: da_DK\n"
@@ -20,12 +20,12 @@ msgstr ""
 #: callback.py:15 callback.py:24 message.py:84 telebot.py:153 telebot.py:162
 #: telebot.py:280
 msgid "is_on"
-msgstr ""
+msgstr "aktiv"
 
 #: callback.py:18 callback.py:21 message.py:86 telebot.py:156 telebot.py:159
 #: telebot.py:282
 msgid "is_off"
-msgstr ""
+msgstr "deaktiv"
 
 #: callback.py:29 telebot.py:167
 msgid "stop_mmdvm"
@@ -33,15 +33,15 @@ msgstr "Stopper MMDVMHost"
 
 #: callback.py:36 telebot.py:174
 msgid "start_mmdvm"
-msgstr ""
+msgstr "Start af MMDVM"
 
 #: callback.py:43 telebot.py:181
 msgid "stop_dmrgw"
-msgstr ""
+msgstr "Stopper DMRGateway"
 
 #: callback.py:50 telebot.py:188
 msgid "start_dmrgw"
-msgstr "Starter MMDVMHost"
+msgstr "Start af MMDVMHost"
 
 #: message.py:15 telebot.py:210
 msgid "welcome"
@@ -109,11 +109,11 @@ msgstr "DMRGateway ikke aktiv"
 
 #: message.py:52 telebot.py:247
 msgid "btn_start_ysfgw"
-msgstr ""
+msgstr "Start af YSFGateway"
 
 #: message.py:53 telebot.py:248
 msgid "btn_stop_ysfgw"
-msgstr ""
+msgstr "Stopper YSFGateway"
 
 #: message.py:56 telebot.py:251
 msgid "btn_reboot"
@@ -125,11 +125,11 @@ msgstr "Funktioner til styring af softwaren og computeren"
 
 #: message.py:67 telebot.py:263
 msgid "on"
-msgstr ""
+msgstr "aktiv"
 
 #: message.py:68 telebot.py:264
 msgid "off"
-msgstr ""
+msgstr "deaktiv"
 
 #: message.py:97 telebot.py:293
 msgid "cpu_temp"
@@ -153,7 +153,7 @@ msgstr "Det har du ikke lov til"
 
 #: telebot.py:62
 msgid "owner_msg_fails"
-msgstr ""
+msgstr "Meddelelsen kom ikke frem"
 
 #: telebot.py:80
 msgid "not_seen_today"
@@ -161,7 +161,7 @@ msgstr "Har jeg ikke set i dag"
 
 #: telebot.py:97
 msgid "gw_error"
-msgstr ""
+msgstr "Gateway error"
 
 #: telebot.py:124
 msgid "no_static_tg"
