@@ -10,12 +10,14 @@ sys.setdefaultencoding('utf8')
 
 import gettext
 
-trans = gettext.translation("telebot", "locale", ["de"])
-trans.install()
-
 # Variablen aus der Config holen
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
-		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, svxactive)
+		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
+		    svxactive, language)
+
+trans = gettext.translation("telebot", "locale", [language])
+trans.install()
+
 
 # Include SVX-Logic
 if svxactive == 1:

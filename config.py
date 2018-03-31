@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+# prefered language
+# translations available
+# de = deutsch, en = english, sv = svenska, da = dansk, sl = Slovenski
+language = "en"
+
 # api_key you got from @botfather for your bot
 apikey = ""
 
