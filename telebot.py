@@ -208,19 +208,19 @@ def on_callback_query(msg):
     if gpioactive == 1:
         for i in range(len(gpioports)):
             if command[0] in gpioports[i]:
-                print(str(gpioports[i][0])+str(gpioports[i][1])+str(gpioports[i][2]))
+                print(str(gpioports[i][0])+" "+str(gpioports[i][1])+" "+str(gpioports[i][2]))
                 if command[1] == "on" and gpioports[i][2] == 0:
             	    GPIO.output(gpioports[i][0], GPIO.HIGH)
             	    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
                 elif command[1] == "on" and gpioports[i][2] == 1:
                     GPIO.output(gpioports[i][0], GPIO.LOW)
-		    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
+		    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
                 elif command[1] == "off" and gpioports[i][2] == 0:
                     GPIO.output(gpioports[i][0], GPIO.LOW)
 		    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
                 elif command[1] == "off" and gpioports[i][2] == 1:
                     GPIO.output(gpioports[i][0], GPIO.HIGH)
-		    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_on"))
+		    bot.answerCallbackQuery(query_id,gpioports[i][1] + " " + _("is_off"))
 
 ### SVX Handler ####
     if svxactive == 1:
@@ -393,11 +393,20 @@ def on_chat_message(msg):
 	status = ''
 	# Eingänge lesen
 	if gpioactive == 1:
+	    i = 0
             for gio in gpioports:
-               if GPIO.input(gio[0]) == GPIO.HIGH:
-	           status += gio[1].upper() + " " + _("is_on") + "\n"
-               else:
-	           status += gio[1].upper() + " " + _("is_off") + "\n"
+	  	if gpioports[i][2] == 0:
+               	    if GPIO.input(gio[0]) == GPIO.HIGH:
+	               status += gio[1].upper() + " " + _("is_on") + "\n"
+               	    else:
+	           	status += gio[1].upper() + " " + _("is_off") + "\n"
+		    i = i + 1
+		elif gpioports[i][2] == 1:
+                    if GPIO.input(gio[0]) == GPIO.HIGH:
+                       status += gio[1].upper() + " " + _("is_off") + "\n"
+                    else:
+                        status += gio[1].upper() + " " + _("is_on") + "\n"
+                    i = i + 1
 
 	# Laufende Prozesse testen
 	for proc in prozesse:
