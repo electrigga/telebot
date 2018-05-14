@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2018-05-14 19:41+UTC\n"
-"PO-Revision-Date: 2018-05-14 21:45+0200\n"
+"PO-Revision-Date: 2018-05-14 21:52+0200\n"
 "Last-Translator: Jens Bremeier\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -191,11 +191,11 @@ msgstr "Entferne dyn TG TS1"
 
 #: telebot.py:366
 msgid "dropCallS2"
-msgstr "Stoppe Ruf auf TS1"
+msgstr "Stoppe Ruf auf TS2"
 
 #: telebot.py:367
 msgid "dropDynamicS2"
-msgstr "Entferne dyn TG TS1"
+msgstr "Entferne dyn TG TS2"
 
 #: telebot.py:370
 msgid "dropRepeater"
