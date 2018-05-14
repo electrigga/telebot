@@ -5,16 +5,17 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ForceReply
 from telepot.loop import MessageLoop
 from pprint import pprint
+from requests.auth import HTTPBasicAuth
 
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 import gettext
 
-# Variablen aus der Config holen
+# Import Config
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
-		    svxactive, language)
+		    svxactive, language, bmapi, bmapiactive)
 
 trans = gettext.translation("telebot", "locale", [language])
 trans.install()
@@ -25,8 +26,6 @@ if svxactive == 1:
     from svxlink import (svxcommands,rep_logic,SVXOff,SVXOn,svx_log,svxlh)
 
 grantfehler = _("granterror")
-befehlsliste_usr = ['/lh'],['/status'],['/tg'],['/help']
-befehlsliste_syop = "/gpio /sw /svx"
 query_data = ''
 chatcount = 0
 
@@ -37,7 +36,7 @@ def initialkb(chat_id,id):
 	    #### Keyboard with init functions
     	    markup = ReplyKeyboardMarkup(keyboard=[
             	    ['/lh', '/status'],
-                    ['/tg', '/help'],
+                    ['/tg', '/bm', '/help'],
 		    ['/gpio', '/sw', '/svx']
                  ])
     	    bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
@@ -81,6 +80,13 @@ def read_sensor(path):
     print time.strftime("%x %X"), "Error reading", path, ": ", e
   return path[1] + ": " + value
 
+# BM API-easy function
+def bmsimple(query_id,apistrg):
+    req = requests.post(apistrg, auth=HTTPBasicAuth(bmapi,''))
+    req.encoding = 'utf-8'
+    apiresult = json.loads(req.text)
+    print(apiresult["message"])
+    bot.answerCallbackQuery(query_id,req.text)
 
 # Timemanipulation
 def formdate(datum):
@@ -204,6 +210,33 @@ def on_callback_query(msg):
 
     command = query_data.split("_")
 
+### Brandmeister API Handler ###
+    if bmapiactive == 1:
+    	apiurl = "https://api.brandmeister.network/"
+    	if query_data == "/dropCallS1":
+	    action = apiurl + "v1.0/repeater/setRepeaterDbus.php?action=dropCallRoute&slot=1&q="
+	    apistrg = action + dmrid
+	    bmsimple(query_id,apistrg)
+        elif query_data == "/dropCallS2":
+            action = apiurl + "v1.0/repeater/setRepeaterDbus.php?action=dropCallRoute&slot=2&q="
+            apistrg = action + dmrid
+            bmsimple(query_id,apistrg)
+        elif query_data == "/dropDynamicS1":
+            action = apiurl + "v1.0/repeater/setRepeaterTarantool.php?action=dropDynamicGroups&slot=1&q="
+            apistrg = action + dmrid
+            bmsimple(query_id,apistrg)
+	elif query_data == "dropDynamicS2":
+            action = apiurl + "v1.0/repeater/setRepeaterTarantool.php?action=dropDynamicGroups&slot=2&q="
+            apistrg = action + dmrid
+            bmsimple(query_id,apistrg)
+        elif query_data == "/dropRepeater":
+            action = apiurl + "v1.0/repeater/setRepeaterDbus.php?action=removeContext&q="
+            apistrg = action + dmrid
+            bmsimple(query_id,apistrg)
+
+        # req = requests.post(apistrg, auth=HTTPBasicAuth(bmapi,''), data = {'talkgroup':262,'timeslot':0})
+        # req.encoding = 'utf-8'
+
 ### GPIO switcher ###
     if gpioactive == 1:
         for i in range(len(gpioports)):
@@ -320,6 +353,25 @@ def on_chat_message(msg):
 	    suche = msg['text'].split(" ")
 	    heard = lastheard(suche[1].upper())
 	    bot.sendMessage(chat_id,heard)
+
+    ### BM Handle ###
+    elif "/bm" in msg['text']:
+	if id in grant:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+		        [
+                               InlineKeyboardButton(text=_('dropCallS1'), callback_data='/dropCallS1'),
+                               InlineKeyboardButton(text=_('dropDynamicS1'), callback_data='/dropDynamicS1')
+                        ],
+                        [
+                               InlineKeyboardButton(text=_('dropCallS2'), callback_data='/dropCallS2'),
+                               InlineKeyboardButton(text=_('dropDynamicS2'), callback_data='/dropDynamicS2')
+                        ],
+			[
+			       InlineKeyboardButton(text=_('dropRepeater'), callback_data='/dropRepeater')
+			]
+                    ])
+
+	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
 
     ### SVX Handle ###
     elif msg['text'] in ["/svx"]:

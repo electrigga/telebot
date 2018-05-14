@@ -3,25 +3,29 @@
 # prefered language
 # translations available
 # de = deutsch, en = english, sv = svenska, da = dansk, sl = Slovenski
-language = "en"
+language = "de"
 
 # api_key you got from @botfather for your bot
 apikey = ""
 
+# brandmeister api
+bmapiactive = 1
+bmapi = ""
+
 # ACL for controll the repeater (your own ID should in here) (ID is NOT @username)
-grant = [123456789]
+grant = []
 
 # ID des Botowner / der Botowner (die bekommen Nachrichten über Statusänderungen)
-owner = [123456789]
+owner = []
 
 # Call of repeater
-botcall = "CALL"
+botcall = ""
 
-# Liste mit zu prüfenden Prozessen
+# Liste of processes
 prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd"]
 
 # ID des Repeaters
-dmrid = "2621"
+dmrid = ""
 
 # folder which contains mmdvm-logs
 mmdvmlogs = "/var/log/mmdvm"
@@ -32,9 +36,9 @@ gwlogs = "/var/log/mmdvm"
 gwprefix = "DMRGateway"
 
 # how to start mmdvm
-mmdvmaufruf = "/usr/bin/screen /home/pi/MMDVMHost/MMDVMHost /home/pi/MMDVMHost/MMDVM-DB0SBN.ini"
+mmdvmaufruf = "/usr/bin/screen -d -m -S MMDVM /home/pi/MMDVMHost/MMDVMHost /home/pi/MMDVMHost/MMDVM-DB0SBN.ini"
 # how to start dmrgw should it be active?
-dmrgwaufruf = "/usr/bin/screen /home/pi/DMRGateway/DMRGateway /home/pi/DMRGateway/DMRGateway.ini"
+dmrgwaufruf = "/usr/bin/screen -d -m -S DMRGW /home/pi/DMRGateway/DMRGateway /home/pi/DMRGateway/DMRGateway.ini"
 dmrgwaktiv = 1
 # how to start ysfgw
 ysfgw = "sudo /etc/init.d/YSFGateway.sh start"
