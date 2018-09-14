@@ -10,16 +10,20 @@ from requests.auth import HTTPBasicAuth
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+
 import gettext
 
 # Import Config
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
-		    svxactive, language, bmapi, bmapiactive)
+		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs)
+
+from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr)
 
 trans = gettext.translation("telebot", "locale", [language])
 trans.install()
 
+		
 # Include SVX-Logic
 if svxactive == 1:
     from config import (svxlogic)
@@ -34,12 +38,19 @@ def initialkb(chat_id,id):
     if chatcount == 0:
 	if id in grant:
 	    #### Keyboard with init functions
-    	    markup = ReplyKeyboardMarkup(keyboard=[
-            	    ['/lh', '/status'],
-                    ['/tg', '/bm', '/help'],
-		    ['/gpio', '/sw', '/svx']
-                 ])
-    	    bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
+			if ispistar == 0:
+				markup = ReplyKeyboardMarkup(keyboard=[
+					['/lh', '/status'],
+					['/tg', '/bm', '/help'],
+					['/gpio', '/sw', '/svx']
+                ])
+			else:
+				markup = ReplyKeyboardMarkup(keyboard=[
+					['/lh', '/status'],
+					['/tg', '/bm', '/help'],
+					['/gpio', '/pi-star'],
+				])
+			bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
     	else:
 	    #### Keyboard with init functions
             markup = ReplyKeyboardMarkup(keyboard=[
@@ -60,10 +71,13 @@ if gpioactive == 1:
 
 # Loggingfunktion
 def botlog(logtext):
+    if ispistar == 1:
+        rpirw
     file = open(logfile, "a+")
     file.write(time.strftime("%d.%m. %H:%M:%S") + ": " + logtext + '\n')
     file.close()
-
+    if ispistar == 1:
+        rpiro
 # function to read temp-sensors
 def read_sensor(path):
   value = "U"
@@ -109,7 +123,10 @@ def lastheard(suchstring):
     else:
         suchstring = "received RF voice header from " +suchstring
     heard = []
-    dateiname = mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
+    if ispistar == 0:
+        dateiname = mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
+    else:
+        dateiname = pistar_mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:
@@ -126,11 +143,15 @@ def lastheard(suchstring):
 	    found = found + heard[-1][14]
         return found
 
+		
 # function to test master connection in gw
 def testgw():
     gwerror = []
     suchstring = "Connection to the master has timed out"
-    dateiname = gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
+    if ispistar == 0:
+        dateiname = gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
+    else:
+        dateiname = pistar_gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:
@@ -314,6 +335,137 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
+
+
+### Pi-Star Handler ###
+    elif query_data == "/psstop_mmdvm_dmr":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_dmr)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmdmr"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_dmr":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_dmr)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmdmr"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstop_mmdvm_ysf":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_ysf)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmysf"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_ysf":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_ysf)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmysf"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)			
+
+    elif query_data == "/psstop_mmdvm_dstar":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_dstar)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmdstar"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_dstar":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_dstar)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmdstar"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstop_mmdvm_p25":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_p25)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmp25"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_p25":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_p25)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmp25"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)			
+			
+    elif query_data == "/psstop_mmdvm_ysf2dmr":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_ysf2dmr)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmysf2dmr"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_ysf2dmr":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_ysf2dmr)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmysf2dmr"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstop_mmdvm_pocsag":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_pocsag)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmpocsag"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_pocsag":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_pocsag)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmpocsag"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)			
+
+			
+			
+			
+			
+			
+			
+			
+			
 ###### Callback-Query-Handler End ######
 
 ###### Chat-Message-Handler Start ######
@@ -420,6 +572,44 @@ def on_chat_message(msg):
 	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
 	else:
 	    bot.sendMessage(chat_id,grantfehler)
+
+    ### Pi-Star Handle ###
+    elif msg['text'] in ["/pi-star"]:
+        if id in grant:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_dmr'), callback_data='/psstart_mmdvm_dmr'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_dmr'), callback_data='/psstop_mmdvm_dmr')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf'), callback_data='/psstart_mmdvm_ysf'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf'), callback_data='/psstop_mmdvm_ysf')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_dstar'), callback_data='/psstart_mmdvm_dstar'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_dstar'), callback_data='/psstop_mmdvm_dstar')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_p25'), callback_data='/psstart_mmdvm_p25'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_p25'), callback_data='/psstop_mmdvm_p25')
+                ],
+
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_pocsag'), callback_data='/psstart_mmdvm_pocsag'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_pocsag'), callback_data='/psstop_mmdvm_pocsag')
+                ],
+                [
+                ],
+#                [
+#                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf2dmr'), callback_data='/psstart_mmdvm_ysf2dmr'),
+#                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf2dmr'), callback_data='/psstop_mmdvm_ysf2dmr')
+#                ],
+                [
+                ]
+            ])
+            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            bot.sendMessage(chat_id, grantfehler)
 
     #### GPIO handle ####
     elif msg['text'] in ["/gpio"]:
