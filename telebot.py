@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import subprocess, re, csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
+#import configparser
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ForceReply
 from telepot.loop import MessageLoop
@@ -9,13 +10,16 @@ from requests.auth import HTTPBasicAuth
 
 reload(sys)
 sys.setdefaultencoding('utf8')
+#config = configparser.ConfigParser()
 
 import gettext
 
 # Import Config
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
-		    svxactive, language, bmapi, bmapiactive)
+		    svxactive, language, bmapi, bmapiactive, ispistar)
+			
+from commands import (psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr)
 
 trans = gettext.translation("telebot", "locale", [language])
 trans.install()
@@ -34,12 +38,19 @@ def initialkb(chat_id,id):
     if chatcount == 0:
 	if id in grant:
 	    #### Keyboard with init functions
-    	    markup = ReplyKeyboardMarkup(keyboard=[
-            	    ['/lh', '/status'],
-                    ['/tg', '/bm', '/help'],
-		    ['/gpio', '/sw', '/svx']
-                 ])
-    	    bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
+			if ispistar == 0:
+				markup = ReplyKeyboardMarkup(keyboard=[
+					['/lh', '/status'],
+					['/tg', '/bm', '/help'],
+					['/gpio', '/sw', '/svx']
+                ])
+			else:
+				markup = ReplyKeyboardMarkup(keyboard=[
+					['/lh', '/status'],
+					['/tg', '/bm', '/help'],
+					['/gpio', '/pi-star'],
+				])
+			bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
     	else:
 	    #### Keyboard with init functions
             markup = ReplyKeyboardMarkup(keyboard=[
@@ -314,6 +325,29 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
+
+
+### Pi-Star Handlers
+    elif query_data == "/psstop_mmdvm_dmr":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(ps_stopmmdvm_dmr)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmdmr"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_dmr":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_dmr)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmdmr"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
 ###### Callback-Query-Handler End ######
 
 ###### Chat-Message-Handler Start ######
@@ -420,6 +454,23 @@ def on_chat_message(msg):
 	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
 	else:
 	    bot.sendMessage(chat_id,grantfehler)
+
+    ### Pi-Star Handle ###
+    elif msg['text'] in ["/pi-star"]:
+        if id in grant:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_dmr'), callback_data='/psstart_mmdvm_dmr'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_dmr'), callback_data='/psstop_mmdvm_dmr')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf'), callback_data='/psstart_mmdvm_ysf'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf'), callback_data='/psstart_mmdvm_ysf')
+                ]
+            ])
+            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            bot.sendMessage(chat_id, grantfehler)
 
     #### GPIO handle ####
     elif msg['text'] in ["/gpio"]:
