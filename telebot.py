@@ -17,7 +17,7 @@ import gettext
 # Import Config
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
-		    svxactive, language, bmapi, bmapiactive, ispistar)
+		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs)
 			
 from commands import (psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr)
 
@@ -120,7 +120,10 @@ def lastheard(suchstring):
     else:
         suchstring = "received RF voice header from " +suchstring
     heard = []
-    dateiname = mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
+    if ispistar == 0:
+        dateiname = mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
+    else:
+        dateiname = pistar_mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:
@@ -137,11 +140,15 @@ def lastheard(suchstring):
 	    found = found + heard[-1][14]
         return found
 
+		
 # function to test master connection in gw
 def testgw():
     gwerror = []
     suchstring = "Connection to the master has timed out"
-    dateiname = gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
+    if ispistar == 0:
+        dateiname = gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
+    else:
+        dateiname = pistar_gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:

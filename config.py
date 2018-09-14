@@ -19,34 +19,36 @@ grant = []
 owner = []
 
 # Call of repeater
-botcall = "dl2rpm"
+botcall = ""
 
 # Liste of processes
 prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd"]
 
 # ID des Repeaters
-dmrid = "263330103"
+dmrid = ""
 
 # folder which contains mmdvm-logs
-mmdvmlogs = "/var/log/pi-star"
+pistar_mmdvmlogs = "/var/log/pi-star"
+mmdvmlogs = "/var/log/mmdvm"
 mmprefix = "MMDVM"
 
 # folder wich contains the dmr-gw logfiles
-gwlogs = "/var/log/pi-star"
+pistar_gwlogs = "/var/log/pi-star"
+gwlogs = "/var/log/mmdvm"
 gwprefix = "DMRGateway"
 
 # how to start mmdvm
-mmdvmaufruf = "sudo crudini --set /etc/mmdvmhost DMR enable 1 & sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 1 & sudo crudini --set /etc/ysf2dmr Enable enable 0"
-mmdvmabschalten = "sudo crudini --set /etc/mmdvmhost DMR enable 0 & sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 0"
+mmdvmaufruf = "/usr/bin/screen -d -m -S MMDVM /home/pi/MMDVMHost/MMDVMHost /home/pi/MMDVMHost/MMDVM-DB0SBN.ini"
 # how to start dmrgw should it be active?
 dmrgwaufruf = "/usr/bin/screen -d -m -S DMRGW /home/pi/DMRGateway/DMRGateway /home/pi/DMRGateway/DMRGateway.ini"
 dmrgwaktiv = 1
 # how to start ysfgw
-ysfgw = "sudo systemctl start ysfgateway"
+ysfgw = "sudo /etc/init.d/YSFGateway.sh start"
 ysfgwaktiv = 1
 # how to start ircdbbgw
-ircdbbgw = "sudo systemctl stop ysfgateway"
+ircdbbgw = "sudo /etc/init.d/ircddbgateway start"
 ircdbbgwaktiv = 1
+
 
 logfile = "botlog.txt"
 userfile = "users.csv"
