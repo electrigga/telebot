@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import subprocess, re, csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
-#import configparser
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ForceReply
 from telepot.loop import MessageLoop
@@ -10,7 +9,7 @@ from requests.auth import HTTPBasicAuth
 
 reload(sys)
 sys.setdefaultencoding('utf8')
-#config = configparser.ConfigParser()
+
 
 import gettext
 
@@ -18,12 +17,13 @@ import gettext
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
 		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs)
-			
-from commands import (psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr)
+
+from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr)
 
 trans = gettext.translation("telebot", "locale", [language])
 trans.install()
 
+		
 # Include SVX-Logic
 if svxactive == 1:
     from config import (svxlogic)
@@ -71,10 +71,13 @@ if gpioactive == 1:
 
 # Loggingfunktion
 def botlog(logtext):
+    if ispistar == 1:
+        rpirw
     file = open(logfile, "a+")
     file.write(time.strftime("%d.%m. %H:%M:%S") + ": " + logtext + '\n')
     file.close()
-
+    if ispistar == 1:
+        rpiro
 # function to read temp-sensors
 def read_sensor(path):
   value = "U"
@@ -334,12 +337,12 @@ def on_callback_query(msg):
 
 
 
-### Pi-Star Handlers
+### Pi-Star Handler ###
     elif query_data == "/psstop_mmdvm_dmr":
         if from_id in grant:
             os.system(psstop)
             time.sleep(7)
-            os.system(ps_stopmmdvm_dmr)
+            os.system(psstop_mmdvm_dmr)
             os.system(psstart)
             bot.answerCallbackQuery(query_id,_("psstopmmdvmdmr"))
         else:
@@ -355,6 +358,114 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
+    elif query_data == "/psstop_mmdvm_ysf":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_ysf)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmysf"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_ysf":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_ysf)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmysf"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)			
+
+    elif query_data == "/psstop_mmdvm_dstar":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_dstar)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmdstar"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_dstar":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_dstar)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmdstar"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstop_mmdvm_p25":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_p25)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmp25"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_p25":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_p25)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmp25"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)			
+			
+    elif query_data == "/psstop_mmdvm_ysf2dmr":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_ysf2dmr)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmysf2dmr"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_ysf2dmr":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_ysf2dmr)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmysf2dmr"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstop_mmdvm_pocsag":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_pocsag)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmpocsag"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_pocsag":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_pocsag)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmpocsag"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)			
+
+			
+			
+			
+			
+			
+			
+			
+			
 ###### Callback-Query-Handler End ######
 
 ###### Chat-Message-Handler Start ######
@@ -472,7 +583,28 @@ def on_chat_message(msg):
                 ],
                 [
                     InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf'), callback_data='/psstart_mmdvm_ysf'),
-                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf'), callback_data='/psstart_mmdvm_ysf')
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf'), callback_data='/psstop_mmdvm_ysf')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_dstar'), callback_data='/psstart_mmdvm_dstar'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_dstar'), callback_data='/psstop_mmdvm_dstar')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_p25'), callback_data='/psstart_mmdvm_p25'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_p25'), callback_data='/psstop_mmdvm_p25')
+                ],
+
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_pocsag'), callback_data='/psstart_mmdvm_pocsag'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_pocsag'), callback_data='/psstop_mmdvm_pocsag')
+                ],
+                [
+                ],
+#                [
+#                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf2dmr'), callback_data='/psstart_mmdvm_ysf2dmr'),
+#                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf2dmr'), callback_data='/psstop_mmdvm_ysf2dmr')
+#                ],
+                [
                 ]
             ])
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)

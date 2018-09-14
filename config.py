@@ -72,28 +72,5 @@ gpioports = [
 svxactive = 0
 svxlogic = "/home/pi/remote/svx_pty.RepeaterLogic"
 
-ispistar = 1
-
-
-#pi-star stuff
-###ab zeile 1398
-psstopmmdvmdmr = "sudo crudini --set /etc/mmdvmhost 'D-Star Enable 0 & sudo crudini --set /etc/mmdvmhost 'D-Star Network' enable 0"
-psstartmmdvmdmr = "sudo crudini --set /etc/mmdvmhost 'D-Star Network' enable 1 & sudo crudini --set /etc/mmdvmhost 'D-Star Network' enable 1"
-#################
-psstopmmdvmp25 = "sudo crudini --set /etc/mmdvmhost P25 Enable 0 & sudo crudini --set /etc/mmdvmhost P25 Enable 0"
-psstartmmdvmp25 = "sudo crudini --set /etc/mmdvmhost P25 Enable 1 & sudo crudini --set /etc/mmdvmhost P25 Enable 1 & sudo crudini --set /etc/ysf2p25 'P25 Network' enable 0"
-##################################
-psstopmmdvmysf = "sudo crudini --set /etc/mmdvmhost 'System Fusion' enable 0 & sudo crudini --set /etc/mmdvmhost 'System Fusion Network' enable 0"
-psstartmmdvmysf = "sudo crudini --set /etc/mmdvmhost 'System Fusion' enable 1 & sudo crudini --set /etc/mmdvmhost 'System Fusion Network' enable 1 & sudo crunini --set /etc/dmr2ysf Enable Enable 0"
-#############################
-#1468
-psstopmmdvmysf2dmr="sudo crudini --set /etc/ysf2dmr Enable Enable 0"
-psstartmmdvmysf2dmr="sudo crudini --set /etc/ysf2dmr Enable Enable 1"
-		  
-		  
-psstopmmdvmdmr = "sudo crudini --set /etc/mmdvmhost DMR enable 0 & sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 0"
-psstartmmdvmdmr = "sudo crudini --set /etc/mmdvmhost DMR enable 1 & sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 1 & sudo crudini --set /etc/ysf2dmr Enable enable 0"
-psstopmmdvmpocsag = "sudo crudini --set /etc/mmdvmhost POCSAG enable 0 & sudo crudini --set /etc/mmdvmhost 'POCSAG Network' enable 0"
-psstartmmdvmpocsag = "sudo crudini --set /etc/mmdvmhost POCSAG enable 1 & sudo crudini --set /etc/mmdvmhost 'POCSAG Network' enable 1"
-psstop="sudo mount -o remount,rw  / && sudo systemctl stop cron.service > /dev/null 2>/dev/null & sudo systemctl stop dstarrepeater.service > /dev/null 2>/dev/null & sudo systemctl stop mmdvmhost.service > /dev/null 2>/dev/null & sudo systemctl stop ircddbgateway.service > /dev/null 2>/dev/null & sudo systemctl stop timeserver.service > /dev/null 2>/dev/null & sudo systemctl stop pistar-watchdog.service > /dev/null 2>/dev/null & sudo systemctl stop pistar-remote.service > /dev/null 2>/dev/null & sudo systemctl stop ysfgateway.service > /dev/null 2>/dev/null & sudo systemctl stop ysf2dmr.service > /dev/null 2>/dev/null & sudo systemctl stop ysf2nxdn.service > /dev/null 2>/dev/null & sudo systemctl stop ysf2p25.service > /dev/null 2>/dev/null & sudo systemctl stop nxdn2dmr.service > /dev/null 2>/dev/null & sudo systemctl stop ysfparrot.service > /dev/null 2>/dev/null & sudo systemctl stop p25gateway.service > /dev/null 2>/dev/null & sudo systemctl stop p25parrot.service > /dev/null 2>/dev/null & sudo systemctl stop nxdngateway.service > /dev/null 2>/dev/null & sudo systemctl stop nxdnparrot.service > /dev/null 2>/dev/null & sudo systemctl stop dmr2ysf.service > /dev/null 2>/dev/null & sudo systemctl stop dmr2nxdn.service > /dev/null 2>/dev/null & sudo systemctl stop dmrgateway.service > /dev/null 2>/dev/null & sudo systemctl stop dapnetgateway.service > /dev/null 2>/dev/null"
-psstart="sudo systemctl daemon-reload > /dev/null 2>/dev/null & sudo systemctl start dstarrepeater.service > /dev/null 2>/dev/null & sudo systemctl start mmdvmhost.service > /dev/null 2>/dev/null & sudo systemctl start ircddbgateway.service > /dev/null 2>/dev/null & sudo systemctl start timeserver.service > /dev/null 2>/dev/null & sudo systemctl start pistar-watchdog.service > /dev/null 2>/dev/null & sudo systemctl start pistar-remote.service > /dev/null 2>/dev/null & sudo systemctl start ysf2dmr.service > /dev/null 2>/dev/null & sudo systemctl start ysf2nxdn.service > /dev/null 2>/dev/null & sudo systemctl start ysf2p25.service > /dev/null 2>/dev/null & sudo systemctl start nxdn2dmr.service > /dev/null 2>/dev/null & sudo systemctl start ysfgateway.service > /dev/null 2>/dev/null & sudo systemctl start ysfparrot.service > /dev/null 2>/dev/null & sudo systemctl start p25gateway.service > /dev/null 2>/dev/null & sudo systemctl start p25parrot.service > /dev/null 2>/dev/null & sudo systemctl start nxdngateway.service > /dev/null 2>/dev/null & sudo systemctl start nxdnparrot.service > /dev/null 2>/dev/null & sudo systemctl start dmr2ysf.service > /dev/null 2>/dev/null & sudo systemctl start dmr2nxdn.service > /dev/null 2>/dev/null & sudo systemctl start dmrgateway.service > /dev/null 2>/dev/null & sudo systemctl start dapnetgateway.service > /dev/null 2>/dev/null & sudo systemctl start cron.service > /dev/null 2>/dev/null & sudo mount -o remount,ro /"
+#### Pi-Star Kommandos aktivieren
+ispistar = 0
