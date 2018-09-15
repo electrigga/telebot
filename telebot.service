@@ -10,6 +10,7 @@
 [Unit]
 Description=Telebot Bot
 After=network-online.target
+Wants=network-online.target
 
 [Service]
 ExecStart=python /home/pi/telebot/telebot.py
