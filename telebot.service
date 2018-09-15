@@ -18,7 +18,6 @@ Restart=always
 RestartSec=5
 
 
-SyslogIdentifier=hangupsbot
-
+SyslogIdentifier=telebot
 [Install]
 WantedBy=default.target
