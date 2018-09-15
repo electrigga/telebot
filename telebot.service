@@ -13,7 +13,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=python /home/pi/telebot/telebot.py
+ExecStart=python /home/pi-star/telebot/telebot.py
 Restart=always
 RestartSec=5
 
