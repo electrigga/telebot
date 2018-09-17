@@ -16,11 +16,16 @@ import gettext
 # Import Config
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
-		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs)
+		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs, botpath)
 
+# Import Commands
 from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr)
 
-trans = gettext.translation("telebot", "locale", [language])
+
+if botpath == "":
+    trans = gettext.translation("telebot", "/locale", [language])
+else:
+    trans = gettext.translation("telebot", botpath + "/locale", [language])
 trans.install()
 
 		
@@ -456,8 +461,16 @@ def on_callback_query(msg):
             os.system(psstart)
             bot.answerCallbackQuery(query_id,_("psstartmmdvmpocsag"))
         else:
-            bot.answerCallbackQuery(query_id,grantfehler)			
-
+            bot.answerCallbackQuery(query_id,grantfehler)
+			
+    elif query_data == "/psrestart_mmdvm":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psrestart_mmdvm"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)	
 			
 			
 			
@@ -605,6 +618,7 @@ def on_chat_message(msg):
 #                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf2dmr'), callback_data='/psstop_mmdvm_ysf2dmr')
 #                ],
                 [
+                     InlineKeyboardButton(text=_('btn_psrestart_mmdvm'), callback_data='/psrestartmmdvm')
                 ]
             ])
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
@@ -700,4 +714,4 @@ try:
 except:
     print(_("bot_shutdown"))
     ownerinfo(_("bye_msg_owner"),owner)
-    # GPIO.cleanup()
+    # GPIO.cleanup()	
