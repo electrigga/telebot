@@ -472,7 +472,7 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)	
 			
-			
+	
 			
 			
 			
@@ -624,7 +624,16 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
         else:
             bot.sendMessage(chat_id, grantfehler)
-
+#Telebot service neustart (geheim ;-) )
+    elif msg['text'] in ["/tbneustart"]:
+        if id in grant:
+            bot.sendMessage(chat_id,'tbbotrestart')
+            os.system("sudo systemctl restart telebot.service")
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+					
+			
+			
     #### GPIO handle ####
     elif msg['text'] in ["/gpio"]:
 	if gpioactive == 1:
@@ -667,7 +676,7 @@ def on_chat_message(msg):
 	# Laufende Prozesse testen
 	for proc in prozesse:
 		if prozesschecker(proc) == "Runs":
-			status += "\n" + "*" + proc + " " + prozesschecker(proc) + "*"
+			status += "\n" + "*" + proc + " " + prozesschecker(proc) + " *"
 		else:
 			status += "\n" +  proc + " " + prozesschecker(proc)
 
