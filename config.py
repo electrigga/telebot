@@ -21,8 +21,11 @@ owner = []
 # Call of repeater
 botcall = ""
 
-# Liste of processes
+# List of processes
 prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd"]
+##Pi-Star List of processes
+#prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd","DAPNETGateway","P25Gateway","NXDNGateway","DMR2YSF","DMR2NXDN","YSF2DMR","YSF2NXDN","YSF2P25","NXDN2DMR"]
+
 
 # ID des Repeaters
 dmrid = ""

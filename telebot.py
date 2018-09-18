@@ -223,7 +223,7 @@ def talkgroups():
 def prozesschecker(prozess):
     proc = ([p.info for p in psutil.process_iter(attrs=['pid','name']) if prozess in p.info['name']])
     if proc != []:
-	status = _("runs")
+	status = _("Runs")
     else:
 	status = _("runs_not")
     return status
@@ -666,7 +666,10 @@ def on_chat_message(msg):
 
 	# Laufende Prozesse testen
 	for proc in prozesse:
-	    status += "\n" + proc + " " + prozesschecker(proc)
+		if prozesschecker(proc) == "Runs":
+			status += "\n" + "*" + proc + " " + prozesschecker(proc) + "*"
+		else:
+			status += "\n" +  proc + " " + prozesschecker(proc)
 
 	## Temperaturen
 	# CPU-Temperaturen auslesen
@@ -682,7 +685,7 @@ def on_chat_message(msg):
     	    status += read_sensor(sensors[i])
     	    i = i + 1
 
-        bot.sendMessage(chat_id, status)
+        bot.sendMessage(parse_mode='Markdown',chat_id=chat_id, text=status)
 
     elif msg['text'] in ["/reboot"]:
 	if id in grant:
