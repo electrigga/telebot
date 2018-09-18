@@ -223,7 +223,7 @@ def talkgroups():
 def prozesschecker(prozess):
     proc = ([p.info for p in psutil.process_iter(attrs=['pid','name']) if prozess in p.info['name']])
     if proc != []:
-	status = _("Runs")
+	status = _("runs")
     else:
 	status = _("runs_not")
     return status
@@ -675,8 +675,8 @@ def on_chat_message(msg):
 
 	# Laufende Prozesse testen
 	for proc in prozesse:
-		if prozesschecker(proc) == "Runs":
-			status += "\n" + "*" + proc + " " + prozesschecker(proc) + " *"
+		if prozesschecker(proc) == "runs":
+			status += "\n" + "*" + proc + " " + prozesschecker(proc) + "*" #übersetzung spukt mir in die suppe
 		else:
 			status += "\n" +  proc + " " + prozesschecker(proc)
 
