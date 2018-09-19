@@ -4,24 +4,28 @@
 
 #pi-star stuff
 ###ab zeile 1398
-psstop_mmdvm_dstar = "sudo crudini --set /etc/mmdvmhost D-Star Enable 0 & sudo crudini --set /etc/mmdvmhost 'D-Star Network' enable 0"
-psstart_mmdvm_dstar = "sudo crudini --set /etc/mmdvmhost D-Star Enable 1 & sudo crudini --set /etc/mmdvmhost 'D-Star Network' enable 1"
+psstop_mmdvm_dstar = "sudo crudini --set /etc/mmdvmhost D-Star Enable 0 && sudo crudini --set /etc/mmdvmhost 'D-Star Network' enable 0"
+psstart_mmdvm_dstar = "sudo crudini --set /etc/mmdvmhost D-Star Enable 1 && sudo crudini --set /etc/mmdvmhost 'D-Star Network' enable 1"
 #################
-psstop_mmdvm_p25 = "sudo crudini --set /etc/mmdvmhost P25 Enable 0 & sudo crudini --set /etc/mmdvmhost 'P25 Network' Enable 0"
-psstart_mmdvm_p25 = "sudo crudini --set /etc/mmdvmhost P25 Enable 1 & sudo crudini --set /etc/mmdvmhost 'P25 Network' Enable 1 & sudo crudini --set /etc/ysf2p25 'P25 Network' enable 0"
+psstop_mmdvm_p25 = "sudo crudini --set /etc/mmdvmhost P25 Enable 0 && sudo crudini --set /etc/mmdvmhost 'P25 Network' Enable 0"
+psstart_mmdvm_p25 = "sudo crudini --set /etc/mmdvmhost P25 Enable 1 && sudo crudini --set /etc/mmdvmhost 'P25 Network' Enable 1 && sudo crudini --set /etc/ysf2p25 'P25 Network' enable 0"
 ##################################
-psstop_mmdvm_ysf = "sudo crudini --set /etc/mmdvmhost 'System Fusion' enable 0 & sudo crudini --set /etc/mmdvmhost 'System Fusion Network' enable 0"
-psstart_mmdvm_ysf = "sudo crudini --set /etc/mmdvmhost 'System Fusion' enable 1 & sudo crudini --set /etc/mmdvmhost 'System Fusion Network' enable 1 & sudo crudini --set /etc/dmr2ysf Enable Enable 0"
+psstop_mmdvm_ysf = "sudo crudini --set /etc/mmdvmhost 'System Fusion' enable 0 && sudo crudini --set /etc/mmdvmhost 'System Fusion Network' enable 0"
+psstart_mmdvm_ysf = "sudo crudini --set /etc/mmdvmhost 'System Fusion' enable 1 && sudo crudini --set /etc/mmdvmhost 'System Fusion Network' enable 1 && sudo crudini --set /etc/dmr2ysf Enable Enable 0"
 #############################
 #1468
 psstop_mmdvm_ysf2dmr="sudo crudini --set /etc/ysf2dmr Enabled Enabled 0"
 psstart_mmdvm_ysf2dmr="sudo crudini --set /etc/ysf2dmr Enabled Enabled 1"
 		  
 	  
-psstop_mmdvm_dmr = "sudo crudini --set /etc/mmdvmhost DMR enable 0 & sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 0"
-psstart_mmdvm_dmr = "sudo crudini --set /etc/mmdvmhost DMR enable 1 & sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 1 & sudo crudini --set /etc/ysf2dmr Enabled Enabled 0"
-psstop_mmdvm_pocsag = "sudo crudini --set /etc/mmdvmhost POCSAG enable 0 & sudo crudini --set /etc/mmdvmhost 'POCSAG Network' enable 0"
-psstart_mmdvm_pocsag = "sudo crudini --set /etc/mmdvmhost POCSAG enable 1 & sudo crudini --set /etc/mmdvmhost 'POCSAG Network' enable 1"
+psstop_mmdvm_dmr = "sudo crudini --set /etc/mmdvmhost DMR enable 0 && sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 0"
+psstart_mmdvm_dmr = "sudo crudini --set /etc/mmdvmhost DMR enable 1 && sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 1 && sudo crudini --set /etc/ysf2dmr Enabled Enabled 0"
+
+psstart_mmdvm_dmrxlxmaster = "sudo crudini --set /etc/mmdvmhost 'XLX Network 1' Enabled 1 && sudo crudini --set /etc/mmdvmhost 'XLX Network' Enabled 1"
+psstop_mmdvm_dmrxlxmaster = "sudo crudini --set /etc/mmdvmhost 'XLX Network 1' Enabled 0 && sudo crudini --set /etc/mmdvmhost 'XLX Network' Enabled 0"
+
+psstop_mmdvm_pocsag = "sudo crudini --set /etc/mmdvmhost POCSAG enable 0 && sudo crudini --set /etc/mmdvmhost 'POCSAG Network' enable 0"
+psstart_mmdvm_pocsag = "sudo crudini --set /etc/mmdvmhost POCSAG enable 1 && sudo crudini --set /etc/mmdvmhost 'POCSAG Network' enable 1"
 
 rpirw = "sudo mount -o remount,rw /"
 rpiro = "sudo mount -o remount,ro /"

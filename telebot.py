@@ -19,7 +19,7 @@ from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, s
 		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs, botpath)
 
 # Import Commands
-from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr)
+from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlxmaster, psstop_mmdvm_dmrxlxmaster)
 
 
 if botpath == "":
@@ -343,6 +343,7 @@ def on_callback_query(msg):
 
 
 ### Pi-Star Handler ###
+#DMR
     elif query_data == "/psstop_mmdvm_dmr":
         if from_id in grant:
             os.system(psstop)
@@ -362,7 +363,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,_("psstartmmdvmdmr"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-
+#YSF
     elif query_data == "/psstop_mmdvm_ysf":
         if from_id in grant:
             os.system(psstop)
@@ -382,7 +383,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,_("psstartmmdvmysf"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)			
-
+#D-Star
     elif query_data == "/psstop_mmdvm_dstar":
         if from_id in grant:
             os.system(psstop)
@@ -402,7 +403,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,_("psstartmmdvmdstar"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-
+#P25
     elif query_data == "/psstop_mmdvm_p25":
         if from_id in grant:
             os.system(psstop)
@@ -422,7 +423,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,_("psstartmmdvmp25"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)			
-			
+#YSF2DMR			
     elif query_data == "/psstop_mmdvm_ysf2dmr":
         if from_id in grant:
             os.system(psstop)
@@ -442,6 +443,16 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,_("psstartmmdvmysf2dmr"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
+#POCSAG
+    elif query_data == "/psstart_mmdvm_pocsag":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart_mmdvm_pocsag)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmpocsag"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstop_mmdvm_pocsag":
         if from_id in grant:
@@ -452,17 +463,27 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,_("psstopmmdvmpocsag"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-
-    elif query_data == "/psstart_mmdvm_pocsag":
+#dmrXLX
+    elif query_data == "/psstart_mmdvm_dmrxlxmaster":
         if from_id in grant:
             os.system(psstop)
             time.sleep(7)
-            os.system(psstart_mmdvm_pocsag)
+            os.system(psstart_mmdvm_dmrxlxmaster)
             os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstartmmdvmpocsag"))
+            bot.answerCallbackQuery(query_id,_("psstartmmdvmdmrxlxmaster"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-			
+
+    elif query_data == "/psstop_mmdvm_dmrxlxmaster":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstop_mmdvm_dmrxlxmaster)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psstopmmdvmdmrxlxmaster"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+#nur Dienstneustart
     elif query_data == "/psrestart_mmdvm":
         if from_id in grant:
             os.system(psstop)
@@ -471,14 +492,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,_("psrestart_mmdvm"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)	
-			
-	
-			
-			
-			
-			
-			
-			
+
 ###### Callback-Query-Handler End ######
 
 ###### Chat-Message-Handler Start ######
@@ -606,12 +620,13 @@ def on_chat_message(msg):
                     InlineKeyboardButton(text=_('btn_psstart_mmdvm_p25'), callback_data='/psstart_mmdvm_p25'),
                     InlineKeyboardButton(text=_('btn_psstop_mmdvm_p25'), callback_data='/psstop_mmdvm_p25')
                 ],
-
                 [
                     InlineKeyboardButton(text=_('btn_psstart_mmdvm_pocsag'), callback_data='/psstart_mmdvm_pocsag'),
                     InlineKeyboardButton(text=_('btn_psstop_mmdvm_pocsag'), callback_data='/psstop_mmdvm_pocsag')
                 ],
                 [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_dmrxlx'), callback_data='/psstart_mmdvm_dmrxlx'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_dmrxlx'), callback_data='/psstop_mmdvm_dmrxlx')
                 ],
 #                [
 #                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf2dmr'), callback_data='/psstart_mmdvm_ysf2dmr'),
@@ -625,7 +640,7 @@ def on_chat_message(msg):
         else:
             bot.sendMessage(chat_id, grantfehler)
 #Telebot service neustart (geheim ;-) )
-    elif msg['text'] in ["/tbneustart"]:
+    elif msg['text'] in ["/tbrestart"]:
         if id in grant:
             bot.sendMessage(chat_id,'tbbotrestart')
             os.system("sudo systemctl restart telebot.service")
