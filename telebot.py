@@ -148,6 +148,25 @@ def lastheard(suchstring):
 	    found = found + heard[-1][14]
         return found
 
+def pslasthearddapnet(suchstring):
+    heard = []
+    strings = ("Sending message in slot", suchstring)
+    dateiname = pistar_mmdvmlogs + "/" + "DAPNETGateway" + "-" +(time.strftime("%Y-%m-%d"))+".log"
+    file = open(dateiname, "r")
+    for line in file:
+        if all(s in line for s in strings):
+	    string = (line.rstrip())
+	    string = string.split(" ")
+	    heard.append(string)
+    file.close()
+    if not heard:
+	return _("not_seen_today")
+    else:
+	print(heard) #Formatierung und arraykram noch zu machen.
+	found = heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " "
+	if len(heard[-1]) > 14:
+	    found = found + heard[-1][14]
+        return found
 		
 # function to test master connection in gw
 def testgw():
@@ -587,13 +606,23 @@ def on_chat_message(msg):
 	bot.sendMessage(chat_id, talkgroups())
 
     elif "/lh" in msg['text']:
-	if msg['text'] == "/lh":
+        if msg['text'] == "/lhdn":
+            heard = pslasthearddapnet('')
+            bot.sendMessage(chat_id,heard)
+        elif "/lhdn " in msg['text']:
+	        suche = msg['text'].split(" ")
+	        heard = pslasthearddapnet(suche[1].upper())
+	        bot.sendMessage(chat_id,heard)
+        elif msg['text'] == "/lh":
             heard = lastheard('')
             bot.sendMessage(chat_id,heard)
-	else:
-	    suche = msg['text'].split(" ")
-	    heard = lastheard(suche[1].upper())
-	    bot.sendMessage(chat_id,heard)
+        elif "/lh " in msg['text']:
+	        suche = msg['text'].split(" ")
+	        heard = lastheard(suche[1].upper())
+	        bot.sendMessage(chat_id,heard)
+        #elif "lhecho" in msg['text']:
+        else:
+            bot.sendMessage(chat_id,"command unknown")
 
     ### BM Handle ###
     elif "/bm" in msg['text']:
@@ -717,8 +746,7 @@ def on_chat_message(msg):
         else:
             bot.sendMessage(chat_id, grantfehler)
 
-			
-    #### GPIO handle ####
+	#### GPIO handle ####
     elif msg['text'] in ["/gpio"]:
 	if gpioactive == 1:
 	    if id in grant:
