@@ -76,4 +76,4 @@ svxlogic = "/home/pi/remote/svx_pty.RepeaterLogic"
 #### Pi-Star Kommandos aktivieren
 ispistar = 1
 
-botpath = "/home/pi-star/telebot-dev/telebot" ##workingdir von systemd scheint nicht zu funktionieren. Eintrag nur nötig wenn mit Systemd gestartet wird.
+botpath = "/home/pi-star/telebot" ##workingdir von systemd scheint nicht zu funktionieren. Eintrag nur nötig wenn mit Systemd gestartet wird.
