@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import subprocess, re, csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
+import subprocess, re, csv, requests, json, telepot, sys, os, time, datetime, psutil, subprocess, RPi.GPIO as GPIO
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ForceReply
 from telepot.loop import MessageLoop
@@ -19,7 +19,7 @@ from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, s
 		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs, botpath)
 
 # Import Commands
-from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlxmaster, psstop_mmdvm_dmrxlxmaster)
+from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlx, psstop_mmdvm_dmrxlx)
 
 
 if botpath == "":
@@ -228,6 +228,14 @@ def prozesschecker(prozess):
 	status = _("runs_not")
     return status
 
+#check ob der dienst laut INI schon läuft
+def psinicheck(file,section,key):
+	value = subprocess.check_output("sudo crudini --get " + file + " " + section + " " + key, shell=True)
+	if "1" in value:
+		return True
+	else:
+		return False
+
 ###### Callback-Query-Handler Start ######
 
 def on_callback_query(msg):
@@ -346,141 +354,195 @@ def on_callback_query(msg):
 #DMR
     elif query_data == "/psstop_mmdvm_dmr":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstop_mmdvm_dmr)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstopmmdvmdmr"))
+            value = psinicheck("/etc/mmdvmhost","DMR","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_dmr)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmdmr"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_dmr":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstart_mmdvm_dmr)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstartmmdvmdmr"))
+            value = psinicheck("/etc/mmdvmhost","DMR","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_dmr)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmdmr"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 #YSF
     elif query_data == "/psstop_mmdvm_ysf":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstop_mmdvm_ysf)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstopmmdvmysf"))
+            value = psinicheck("/etc/mmdvmhost","System Fusion","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_ysf)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmysf"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_ysf":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstart_mmdvm_ysf)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstartmmdvmysf"))
+            value = psinicheck("/etc/mmdvmhost","System Fusion","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_ysf)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmysf"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)			
 #D-Star
     elif query_data == "/psstop_mmdvm_dstar":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstop_mmdvm_dstar)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstopmmdvmdstar"))
+            value = psinicheck("/etc/mmdvmhost","D-Star","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_dstar)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmdstar"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_dstar":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstart_mmdvm_dstar)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstartmmdvmdstar"))
+            value = psinicheck("/etc/mmdvmhost","D-Star","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_dstar)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmdstar"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 #P25
     elif query_data == "/psstop_mmdvm_p25":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstop_mmdvm_p25)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstopmmdvmp25"))
-        else:
-            bot.answerCallbackQuery(query_id,grantfehler)
+            value = psinicheck("/etc/mmdvmhost","P25","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_p25)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmp25"))
+            else:
+                bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_p25":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstart_mmdvm_p25)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstartmmdvmp25"))
+            value = psinicheck("/etc/mmdvmhost","P25","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_p25)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmp25"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
         else:
             bot.answerCallbackQuery(query_id,grantfehler)			
 #YSF2DMR			
     elif query_data == "/psstop_mmdvm_ysf2dmr":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstop_mmdvm_ysf2dmr)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstopmmdvmysf2dmr"))
+            value = psinicheck("/etc/ysf2dmr","Enabled","Enabled")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_ysf2dmr)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmysf2dmr"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_ysf2dmr":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstart_mmdvm_ysf2dmr)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstartmmdvmysf2dmr"))
+            value = psinicheck("/etc/ysf2dmr","Enabled","Enabled")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_ysf2dmr)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmysf2dmr"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 #POCSAG
     elif query_data == "/psstart_mmdvm_pocsag":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstart_mmdvm_pocsag)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstartmmdvmpocsag"))
+            value = psinicheck("/etc/mmdvmhost","POCSAG","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_pocsag)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmpocsag"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstop_mmdvm_pocsag":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstop_mmdvm_pocsag)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstopmmdvmpocsag"))
+            value = psinicheck("/etc/mmdvmhost","POCSAG","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_pocsag)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmpocsag"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 #dmrXLX
-    elif query_data == "/psstart_mmdvm_dmrxlxmaster":
+    elif query_data == "/psstart_mmdvm_dmrxlx":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstart_mmdvm_dmrxlxmaster)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstartmmdvmdmrxlxmaster"))
+            value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_dmrxlx)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmdmrxlx"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
-    elif query_data == "/psstop_mmdvm_dmrxlxmaster":
+    elif query_data == "/psstop_mmdvm_dmrxlx":
         if from_id in grant:
-            os.system(psstop)
-            time.sleep(7)
-            os.system(psstop_mmdvm_dmrxlxmaster)
-            os.system(psstart)
-            bot.answerCallbackQuery(query_id,_("psstopmmdvmdmrxlxmaster"))
+            value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_dmrxlx)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmdmrxlx"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 #nur Dienstneustart
@@ -646,8 +708,15 @@ def on_chat_message(msg):
             os.system("sudo systemctl restart telebot.service")
         else:
             bot.sendMessage(chat_id, grantfehler)
-					
-			
+
+    elif msg['text'] in ["/test"]:
+        if id in grant:
+            value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
+            #value = subprocess.check_output("sudo crudini --get " + "/etc/dmrgateway" + " " + "'XLX Network'" + " " + "Enabled", shell=True)
+            bot.sendMessage(chat_id,value)
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+
 			
     #### GPIO handle ####
     elif msg['text'] in ["/gpio"]:

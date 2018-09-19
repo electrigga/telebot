@@ -6,29 +6,27 @@
 language = "de"
 
 # api_key you got from @botfather for your bot
-apikey = ""
+apikey = "682008133:AAE8nQjHUYfmGe0vFA2knA_Uj09yAwP9RCg"
 
 # brandmeister api
 bmapiactive = 1
-bmapi = ""
+bmapi = "iS7jF.$ZUpL1egNq9p4Xns$DdoCoqqaJfh@Vf$S7mB8BRV.$i3UFvRgJdS4EffkvxkoNhdUEO@cCVbAaerPKg3rtVv47LoDfI.@$bTB$TOAL$7WbzJWPMkfEQkMyImNo"
 
 # ACL for controll the repeater (your own ID should in here) (ID is NOT @username)
-grant = []
+grant = [190753861]
 
 # ID des Botowner / der Botowner (die bekommen Nachrichten über Statusänderungen)
-owner = []
+owner = [190753861]
 
 # Call of repeater
-botcall = ""
+botcall = "DL2RPM2"
 
-# List of processes
-prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd"]
-##Pi-Star List of processes
-#prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd","DAPNETGateway","P25Gateway","NXDNGateway","DMR2YSF","DMR2NXDN","YSF2DMR","YSF2NXDN","YSF2P25","NXDN2DMR"]
+# Liste of processes
+prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd","DAPNETGateway","P25Gateway","NXDNGateway","DMR2YSF","DMR2NXDN","YSF2DMR","YSF2NXDN","YSF2P25","NXDN2DMR"]
 
 
 # ID des Repeaters
-dmrid = ""
+dmrid = "263330103"
 
 # folder which contains mmdvm-logs
 pistar_mmdvmlogs = "/var/log/pi-star"
@@ -76,6 +74,6 @@ svxactive = 0
 svxlogic = "/home/pi/remote/svx_pty.RepeaterLogic"
 
 #### Pi-Star Kommandos aktivieren
-ispistar = 0
-botpath = ""
-#botpath = "/home/pi-star/telebot" ##workingdir von systemd scheint nicht zu funktionieren. Eintrag nur nötig wenn mit Systemd gestartet wird.
+ispistar = 1
+
+botpath = "/home/pi-star/telebot-dev/telebot" ##workingdir von systemd scheint nicht zu funktionieren. Eintrag nur nötig wenn mit Systemd gestartet wird.
