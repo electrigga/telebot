@@ -6,27 +6,27 @@
 language = "de"
 
 # api_key you got from @botfather for your bot
-apikey = "682008133:AAE8nQjHUYfmGe0vFA2knA_Uj09yAwP9RCg"
+apikey = ""
 
 # brandmeister api
 bmapiactive = 1
-bmapi = "iS7jF.$ZUpL1egNq9p4Xns$DdoCoqqaJfh@Vf$S7mB8BRV.$i3UFvRgJdS4EffkvxkoNhdUEO@cCVbAaerPKg3rtVv47LoDfI.@$bTB$TOAL$7WbzJWPMkfEQkMyImNo"
+bmapi = ""
 
 # ACL for controll the repeater (your own ID should in here) (ID is NOT @username)
-grant = [190753861]
+grant = []
 
 # ID des Botowner / der Botowner (die bekommen Nachrichten über Statusänderungen)
-owner = [190753861]
+owner = []
 
 # Call of repeater
-botcall = "DL2RPM2"
+botcall = ""
 
 # Liste of processes
 prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd","DAPNETGateway","P25Gateway","NXDNGateway","DMR2YSF","DMR2NXDN","YSF2DMR","YSF2NXDN","YSF2P25","NXDN2DMR"]
 
 
 # ID des Repeaters
-dmrid = "263330103"
+dmrid = ""
 
 # folder which contains mmdvm-logs
 pistar_mmdvmlogs = "/var/log/pi-star"
