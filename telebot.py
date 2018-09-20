@@ -401,7 +401,7 @@ def on_callback_query(msg):
 #YSF
     elif query_data == "/psstop_mmdvm_ysf":
         if from_id in grant:
-            value = psinicheck("/etc/mmdvmhost","System Fusion","Enable")
+            value = psinicheck("/etc/mmdvmhost","'System Fusion'","Enable")
             if value == True:
                 os.system(psstop)
                 time.sleep(7)
