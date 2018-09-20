@@ -244,7 +244,7 @@ def prozesschecker(prozess):
     if proc != []:
 	status = _("runs")
     else:
-	status = _("runs_not")
+	status = _("runs not")
     return status
 
 #check ob der dienst laut INI schon läuft
@@ -626,20 +626,21 @@ def on_chat_message(msg):
 
     ### BM Handle ###
     elif "/bm" in msg['text']:
-	if id in grant:
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[
-		        [
-                               InlineKeyboardButton(text=_('dropCallS1'), callback_data='/dropCallS1'),
-                               InlineKeyboardButton(text=_('dropDynamicS1'), callback_data='/dropDynamicS1')
-                        ],
-                        [
-                               InlineKeyboardButton(text=_('dropCallS2'), callback_data='/dropCallS2'),
-                               InlineKeyboardButton(text=_('dropDynamicS2'), callback_data='/dropDynamicS2')
-                        ],
-			[
-			       InlineKeyboardButton(text=_('dropRepeater'), callback_data='/dropRepeater')
-			]
-                    ])
+        if msg['text'] == "/bm":
+            if id in grant:
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [
+                        InlineKeyboardButton(text=_('dropCallS1'), callback_data='/dropCallS1'),
+                        InlineKeyboardButton(text=_('dropDynamicS1'), callback_data='/dropDynamicS1')
+                    ],
+                    [
+                        InlineKeyboardButton(text=_('dropCallS2'), callback_data='/dropCallS2'),
+                        InlineKeyboardButton(text=_('dropDynamicS2'), callback_data='/dropDynamicS2')
+                    ],
+                    [
+                        InlineKeyboardButton(text=_('dropRepeater'), callback_data='/dropRepeater')
+                    ]
+                ])
 
 	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
 
