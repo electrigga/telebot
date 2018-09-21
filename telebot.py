@@ -746,6 +746,12 @@ def on_chat_message(msg):
             os.system("sudo systemctl restart telebot.service")
         else:
             bot.sendMessage(chat_id, grantfehler)
+    elif msg['text'] in ["/tbupdate"]:
+        if id in grant:
+            bot.sendMessage(chat_id,'tbupdate')
+            os.system("cd /home/pi-star/telebot & rpi-rw & git pull")
+        else:
+            bot.sendMessage(chat_id, grantfehler)
 
     elif "/add" in msg['text']:
         if id in grant:
