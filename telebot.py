@@ -107,6 +107,7 @@ def bmsimple(query_id,apistrg):
     print(apiresult["message"])
     bot.answerCallbackQuery(query_id,req.text)
 
+	
 # Timemanipulation
 def formdate(datum):
     dat = datetime.datetime.fromtimestamp(datum).strftime('%d.%m.%Y')
@@ -290,6 +291,11 @@ def on_callback_query(msg):
         # req = requests.post(apistrg, auth=HTTPBasicAuth(bmapi,''), data = {'talkgroup':262,'timeslot':0})
         # req.encoding = 'utf-8'
 
+		
+		
+		
+		
+		
 ### GPIO switcher ###
     if gpioactive == 1:
         for i in range(len(gpioports)):
@@ -465,7 +471,9 @@ def on_callback_query(msg):
                 os.system(psstart)
                 bot.answerCallbackQuery(query_id,_("psstopmmdvmp25"))
             else:
-                bot.answerCallbackQuery(query_id,grantfehler)
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_p25":
         if from_id in grant:
@@ -739,14 +747,74 @@ def on_chat_message(msg):
         else:
             bot.sendMessage(chat_id, grantfehler)
 
-    elif msg['text'] in ["/test"]:
+    elif "/add" in msg['text']:
         if id in grant:
-            value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
-            #value = subprocess.check_output("sudo crudini --get " + "/etc/dmrgateway" + " " + "'XLX Network'" + " " + "Enabled", shell=True)
-            bot.sendMessage(chat_id,value)
+            if "/add " in msg['text']:
+                suche = msg['text'].split(" ")
+                bmts = suche[1]
+                bmtg = suche[2]
+                datas= "talkgroup="+str(bmtg)+"&timeslot="+str(bmts)
+                header = {'Content-Length': len(datas),
+                'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=ADD&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+                bot.sendMessage(chat_id,value.text)
+            else:
+                bot.sendMessage(chat_id,"write /add TS TG")
+        else:
+            bot.sendMessage(chat_id, grantfehler)	
+    elif "/del" in msg['text']:
+        if id in grant:
+            if "/del " in msg['text']:
+                suche = msg['text'].split(" ")
+                bmts = suche[1]
+                bmtg = suche[2]
+                datas= "talkgroup="+str(bmtg)+"&timeslot="+str(bmts)
+                header = {'Content-Length': len(datas),
+                'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=DEL&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+                bot.sendMessage(chat_id,value.text)
+            else:
+                bot.sendMessage(chat_id,"write /del TS TG")
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+			
+    elif "/link" in msg['text']:
+        if id in grant:
+            if "/link " in msg['text']:
+                suche = msg['text'].split(" ")
+                bmref = suche[1]
+                datas= "reflector="+str(bmref)
+                header = {'Content-Length': len(datas),
+                'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+                bot.sendMessage(chat_id,value.text)
+            else:
+                bot.sendMessage(chat_id,"write /add TS TG")
         else:
             bot.sendMessage(chat_id, grantfehler)
 
+    elif "/unlink" in msg['text']:
+        if id in grant:
+            suche = msg['text'].split(" ")
+            bmref = 4000
+            datas= "reflector="+str(bmref)
+            print(datas)
+            header = {'Content-Length': len(datas),
+            'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+            bot.sendMessage(chat_id,value.text)
+        else:
+            bot.sendMessage(chat_id, grantfehler)			
+	
+	# if ( ($_POST["REFmgr"] == "LINK") && (isset($_POST["refSubmit"])) ) { $bmAPIurl = $bmAPIurl."reflector/setActiveReflector.php?id=".$dmrID; }
+    #if ( ($_POST["REFmgr"] == "UNLINK") && (isset($_POST["refSubmit"])) ) { $bmAPIurl = $bmAPIurl."reflector/setActiveReflector.php?id=".$dmrID; $targetREF = "4000"; }
+	#  'reflector' => $targetREF,		
+			
+			
 	#### GPIO handle ####
     elif msg['text'] in ["/gpio"]:
 	if gpioactive == 1:
