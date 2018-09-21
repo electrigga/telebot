@@ -13,10 +13,11 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=python /home/pi-star/telebot/telebot.py
+ExecStart=/usr/bin/python /home/pi-star/telebot/telebot.py
+WorkingDirectory=/home/pi-star/telebot
 Restart=always
 RestartSec=5
-
+User=pi-star
 
 SyslogIdentifier=telebot
 [Install]
