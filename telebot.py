@@ -748,7 +748,9 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id, grantfehler)
     elif msg['text'] in ["/tbupdate"]:
         if id in grant:
-            bot.sendMessage(chat_id,'tbupdate')
+            bot.sendMessage(chat_id,'Daten werden vom Github geholt, Restart bitte extra auslösen.')
+            os.system(rpi-rw)
+            time.sleep(2)
             os.system("cd /home/pi-star/telebot & rpi-rw & git pull")
         else:
             bot.sendMessage(chat_id, grantfehler)
