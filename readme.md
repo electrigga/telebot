@@ -42,15 +42,26 @@ Fragen, Anregungen, Wünsche und Hilfe bekommt ihr standesgemäß über Telegram
 
 
 Kurzanleitung zur Installation auf Pi-Startelebot auf Pi-Star:
+
 sudo apt-get install python-pip
+
 sudo pip install psutil telepot requests crudini
+
 in /home/pi-star
+
 rpi-rw
+
 git clone https://github.com/renemayer-hb/telebot.git
+
 cd telebot
+
 git checkout dev
+
 die config.py editieren
+
 sudo cp telebot.servcie /etc/systemd/system/telebot.service
+
 sudo systemctl enable telebot.service
+
 sudo systemctl start telebot.service
 
