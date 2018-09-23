@@ -53,3 +53,4 @@ die config.py editieren
 sudo cp telebot.servcie /etc/systemd/system/telebot.service
 sudo systemctl enable telebot.service
 sudo systemctl start telebot.service
+
