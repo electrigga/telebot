@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import subprocess, re, csv, requests, json, telepot, sys, os, time, datetime, psutil, RPi.GPIO as GPIO
+import subprocess, re, csv, requests, json, telepot, sys, os, time, datetime, psutil, subprocess, RPi.GPIO as GPIO
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ForceReply
 from telepot.loop import MessageLoop
@@ -10,16 +10,25 @@ from requests.auth import HTTPBasicAuth
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+
 import gettext
 
 # Import Config
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
-		    svxactive, language, bmapi, bmapiactive)
+		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs, botpath)
 
-trans = gettext.translation("telebot", "locale", [language])
+# Import Commands
+from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlx, psstop_mmdvm_dmrxlx)
+
+
+if botpath == "":
+    trans = gettext.translation("telebot", "/locale", [language])
+else:
+    trans = gettext.translation("telebot", botpath + "/locale", [language])
 trans.install()
 
+		
 # Include SVX-Logic
 if svxactive == 1:
     from config import (svxlogic)
@@ -34,12 +43,19 @@ def initialkb(chat_id,id):
     if chatcount == 0:
 	if id in grant:
 	    #### Keyboard with init functions
-    	    markup = ReplyKeyboardMarkup(keyboard=[
-            	    ['/lh', '/status'],
-                    ['/tg', '/bm', '/help'],
-		    ['/gpio', '/sw', '/svx']
-                 ])
-    	    bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
+			if ispistar == 0:
+				markup = ReplyKeyboardMarkup(keyboard=[
+					['/lh', '/status'],
+					['/tg', '/bm', '/help'],
+					['/gpio', '/sw', '/svx']
+                ])
+			else:
+				markup = ReplyKeyboardMarkup(keyboard=[
+					['/lh', '/status'],
+					['/tg', '/bm', '/help'],
+					['/gpio', '/pi-star'],
+				])
+			bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
     	else:
 	    #### Keyboard with init functions
             markup = ReplyKeyboardMarkup(keyboard=[
@@ -60,10 +76,13 @@ if gpioactive == 1:
 
 # Loggingfunktion
 def botlog(logtext):
+    if ispistar == 1:
+        rpirw
     file = open(logfile, "a+")
     file.write(time.strftime("%d.%m. %H:%M:%S") + ": " + logtext + '\n')
     file.close()
-
+    if ispistar == 1:
+        rpiro
 # function to read temp-sensors
 def read_sensor(path):
   value = "U"
@@ -88,6 +107,7 @@ def bmsimple(query_id,apistrg):
     print(apiresult["message"])
     bot.answerCallbackQuery(query_id,req.text)
 
+	
 # Timemanipulation
 def formdate(datum):
     dat = datetime.datetime.fromtimestamp(datum).strftime('%d.%m.%Y')
@@ -109,7 +129,10 @@ def lastheard(suchstring):
     else:
         suchstring = "received RF voice header from " +suchstring
     heard = []
-    dateiname = mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
+    if ispistar == 0:
+        dateiname = mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
+    else:
+        dateiname = pistar_mmdvmlogs + "/" + mmprefix + "-" +(time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:
@@ -126,11 +149,34 @@ def lastheard(suchstring):
 	    found = found + heard[-1][14]
         return found
 
+def pslasthearddapnet(suchstring):
+    heard = []
+    strings = ("Sending message in slot", suchstring)
+    dateiname = pistar_mmdvmlogs + "/" + "DAPNETGateway" + "-" +(time.strftime("%Y-%m-%d"))+".log"
+    file = open(dateiname, "r")
+    for line in file:
+        if all(s in line for s in strings):
+	    string = (line.rstrip())
+	    string = string.split(" ")
+	    heard.append(string)
+    file.close()
+    if not heard:
+	return _("not_seen_today")
+    else:
+	print(heard) #Formatierung und arraykram noch zu machen.
+	found = heard[-1][2] + " " + heard[-1][4] + " " + heard[-1][5] + " " + heard[-1][11] + " " + heard[-1][13] + " "
+	if len(heard[-1]) > 14:
+	    found = found + heard[-1][14]
+        return found
+		
 # function to test master connection in gw
 def testgw():
     gwerror = []
     suchstring = "Connection to the master has timed out"
-    dateiname = gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
+    if ispistar == 0:
+        dateiname = gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
+    else:
+        dateiname = pistar_gwlogs + "/" + gwprefix + "-" + (time.strftime("%Y-%m-%d"))+".log"
     file = open(dateiname, "r")
     for line in file:
         if line.find(suchstring) > 1:
@@ -199,8 +245,16 @@ def prozesschecker(prozess):
     if proc != []:
 	status = _("runs")
     else:
-	status = _("runs_not")
+	status = _("runs not")
     return status
+
+#check ob der dienst laut INI schon läuft
+def psinicheck(file,section,key):
+	value = subprocess.check_output("sudo crudini --get " + file + " " + section + " " + key, shell=True)
+	if "1" in value:
+		return True
+	else:
+		return False
 
 ###### Callback-Query-Handler Start ######
 
@@ -237,6 +291,11 @@ def on_callback_query(msg):
         # req = requests.post(apistrg, auth=HTTPBasicAuth(bmapi,''), data = {'talkgroup':262,'timeslot':0})
         # req.encoding = 'utf-8'
 
+		
+		
+		
+		
+		
 ### GPIO switcher ###
     if gpioactive == 1:
         for i in range(len(gpioports)):
@@ -314,6 +373,215 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
+
+
+### Pi-Star Handler ###
+#DMR
+    elif query_data == "/psstop_mmdvm_dmr":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","DMR","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_dmr)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmdmr"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_dmr":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","DMR","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_dmr)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmdmr"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+#YSF
+    elif query_data == "/psstop_mmdvm_ysf":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","'System Fusion'","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_ysf)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmysf"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_ysf":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","'System Fusion'","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_ysf)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmysf"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)			
+#D-Star
+    elif query_data == "/psstop_mmdvm_dstar":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","D-Star","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_dstar)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmdstar"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_dstar":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","D-Star","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_dstar)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmdstar"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+#P25
+    elif query_data == "/psstop_mmdvm_p25":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","P25","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_p25)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmp25"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_p25":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","P25","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_p25)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmp25"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)			
+#YSF2DMR			
+    elif query_data == "/psstop_mmdvm_ysf2dmr":
+        if from_id in grant:
+            value = psinicheck("/etc/ysf2dmr","Enabled","Enabled")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_ysf2dmr)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmysf2dmr"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstart_mmdvm_ysf2dmr":
+        if from_id in grant:
+            value = psinicheck("/etc/ysf2dmr","Enabled","Enabled")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_ysf2dmr)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmysf2dmr"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+#POCSAG
+    elif query_data == "/psstart_mmdvm_pocsag":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","POCSAG","Enable")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_pocsag)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmpocsag"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstop_mmdvm_pocsag":
+        if from_id in grant:
+            value = psinicheck("/etc/mmdvmhost","POCSAG","Enable")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_pocsag)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmpocsag"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+#dmrXLX
+    elif query_data == "/psstart_mmdvm_dmrxlx":
+        if from_id in grant:
+            value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
+            if value == False:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstart_mmdvm_dmrxlx)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstartmmdvmdmrxlx"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psstop_mmdvm_dmrxlx":
+        if from_id in grant:
+            value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
+            if value == True:
+                os.system(psstop)
+                time.sleep(7)
+                os.system(psstop_mmdvm_dmrxlx)
+                os.system(psstart)
+                bot.answerCallbackQuery(query_id,_("psstopmmdvmdmrxlx"))
+            else:
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+#nur Dienstneustart
+    elif query_data == "/psrestart_mmdvm":
+        if from_id in grant:
+            os.system(psstop)
+            time.sleep(7)
+            os.system(psstart)
+            bot.answerCallbackQuery(query_id,_("psrestart_mmdvm"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)	
+
 ###### Callback-Query-Handler End ######
 
 ###### Chat-Message-Handler Start ######
@@ -346,30 +614,41 @@ def on_chat_message(msg):
 	bot.sendMessage(chat_id, talkgroups())
 
     elif "/lh" in msg['text']:
-	if msg['text'] == "/lh":
+        if msg['text'] == "/lhdn":
+            heard = pslasthearddapnet('')
+            bot.sendMessage(chat_id,heard)
+        elif "/lhdn " in msg['text']:
+	        suche = msg['text'].split(" ")
+	        heard = pslasthearddapnet(suche[1].upper())
+	        bot.sendMessage(chat_id,heard)
+        elif msg['text'] == "/lh":
             heard = lastheard('')
             bot.sendMessage(chat_id,heard)
-	else:
-	    suche = msg['text'].split(" ")
-	    heard = lastheard(suche[1].upper())
-	    bot.sendMessage(chat_id,heard)
+        elif "/lh " in msg['text']:
+	        suche = msg['text'].split(" ")
+	        heard = lastheard(suche[1].upper())
+	        bot.sendMessage(chat_id,heard)
+        #elif "lhecho" in msg['text']:
+        else:
+            bot.sendMessage(chat_id,"command unknown")
 
     ### BM Handle ###
     elif "/bm" in msg['text']:
-	if id in grant:
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[
-		        [
-                               InlineKeyboardButton(text=_('dropCallS1'), callback_data='/dropCallS1'),
-                               InlineKeyboardButton(text=_('dropDynamicS1'), callback_data='/dropDynamicS1')
-                        ],
-                        [
-                               InlineKeyboardButton(text=_('dropCallS2'), callback_data='/dropCallS2'),
-                               InlineKeyboardButton(text=_('dropDynamicS2'), callback_data='/dropDynamicS2')
-                        ],
-			[
-			       InlineKeyboardButton(text=_('dropRepeater'), callback_data='/dropRepeater')
-			]
-                    ])
+        if msg['text'] == "/bm":
+            if id in grant:
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [
+                        InlineKeyboardButton(text=_('dropCallS1'), callback_data='/dropCallS1'),
+                        InlineKeyboardButton(text=_('dropDynamicS1'), callback_data='/dropDynamicS1')
+                    ],
+                    [
+                        InlineKeyboardButton(text=_('dropCallS2'), callback_data='/dropCallS2'),
+                        InlineKeyboardButton(text=_('dropDynamicS2'), callback_data='/dropDynamicS2')
+                    ],
+                    [
+                        InlineKeyboardButton(text=_('dropRepeater'), callback_data='/dropRepeater')
+                    ]
+                ])
 
 	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
 
@@ -421,7 +700,130 @@ def on_chat_message(msg):
 	else:
 	    bot.sendMessage(chat_id,grantfehler)
 
-    #### GPIO handle ####
+    ### Pi-Star Handle ###
+    elif msg['text'] in ["/pi-star"]:
+        if id in grant:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_dmr'), callback_data='/psstart_mmdvm_dmr'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_dmr'), callback_data='/psstop_mmdvm_dmr')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf'), callback_data='/psstart_mmdvm_ysf'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf'), callback_data='/psstop_mmdvm_ysf')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_dstar'), callback_data='/psstart_mmdvm_dstar'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_dstar'), callback_data='/psstop_mmdvm_dstar')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_p25'), callback_data='/psstart_mmdvm_p25'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_p25'), callback_data='/psstop_mmdvm_p25')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_pocsag'), callback_data='/psstart_mmdvm_pocsag'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_pocsag'), callback_data='/psstop_mmdvm_pocsag')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_dmrxlx'), callback_data='/psstart_mmdvm_dmrxlx'),
+                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_dmrxlx'), callback_data='/psstop_mmdvm_dmrxlx')
+                ],
+#                [
+#                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf2dmr'), callback_data='/psstart_mmdvm_ysf2dmr'),
+#                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf2dmr'), callback_data='/psstop_mmdvm_ysf2dmr')
+#                ],
+                [
+                     InlineKeyboardButton(text=_('btn_psrestart_mmdvm'), callback_data='/psrestartmmdvm')
+                ]
+            ])
+            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+#Telebot service neustart (geheim ;-) )
+    elif msg['text'] in ["/tbrestart"]:
+        if id in grant:
+            bot.sendMessage(chat_id,'tbbotrestart')
+            os.system("sudo systemctl restart telebot.service")
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+    elif msg['text'] in ["/tbupdate"]:
+        if id in grant:
+            bot.sendMessage(chat_id,'Daten werden vom Github geholt, Restart bitte extra auslösen.')
+            os.system(rpi-rw)
+            time.sleep(2)
+            os.system("cd /home/pi-star/telebot & rpi-rw & git pull")
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+
+    elif "/add" in msg['text']:
+        if id in grant:
+            if "/add " in msg['text']:
+                suche = msg['text'].split(" ")
+                bmts = suche[1]
+                bmtg = suche[2]
+                datas= "talkgroup="+str(bmtg)+"&timeslot="+str(bmts)
+                header = {'Content-Length': len(datas),
+                'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=ADD&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+                bot.sendMessage(chat_id,value.text)
+            else:
+                bot.sendMessage(chat_id,"write /add TS TG")
+        else:
+            bot.sendMessage(chat_id, grantfehler)	
+    elif "/del" in msg['text']:
+        if id in grant:
+            if "/del " in msg['text']:
+                suche = msg['text'].split(" ")
+                bmts = suche[1]
+                bmtg = suche[2]
+                datas= "talkgroup="+str(bmtg)+"&timeslot="+str(bmts)
+                header = {'Content-Length': len(datas),
+                'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=DEL&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+                bot.sendMessage(chat_id,value.text)
+            else:
+                bot.sendMessage(chat_id,"write /del TS TG")
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+			
+    elif "/link" in msg['text']:
+        if id in grant:
+            if "/link " in msg['text']:
+                suche = msg['text'].split(" ")
+                bmref = suche[1]
+                datas= "reflector="+str(bmref)
+                header = {'Content-Length': len(datas),
+                'Content-Type': 'application/x-www-form-urlencoded'
+                }
+                value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+                bot.sendMessage(chat_id,value.text)
+            else:
+                bot.sendMessage(chat_id,"write /add TS TG")
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+
+    elif "/unlink" in msg['text']:
+        if id in grant:
+            suche = msg['text'].split(" ")
+            bmref = 4000
+            datas= "reflector="+str(bmref)
+            print(datas)
+            header = {'Content-Length': len(datas),
+            'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+            bot.sendMessage(chat_id,value.text)
+        else:
+            bot.sendMessage(chat_id, grantfehler)			
+	
+	# if ( ($_POST["REFmgr"] == "LINK") && (isset($_POST["refSubmit"])) ) { $bmAPIurl = $bmAPIurl."reflector/setActiveReflector.php?id=".$dmrID; }
+    #if ( ($_POST["REFmgr"] == "UNLINK") && (isset($_POST["refSubmit"])) ) { $bmAPIurl = $bmAPIurl."reflector/setActiveReflector.php?id=".$dmrID; $targetREF = "4000"; }
+	#  'reflector' => $targetREF,		
+			
+			
+	#### GPIO handle ####
     elif msg['text'] in ["/gpio"]:
 	if gpioactive == 1:
 	    if id in grant:
@@ -462,7 +864,10 @@ def on_chat_message(msg):
 
 	# Laufende Prozesse testen
 	for proc in prozesse:
-	    status += "\n" + proc + " " + prozesschecker(proc)
+		if prozesschecker(proc) == "runs":
+			status += "\n" + "*" + proc + " " + prozesschecker(proc) + "*" #übersetzung spukt mir in die suppe
+		else:
+			status += "\n" +  proc + " " + prozesschecker(proc)
 
 	## Temperaturen
 	# CPU-Temperaturen auslesen
@@ -478,7 +883,7 @@ def on_chat_message(msg):
     	    status += read_sensor(sensors[i])
     	    i = i + 1
 
-        bot.sendMessage(chat_id, status)
+        bot.sendMessage(parse_mode='Markdown',chat_id=chat_id, text=status)
 
     elif msg['text'] in ["/reboot"]:
 	if id in grant:
@@ -510,4 +915,4 @@ try:
 except:
     print(_("bot_shutdown"))
     ownerinfo(_("bye_msg_owner"),owner)
-    # GPIO.cleanup()
+    # GPIO.cleanup()	

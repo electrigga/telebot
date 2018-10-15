@@ -22,16 +22,19 @@ owner = []
 botcall = ""
 
 # Liste of processes
-prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd"]
+prozesse=["MMDVMHost","DMRGateway","YSFGateway","ircddbgatewayd","DAPNETGateway","P25Gateway","NXDNGateway","DMR2YSF","DMR2NXDN","YSF2DMR","YSF2NXDN","YSF2P25","NXDN2DMR"]
+
 
 # ID des Repeaters
 dmrid = ""
 
 # folder which contains mmdvm-logs
+pistar_mmdvmlogs = "/var/log/pi-star"
 mmdvmlogs = "/var/log/mmdvm"
 mmprefix = "MMDVM"
 
 # folder wich contains the dmr-gw logfiles
+pistar_gwlogs = "/var/log/pi-star"
 gwlogs = "/var/log/mmdvm"
 gwprefix = "DMRGateway"
 
@@ -46,6 +49,7 @@ ysfgwaktiv = 1
 # how to start ircdbbgw
 ircdbbgw = "sudo /etc/init.d/ircddbgateway start"
 ircdbbgwaktiv = 1
+
 
 logfile = "botlog.txt"
 userfile = "users.csv"
@@ -68,3 +72,8 @@ gpioports = [
 #### SVXLink Settings
 svxactive = 0
 svxlogic = "/home/pi/remote/svx_pty.RepeaterLogic"
+
+#### Pi-Star Kommandos aktivieren
+ispistar = 1
+
+botpath = "/home/pi-star/telebot" ##workingdir von systemd scheint nicht zu funktionieren. Eintrag nur nötig wenn mit Systemd gestartet wird.
