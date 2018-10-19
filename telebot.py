@@ -54,7 +54,7 @@ def initialkb(chat_id,id):
 				markup = ReplyKeyboardMarkup(keyboard=[
 					['/lh', '/status'],
 					['/tg', '/bm', '/help'],
-					['/gpio', '/pi-star','/system'],
+					['/gpio', '/pi-star','/system']
 				])
 			bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
     	else:
