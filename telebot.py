@@ -47,13 +47,14 @@ def initialkb(chat_id,id):
 				markup = ReplyKeyboardMarkup(keyboard=[
 					['/lh', '/status'],
 					['/tg', '/bm', '/help'],
-					['/gpio', '/sw', '/svx']
+					['/gpio', '/sw', '/svx'],
+					['/system']
                 ])
 			else:
 				markup = ReplyKeyboardMarkup(keyboard=[
 					['/lh', '/status'],
 					['/tg', '/bm', '/help'],
-					['/gpio', '/pi-star'],
+					['/gpio', '/pi-star','/system'],
 				])
 			bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
     	else:
@@ -471,7 +472,7 @@ def on_callback_query(msg):
                 os.system(psstart)
                 bot.answerCallbackQuery(query_id,_("psstopmmdvmp25"))
             else:
-                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
@@ -485,9 +486,9 @@ def on_callback_query(msg):
                 os.system(psstart)
                 bot.answerCallbackQuery(query_id,_("psstartmmdvmp25"))
             else:
-                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
-            bot.answerCallbackQuery(query_id,grantfehler)			
+            bot.answerCallbackQuery(query_id,grantfehler)
 #YSF2DMR			
     elif query_data == "/psstop_mmdvm_ysf2dmr":
         if from_id in grant:
@@ -701,7 +702,7 @@ def on_chat_message(msg):
 	    bot.sendMessage(chat_id,grantfehler)
 
     ### Pi-Star Handle ###
-    elif msg['text'] in ["/pi-star"]:
+    elif msg['text'] in ["/pistar"]:
         if id in grant:
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [
@@ -743,6 +744,7 @@ def on_chat_message(msg):
     elif msg['text'] in ["/tbrestart"]:
         if id in grant:
             bot.sendMessage(chat_id,'tbbotrestart')
+            ownerinfo(_("bye_msg_owner"),owner)
             os.system("sudo systemctl restart telebot.service")
         else:
             bot.sendMessage(chat_id, grantfehler)
@@ -751,7 +753,7 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id,'Daten werden vom Github geholt, Restart bitte extra auslösen.')
             os.system(rpi-rw)
             time.sleep(2)
-            os.system("cd /home/pi-star/telebot & rpi-rw & git pull")
+            os.system("cd " + botpath + " & rpi-rw & git pull")
         else:
             bot.sendMessage(chat_id, grantfehler)
 
@@ -865,7 +867,7 @@ def on_chat_message(msg):
 	# Laufende Prozesse testen
 	for proc in prozesse:
 		if prozesschecker(proc) == "runs":
-			status += "\n" + "*" + proc + " " + prozesschecker(proc) + "*" #übersetzung spukt mir in die suppe
+			status += "\n" + "*" + proc + " " + prozesschecker(proc) + "*" #übersetzung vermasselt mir die markup bold
 		else:
 			status += "\n" +  proc + " " + prozesschecker(proc)
 
