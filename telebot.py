@@ -48,13 +48,13 @@ def initialkb(chat_id,id):
 					['/lh', '/status'],
 					['/tg', '/bm', '/help'],
 					['/gpio', '/sw', '/svx'],
-					['/system']
+					['/misc']
                 ])
 			else:
 				markup = ReplyKeyboardMarkup(keyboard=[
 					['/lh', '/status'],
 					['/tg', '/bm', '/help'],
-					['/gpio', '/pi-star','/system']
+					['/gpio', '/pistar','/misc']
 				])
 			bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
     	else:
@@ -257,6 +257,10 @@ def psinicheck(file,section,key):
 	else:
 		return False
 
+
+
+
+
 ###### Callback-Query-Handler Start ######
 
 def on_callback_query(msg):
@@ -374,7 +378,30 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
+### misc handler ###
+    elif query_data == "/reboot":
+        if from_id in grant:
+            bot.answerCallbackQuery(query_id,_("rebooting_system"))
+            os.system('sudo shutdown -r now')
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
 
+    elif query_data == "/tbrestart":
+        if from_id in grant:
+            #bot.answerCallbackQuery(query_id,_("rebooting_system"))
+            ownerinfo(_("bye_msg_owner"),owner)
+            os.system("sudo systemctl restart telebot.service")
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/tbupdate":
+        if from_id in grant:
+            bot.answerCallbackQuery(query_id,_("'Daten werden vom Github geholt, Restart bitte extra auslösen.'"))
+            os.system(rpirw)
+            time.sleep(2)
+            os.system("cd " + botpath + " & git pull")
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
 
 ### Pi-Star Handler ###
 #DMR
@@ -701,6 +728,22 @@ def on_chat_message(msg):
 	else:
 	    bot.sendMessage(chat_id,grantfehler)
 
+    ### misc handler ###
+    elif msg['text'] in ["/misc"]:
+        if id in grant:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                    InlineKeyboardButton(text=_('btn_tbrestart'), callback_data='/tbrestart'),
+                    InlineKeyboardButton(text=_('btn_tbupdate'), callback_data='/tbupdate')
+                ],
+                [
+                     InlineKeyboardButton(text=_('btn_reboot'), callback_data='/reboot')
+                ]
+            ])
+            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+
     ### Pi-Star Handle ###
     elif msg['text'] in ["/pistar"]:
         if id in grant:
@@ -743,7 +786,6 @@ def on_chat_message(msg):
 #Telebot service neustart (geheim ;-) )
     elif msg['text'] in ["/tbrestart"]:
         if id in grant:
-            bot.sendMessage(chat_id,'tbbotrestart')
             ownerinfo(_("bye_msg_owner"),owner)
             os.system("sudo systemctl restart telebot.service")
         else:
@@ -751,9 +793,9 @@ def on_chat_message(msg):
     elif msg['text'] in ["/tbupdate"]:
         if id in grant:
             bot.sendMessage(chat_id,'Daten werden vom Github geholt, Restart bitte extra auslösen.')
-            os.system(rpi-rw)
+            os.system(rpirw)
             time.sleep(2)
-            os.system("cd " + botpath + " & rpi-rw & git pull")
+            os.system("cd " + botpath + " & git pull")
         else:
             bot.sendMessage(chat_id, grantfehler)
 
