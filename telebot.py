@@ -394,7 +394,7 @@ def on_callback_query(msg):
             os.system(rpirw)
             time.sleep(2)
             os.system("cd " + botpath + " && git pull > " + botpath + "/update.log")
-            
+            bot.sendMessage(from_id, readfile(botpath + "/update.log"))
             bot.answerCallbackQuery(query_id, readfile(botpath + "/update.log"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
@@ -403,7 +403,27 @@ def on_callback_query(msg):
         bot.sendMessage(from_id,readfile(botpath + "/version"))
         bot.answerCallbackQuery(query_id,readfile(botpath + "/version"))
 
-### Pi-Star Handler ###
+### Pi-Star Query Handler ###
+    elif query_data == "/psupdate":
+        if from_id in grant:
+            os.system(rpirw)
+            os.system("sudo rm /var/log/pi-star/pi-star_update.log")
+            os.system("sudo pistar-update")
+            bot.sendMessage(from_id,readfile("/var/log/pi-star/pi-star_update.log"))
+            bot.answerCallbackQuery(query_id, readfile("/var/log/pi-star/pi-star_update.log"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psupgrade": #die logfile wird vom system nicht genutzt
+        if from_id in grant:
+            os.system(rpirw)
+            os.system("sudo rm /var/log/pi-star/pi-star_upgrade.log")
+            os.system("sudo pistar-upgrade")
+            bot.sendMessage(from_id,readfile("/var/log/pi-star/pi-star_upgrade.log"))
+            bot.answerCallbackQuery(query_id, readfile("/var/log/pi-star/pi-star_upgrade.log"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
 #DMR
     elif query_data == "/psstop_mmdvm_dmr":
         if from_id in grant:
@@ -774,6 +794,10 @@ def on_chat_message(msg):
                 [
                     InlineKeyboardButton(text=_('btn_psstart_mmdvm_dmrxlx'), callback_data='/psstart_mmdvm_dmrxlx'),
                     InlineKeyboardButton(text=_('btn_psstop_mmdvm_dmrxlx'), callback_data='/psstop_mmdvm_dmrxlx')
+                ],
+                [
+                    InlineKeyboardButton(text=_('btn_psupdate'), callback_data='/psupdate'),
+                    InlineKeyboardButton(text=_('btn_psupgrade'), callback_data='/psupgrade')
                 ],
 #                [
 #                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf2dmr'), callback_data='/psstart_mmdvm_ysf2dmr'),
