@@ -257,9 +257,12 @@ def psinicheck(file,section,key):
 	else:
 		return False
 
-
-
-
+def tbversion():
+    f= open(botpath + "/version","r")
+    if f.mode == "r":
+        content = f.read()
+        f.close()
+        return content
 
 ###### Callback-Query-Handler Start ######
 
@@ -284,7 +287,7 @@ def on_callback_query(msg):
             action = apiurl + "v1.0/repeater/setRepeaterTarantool.php?action=dropDynamicGroups&slot=1&q="
             apistrg = action + dmrid
             bmsimple(query_id,apistrg)
-	elif query_data == "dropDynamicS2":
+        elif query_data == "dropDynamicS2":
             action = apiurl + "v1.0/repeater/setRepeaterTarantool.php?action=dropDynamicGroups&slot=2&q="
             apistrg = action + dmrid
             bmsimple(query_id,apistrg)
@@ -293,14 +296,6 @@ def on_callback_query(msg):
             apistrg = action + dmrid
             bmsimple(query_id,apistrg)
 
-        # req = requests.post(apistrg, auth=HTTPBasicAuth(bmapi,''), data = {'talkgroup':262,'timeslot':0})
-        # req.encoding = 'utf-8'
-
-		
-		
-		
-		
-		
 ### GPIO switcher ###
     if gpioactive == 1:
         for i in range(len(gpioports)):
@@ -388,20 +383,24 @@ def on_callback_query(msg):
 
     elif query_data == "/tbrestart":
         if from_id in grant:
-            #bot.answerCallbackQuery(query_id,_("rebooting_system"))
             ownerinfo(_("bye_msg_owner"),owner)
+            bot.answerCallbackQuery(query_id,_("tbrestart"))
             os.system("sudo systemctl restart telebot.service")
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/tbupdate":
         if from_id in grant:
-            bot.answerCallbackQuery(query_id,_("'Daten werden vom Github geholt, Restart bitte extra auslösen.'"))
             os.system(rpirw)
             time.sleep(2)
-            os.system("cd " + botpath + " & git pull")
+            os.system("cd " + botpath + " && git pull")
+            bot.answerCallbackQuery(query_id,_("Files were updates from github, please reboot manually."))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/tbversion":
+        bot.sendMessage(from_id,tbversion())
+        bot.answerCallbackQuery(query_id,_(tbversion()))
 
 ### Pi-Star Handler ###
 #DMR
@@ -558,7 +557,6 @@ def on_callback_query(msg):
                 bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-
     elif query_data == "/psstop_mmdvm_pocsag":
         if from_id in grant:
             value = psinicheck("/etc/mmdvmhost","POCSAG","Enable")
@@ -586,7 +584,6 @@ def on_callback_query(msg):
                 bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-
     elif query_data == "/psstop_mmdvm_dmrxlx":
         if from_id in grant:
             value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
@@ -610,6 +607,8 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)	
 
+			
+			
 ###### Callback-Query-Handler End ######
 
 ###### Chat-Message-Handler Start ######
@@ -738,6 +737,9 @@ def on_chat_message(msg):
                 ],
                 [
                      InlineKeyboardButton(text=_('btn_reboot'), callback_data='/reboot')
+                ],
+                [
+                     InlineKeyboardButton(text=_('tbversion'), callback_data='/tbversion')
                 ]
             ])
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
@@ -783,16 +785,20 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
         else:
             bot.sendMessage(chat_id, grantfehler)
-#Telebot service neustart (geheim ;-) )
+			
+    elif msg['text'] in ["/tbversion"]:
+        bot.sendMessage(chat_id, tbversion())
+
     elif msg['text'] in ["/tbrestart"]:
         if id in grant:
             ownerinfo(_("bye_msg_owner"),owner)
             os.system("sudo systemctl restart telebot.service")
         else:
             bot.sendMessage(chat_id, grantfehler)
+
     elif msg['text'] in ["/tbupdate"]:
         if id in grant:
-            bot.sendMessage(chat_id,'Daten werden vom Github geholt, Restart bitte extra auslösen.')
+            bot.sendMessage(chat_id,"Files were updates from github, please reboot manually.")
             os.system(rpirw)
             time.sleep(2)
             os.system("cd " + botpath + " & git pull")
@@ -926,6 +932,9 @@ def on_chat_message(msg):
     	    status += '\n'
     	    status += read_sensor(sensors[i])
     	    i = i + 1
+
+	status += '\n'
+	status += "Telebot version: " + tbversion()
 
         bot.sendMessage(parse_mode='Markdown',chat_id=chat_id, text=status)
 
