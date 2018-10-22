@@ -257,8 +257,8 @@ def psinicheck(file,section,key):
 	else:
 		return False
 
-def tbversion():
-    f= open(botpath + "/version","r")
+def readfile(filepath):
+    f= open(filepath,"r")
     if f.mode == "r":
         content = f.read()
         f.close()
@@ -393,14 +393,15 @@ def on_callback_query(msg):
         if from_id in grant:
             os.system(rpirw)
             time.sleep(2)
-            os.system("cd " + botpath + " && git pull")
-            bot.answerCallbackQuery(query_id,_("Files were updates from github, please reboot manually."))
+            os.system("cd " + botpath + " && git pull > " + botpath + "/update.log")
+            
+            bot.answerCallbackQuery(query_id, readfile(botpath + "/update.log"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/tbversion":
-        bot.sendMessage(from_id,tbversion())
-        bot.answerCallbackQuery(query_id,_(tbversion()))
+        bot.sendMessage(from_id,readfile(botpath + "/version"))
+        bot.answerCallbackQuery(query_id,readfile(botpath + "/version"))
 
 ### Pi-Star Handler ###
 #DMR
@@ -787,7 +788,7 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id, grantfehler)
 			
     elif msg['text'] in ["/tbversion"]:
-        bot.sendMessage(chat_id, tbversion())
+        bot.sendMessage(chat_id, readfile(botpath + "/version"))
 
     elif msg['text'] in ["/tbrestart"]:
         if id in grant:
@@ -798,10 +799,10 @@ def on_chat_message(msg):
 
     elif msg['text'] in ["/tbupdate"]:
         if id in grant:
-            bot.sendMessage(chat_id,"Files were updates from github, please reboot manually.")
             os.system(rpirw)
             time.sleep(2)
-            os.system("cd " + botpath + " & git pull")
+            os.system("cd " + botpath + " && git pull > " + botpath + "/update.log")
+            bot.sendMessage(chat_id, readfile(botpath + "/update.log"))
         else:
             bot.sendMessage(chat_id, grantfehler)
 
@@ -934,7 +935,7 @@ def on_chat_message(msg):
     	    i = i + 1
 
 	status += '\n'
-	status += "Telebot version: " + tbversion()
+	status += "Telebot version: " + readfile(botpath + "/version")
 
         bot.sendMessage(parse_mode='Markdown',chat_id=chat_id, text=status)
 
