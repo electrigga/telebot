@@ -414,7 +414,7 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
-    elif query_data == "/psupgrade": #die logfile wird vom system nicht genutzt
+    elif query_data == "/psupgrade":
         if from_id in grant:
             os.system(rpirw)
             os.system("sudo rm /var/log/pi-star/pi-star_upgrade.log")
@@ -892,13 +892,7 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id,value.text)
         else:
             bot.sendMessage(chat_id, grantfehler)			
-	
-	# if ( ($_POST["REFmgr"] == "LINK") && (isset($_POST["refSubmit"])) ) { $bmAPIurl = $bmAPIurl."reflector/setActiveReflector.php?id=".$dmrID; }
-    #if ( ($_POST["REFmgr"] == "UNLINK") && (isset($_POST["refSubmit"])) ) { $bmAPIurl = $bmAPIurl."reflector/setActiveReflector.php?id=".$dmrID; $targetREF = "4000"; }
-	#  'reflector' => $targetREF,		
-			
-			
-	#### GPIO handle ####
+
     elif msg['text'] in ["/gpio"]:
 	if gpioactive == 1:
 	    if id in grant:
