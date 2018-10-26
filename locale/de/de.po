@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-10-24 09:53+CEST\n"
-"PO-Revision-Date: 2018-10-24 09:55+0200\n"
+"POT-Creation-Date: 2018-10-26 18:02+CEST\n"
+"PO-Revision-Date: 2018-10-26 18:07+0200\n"
 "Last-Translator: Jens Bremeier\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -97,11 +97,11 @@ msgstr ""
 msgid "runs not"
 msgstr ""
 
-#: telebot.py:306 telebot.py:309 telebot.py:324 telebot.py:929 telebot.py:937
+#: telebot.py:306 telebot.py:309 telebot.py:324 telebot.py:923 telebot.py:931
 msgid "is_on"
 msgstr "ist an."
 
-#: telebot.py:312 telebot.py:315 telebot.py:321 telebot.py:931 telebot.py:935
+#: telebot.py:312 telebot.py:315 telebot.py:321 telebot.py:925 telebot.py:929
 msgid "is_off"
 msgstr "ist aus."
 
@@ -137,11 +137,11 @@ msgstr "Beende das DMRGateway…."
 msgid "start_dmrgw"
 msgstr "Starte das DMRGateway…."
 
-#: telebot.py:379 telebot.py:968
+#: telebot.py:379 telebot.py:962
 msgid "rebooting_system"
 msgstr "Starte das System neu"
 
-#: telebot.py:386 telebot.py:819 telebot.py:995
+#: telebot.py:386 telebot.py:819 telebot.py:989
 msgid "bye_msg_owner"
 msgstr "Ich bin dann mal weg…."
 
@@ -248,6 +248,14 @@ msgid "tg_help"
 msgstr "Listet die statisch geschalteten TG auf."
 
 #: telebot.py:658
+msgid "bmadd_help"
+msgstr "mit \"/add TS TG\" wird eine statische Talkgroup hinzugefügt. TS=Timeslot TG=Talkgroup"
+
+#: telebot.py:658
+msgid "bmdel_help"
+msgstr "mit \"/del TS TG\" wird eine statische Talkgroup gelöscht. TS=Timeslot TG=Talkgroup"
+
+#: telebot.py:658
 msgid "gpio_help"
 msgstr "Funktionen zur Steuerung der GPIO"
 
@@ -299,7 +307,7 @@ msgstr "Zuletzt gehört Echolink"
 msgid "keyboard_svxlink"
 msgstr "SVXLink Sysop"
 
-#: telebot.py:725 telebot.py:916
+#: telebot.py:725 telebot.py:910
 msgid "not_activ"
 msgstr "Nicht aktiv"
 
@@ -403,39 +411,39 @@ msgstr "Pi_Star upgraden"
 msgid "btn_psrestart_mmdvm"
 msgstr "Pi-Star MMDVM neu starten"
 
-#: telebot.py:907
+#: telebot.py:901
 msgid "on"
 msgstr "an"
 
-#: telebot.py:908
+#: telebot.py:902
 msgid "off"
 msgstr "aus"
 
-#: telebot.py:911
+#: telebot.py:905
 msgid "gpio"
 msgstr "Funktionen zur Steuerung der GPIO"
 
-#: telebot.py:952
+#: telebot.py:946
 msgid "cpu_temp"
 msgstr "CPU-Temperatur"
 
-#: telebot.py:973
+#: telebot.py:967
 msgid "cmd_list_with /help."
 msgstr "Eine Liste der Kommandos bekommst du mit /help"
 
-#: telebot.py:973
+#: telebot.py:967
 msgid "no_idea_command"
 msgstr "Ich weiß nicht, was du damit meinst: "
 
-#: telebot.py:983
+#: telebot.py:977
 msgid "start_msg_owner"
 msgstr "Ich bin wieder da…."
 
-#: telebot.py:987
+#: telebot.py:981
 msgid "bot_is_wrong"
 msgstr "Irgendwas stimmt mit dem Bot nicht."
 
-#: telebot.py:994
+#: telebot.py:988
 msgid "bot_shutdown"
 msgstr "Tschüss…."
 
