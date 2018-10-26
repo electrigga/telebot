@@ -655,7 +655,7 @@ def on_chat_message(msg):
 	hilfetext = _("info_commands") + "\n" + "/status " + _("status_help") + "\n" + "/help " + _("help_help") + "\n" + \
 		    "/tg " + _("tg_help") + "\n" + "/lh " + _("lh_help") + "\n" + "/lh CALL " + _("lh_CALL_help")
         if id in grant:
-            hilfetext += "\n\n" + "/gpio " + _("gpio_help") + "\n" + "/sw " + _("sw_help") + "\n" + "/svx " + _("svx_help") + "\n" + "/add" + _("bmadd_help") + "/n" + "/del" + _("bmdel_help") 
+            hilfetext += "\n\n" + "/gpio " + _("gpio_help") + "\n" + "/sw " + _("sw_help") + "\n" + "/svx " + _("svx_help") + "\n" + "/add " + _("bmadd_help") + " \n" + "/del " + _("bmdel_help") 
         bot.sendMessage(chat_id,botcall + " " + hilfetext)
 
     elif msg['text'] in ["/tg"]:
