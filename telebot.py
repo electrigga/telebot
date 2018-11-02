@@ -47,13 +47,14 @@ def initialkb(chat_id,id):
 				markup = ReplyKeyboardMarkup(keyboard=[
 					['/lh', '/status'],
 					['/tg', '/bm', '/help'],
-					['/gpio', '/sw', '/svx']
+					['/gpio', '/sw', '/svx'],
+					['/misc']
                 ])
 			else:
 				markup = ReplyKeyboardMarkup(keyboard=[
 					['/lh', '/status'],
 					['/tg', '/bm', '/help'],
-					['/gpio', '/pi-star'],
+					['/gpio', '/pistar','/misc']
 				])
 			bot.sendMessage(chat_id, _('basic_commands'), reply_markup=markup)
     	else:
@@ -256,6 +257,13 @@ def psinicheck(file,section,key):
 	else:
 		return False
 
+def readfile(filepath):
+    f= open(filepath,"r")
+    if f.mode == "r":
+        content = f.read()
+        f.close()
+        return content
+
 ###### Callback-Query-Handler Start ######
 
 def on_callback_query(msg):
@@ -279,7 +287,7 @@ def on_callback_query(msg):
             action = apiurl + "v1.0/repeater/setRepeaterTarantool.php?action=dropDynamicGroups&slot=1&q="
             apistrg = action + dmrid
             bmsimple(query_id,apistrg)
-	elif query_data == "dropDynamicS2":
+        elif query_data == "dropDynamicS2":
             action = apiurl + "v1.0/repeater/setRepeaterTarantool.php?action=dropDynamicGroups&slot=2&q="
             apistrg = action + dmrid
             bmsimple(query_id,apistrg)
@@ -288,14 +296,6 @@ def on_callback_query(msg):
             apistrg = action + dmrid
             bmsimple(query_id,apistrg)
 
-        # req = requests.post(apistrg, auth=HTTPBasicAuth(bmapi,''), data = {'talkgroup':262,'timeslot':0})
-        # req.encoding = 'utf-8'
-
-		
-		
-		
-		
-		
 ### GPIO switcher ###
     if gpioactive == 1:
         for i in range(len(gpioports)):
@@ -373,9 +373,57 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
+### misc handler ###
+    elif query_data == "/reboot":
+        if from_id in grant:
+            bot.answerCallbackQuery(query_id,_("rebooting_system"))
+            os.system('sudo shutdown -r now')
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
 
+    elif query_data == "/tbrestart":
+        if from_id in grant:
+            ownerinfo(_("bye_msg_owner"),owner)
+            bot.answerCallbackQuery(query_id,_("tbrestart"))
+            os.system("sudo systemctl restart telebot.service")
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
 
-### Pi-Star Handler ###
+    elif query_data == "/tbupdate":
+        if from_id in grant:
+            os.system(rpirw)
+            time.sleep(2)
+            os.system("cd " + botpath + " && git pull > " + botpath + "/update.log")
+            bot.sendMessage(from_id, readfile(botpath + "/update.log"))
+            bot.answerCallbackQuery(query_id, readfile(botpath + "/update.log"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/tbversion":
+        bot.sendMessage(from_id,readfile(botpath + "/version"))
+        bot.answerCallbackQuery(query_id,readfile(botpath + "/version"))
+
+### Pi-Star Query Handler ###
+    elif query_data == "/psupdate":
+        if from_id in grant:
+            os.system(rpirw)
+            os.system("sudo rm /var/log/pi-star/pi-star_update.log")
+            os.system("sudo pistar-update")
+            bot.sendMessage(from_id,readfile("/var/log/pi-star/pi-star_update.log"))
+            bot.answerCallbackQuery(query_id, readfile("/var/log/pi-star/pi-star_update.log"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/psupgrade":
+        if from_id in grant:
+            os.system(rpirw)
+            os.system("sudo rm /var/log/pi-star/pi-star_upgrade.log")
+            os.system("sudo pistar-upgrade")
+            bot.sendMessage(from_id,readfile("/var/log/pi-star/pi-star_upgrade.log"))
+            bot.answerCallbackQuery(query_id, readfile("/var/log/pi-star/pi-star_upgrade.log"))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
 #DMR
     elif query_data == "/psstop_mmdvm_dmr":
         if from_id in grant:
@@ -471,7 +519,7 @@ def on_callback_query(msg):
                 os.system(psstart)
                 bot.answerCallbackQuery(query_id,_("psstopmmdvmp25"))
             else:
-                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
@@ -485,9 +533,9 @@ def on_callback_query(msg):
                 os.system(psstart)
                 bot.answerCallbackQuery(query_id,_("psstartmmdvmp25"))
             else:
-                bot.answerCallbackQuery(query_id,_("rsp_noaction"))	
+                bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
-            bot.answerCallbackQuery(query_id,grantfehler)			
+            bot.answerCallbackQuery(query_id,grantfehler)
 #YSF2DMR			
     elif query_data == "/psstop_mmdvm_ysf2dmr":
         if from_id in grant:
@@ -530,7 +578,6 @@ def on_callback_query(msg):
                 bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-
     elif query_data == "/psstop_mmdvm_pocsag":
         if from_id in grant:
             value = psinicheck("/etc/mmdvmhost","POCSAG","Enable")
@@ -558,7 +605,6 @@ def on_callback_query(msg):
                 bot.answerCallbackQuery(query_id,_("rsp_noaction"))
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-
     elif query_data == "/psstop_mmdvm_dmrxlx":
         if from_id in grant:
             value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
@@ -582,6 +628,8 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)	
 
+			
+			
 ###### Callback-Query-Handler End ######
 
 ###### Chat-Message-Handler Start ######
@@ -607,7 +655,7 @@ def on_chat_message(msg):
 	hilfetext = _("info_commands") + "\n" + "/status " + _("status_help") + "\n" + "/help " + _("help_help") + "\n" + \
 		    "/tg " + _("tg_help") + "\n" + "/lh " + _("lh_help") + "\n" + "/lh CALL " + _("lh_CALL_help")
         if id in grant:
-            hilfetext += "\n\n" + "/gpio " + _("gpio_help") + "\n" + "/sw " + _("sw_help") + "\n" + "/svx " + _("svx_help")
+            hilfetext += "\n\n" + "/gpio " + _("gpio_help") + "\n" + "/sw " + _("sw_help") + "\n" + "/svx " + _("svx_help") + "\n" + "/add " + _("bmadd_help") + " \n" + "/del " + _("bmdel_help") 
         bot.sendMessage(chat_id,botcall + " " + hilfetext)
 
     elif msg['text'] in ["/tg"]:
@@ -700,8 +748,27 @@ def on_chat_message(msg):
 	else:
 	    bot.sendMessage(chat_id,grantfehler)
 
+    ### misc handler ###
+    elif msg['text'] in ["/misc"]:
+        if id in grant:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                    InlineKeyboardButton(text=_('btn_tbrestart'), callback_data='/tbrestart'),
+                    InlineKeyboardButton(text=_('btn_tbupdate'), callback_data='/tbupdate')
+                ],
+                [
+                     InlineKeyboardButton(text=_('btn_reboot'), callback_data='/reboot')
+                ],
+                [
+                     InlineKeyboardButton(text=_('tbversion'), callback_data='/tbversion')
+                ]
+            ])
+            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            bot.sendMessage(chat_id, grantfehler)
+
     ### Pi-Star Handle ###
-    elif msg['text'] in ["/pi-star"]:
+    elif msg['text'] in ["/pistar"]:
         if id in grant:
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [
@@ -728,6 +795,10 @@ def on_chat_message(msg):
                     InlineKeyboardButton(text=_('btn_psstart_mmdvm_dmrxlx'), callback_data='/psstart_mmdvm_dmrxlx'),
                     InlineKeyboardButton(text=_('btn_psstop_mmdvm_dmrxlx'), callback_data='/psstop_mmdvm_dmrxlx')
                 ],
+                [
+                    InlineKeyboardButton(text=_('btn_psupdate'), callback_data='/psupdate'),
+                    InlineKeyboardButton(text=_('btn_psupgrade'), callback_data='/psupgrade')
+                ],
 #                [
 #                    InlineKeyboardButton(text=_('btn_psstart_mmdvm_ysf2dmr'), callback_data='/psstart_mmdvm_ysf2dmr'),
 #                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf2dmr'), callback_data='/psstop_mmdvm_ysf2dmr')
@@ -739,19 +810,23 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
         else:
             bot.sendMessage(chat_id, grantfehler)
-#Telebot service neustart (geheim ;-) )
+			
+    elif msg['text'] in ["/tbversion"]:
+        bot.sendMessage(chat_id, readfile(botpath + "/version"))
+
     elif msg['text'] in ["/tbrestart"]:
         if id in grant:
-            bot.sendMessage(chat_id,'tbbotrestart')
+            ownerinfo(_("bye_msg_owner"),owner)
             os.system("sudo systemctl restart telebot.service")
         else:
             bot.sendMessage(chat_id, grantfehler)
+
     elif msg['text'] in ["/tbupdate"]:
         if id in grant:
-            bot.sendMessage(chat_id,'Daten werden vom Github geholt, Restart bitte extra auslösen.')
-            os.system(rpi-rw)
+            os.system(rpirw)
             time.sleep(2)
-            os.system("cd /home/pi-star/telebot & rpi-rw & git pull")
+            os.system("cd " + botpath + " && git pull > " + botpath + "/update.log")
+            bot.sendMessage(chat_id, readfile(botpath + "/update.log"))
         else:
             bot.sendMessage(chat_id, grantfehler)
 
@@ -817,13 +892,7 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id,value.text)
         else:
             bot.sendMessage(chat_id, grantfehler)			
-	
-	# if ( ($_POST["REFmgr"] == "LINK") && (isset($_POST["refSubmit"])) ) { $bmAPIurl = $bmAPIurl."reflector/setActiveReflector.php?id=".$dmrID; }
-    #if ( ($_POST["REFmgr"] == "UNLINK") && (isset($_POST["refSubmit"])) ) { $bmAPIurl = $bmAPIurl."reflector/setActiveReflector.php?id=".$dmrID; $targetREF = "4000"; }
-	#  'reflector' => $targetREF,		
-			
-			
-	#### GPIO handle ####
+
     elif msg['text'] in ["/gpio"]:
 	if gpioactive == 1:
 	    if id in grant:
@@ -865,7 +934,7 @@ def on_chat_message(msg):
 	# Laufende Prozesse testen
 	for proc in prozesse:
 		if prozesschecker(proc) == "runs":
-			status += "\n" + "*" + proc + " " + prozesschecker(proc) + "*" #übersetzung spukt mir in die suppe
+			status += "\n" + "*" + proc + " " + prozesschecker(proc) + "*" #übersetzung vermasselt mir die markup bold
 		else:
 			status += "\n" +  proc + " " + prozesschecker(proc)
 
@@ -882,6 +951,9 @@ def on_chat_message(msg):
     	    status += '\n'
     	    status += read_sensor(sensors[i])
     	    i = i + 1
+
+	status += '\n'
+	status += "Telebot version: " + readfile(botpath + "/version")
 
         bot.sendMessage(parse_mode='Markdown',chat_id=chat_id, text=status)
 
