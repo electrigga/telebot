@@ -663,6 +663,9 @@ def on_chat_message(msg):
     if msg['text'] in ["/start","/start start", "start", "hallo", "Hallo", "Hi", "Start"]:
 	bot.sendMessage(chat_id, _("welcome") + " " + botcall + " " + vorname + "!" + \
 				 "\n" + _("toget_help_write_/help"))
+	global chatcount
+	chatcount = 0
+	initialkb(chat_id,id)
 
     elif msg['text'] in ["/help", "hilfe", "help", "/hilfe"]:
 	hilfetext = _("info_commands") + "\n" + "/status " + _("status_help") + "\n" + "/help " + _("help_help") + "\n" + \
