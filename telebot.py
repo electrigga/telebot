@@ -410,6 +410,10 @@ def on_callback_query(msg):
         bot.sendMessage(from_id,readfile(botpath + "/version"))
         bot.answerCallbackQuery(query_id,readfile(botpath + "/version"))
 
+    elif query_data == "/externalip":
+        bot.sendMessage(from_id,subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
+        bot.answerCallbackQuery(query_id,subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
+
 ### Pi-Star Query Handler ###
     elif query_data == "/psupdate":
         if from_id in grant:
@@ -770,6 +774,9 @@ def on_chat_message(msg):
                 ],
                 [
                      InlineKeyboardButton(text=_('tbversion'), callback_data='/tbversion')
+                ],
+                [
+                     InlineKeyboardButton(text=_('externalip'), callback_data='/externalip')
                 ]
             ])
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
@@ -827,6 +834,12 @@ def on_chat_message(msg):
         if id in grant:
             ownerinfo(_("bye_msg_owner"),owner)
             os.system("sudo systemctl restart telebot.service")
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+
+    elif msg['text'] in ["/externalip"]:
+        if id in grant:
+            bot.sendMessage(chat_id, subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
         else:
             msgfuncgrantfehler(msg,chat_id)
 
