@@ -868,7 +868,7 @@ def on_chat_message(msg):
                 value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=ADD&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
                 bot.sendMessage(chat_id,value.text)
             else:
-                bot.sendMessage(chat_id,"write /add TS TG")
+                bot.sendMessage(chat_id,_("write ") + _("/add TS TG"))
         else:
             msgfuncgrantfehler(msg,chat_id)
     elif "/del" in msg['text']:
@@ -884,7 +884,7 @@ def on_chat_message(msg):
                 value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=DEL&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
                 bot.sendMessage(chat_id,value.text)
             else:
-                bot.sendMessage(chat_id,"write /del TS TG")
+                bot.sendMessage(chat_id,_("write ") + _("/del TS TG"))
         else:
             msgfuncgrantfehler(msg,chat_id)
 			
