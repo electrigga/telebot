@@ -264,6 +264,13 @@ def readfile(filepath):
         f.close()
         return content
 
+def queryfuncgrantfehler(msg,query_id): ## not needed since the command for opening the query is already checked against grant, but leave it as a safequard against malicious clients
+    ownerinfo(_('Befehlsaufruf ohne Berechtigung von: ') + msg['from']['username'] + _(' Befehl: ') + msg['text'],owner)
+    bot.answerCallbackQuery(query_id,grantfehler)
+
+def msgfuncgrantfehler(msg,chat_id):
+    ownerinfo(_('Befehlsaufruf ohne Berechtigung von: ') + msg['from']['username'] + _(' Befehl: ') + msg['text'],owner)
+    bot.sendMessage(chat_id, grantfehler)
 ###### Callback-Query-Handler Start ######
 
 def on_callback_query(msg):
@@ -350,7 +357,7 @@ def on_callback_query(msg):
             prockiller("MMDVMHost")
             bot.answerCallbackQuery(query_id,_("stop_mmdvm"))
         else:
-            bot.answerCallbackQuery(query_id,grantfehler)
+            queryfuncgrantfehler(msg,query_id)
 
     elif query_data == "/startmmdvm":
         if from_id in grant:
@@ -402,6 +409,10 @@ def on_callback_query(msg):
     elif query_data == "/tbversion":
         bot.sendMessage(from_id,readfile(botpath + "/version"))
         bot.answerCallbackQuery(query_id,readfile(botpath + "/version"))
+
+    elif query_data == "/externalip":
+        bot.sendMessage(from_id,subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
+        bot.answerCallbackQuery(query_id,subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
 
 ### Pi-Star Query Handler ###
     elif query_data == "/psupdate":
@@ -647,9 +658,14 @@ def on_chat_message(msg):
     # print(msg['text'])
     print(msg)
 
+
+
     if msg['text'] in ["/start","/start start", "start", "hallo", "Hallo", "Hi", "Start"]:
 	bot.sendMessage(chat_id, _("welcome") + " " + botcall + " " + vorname + "!" + \
 				 "\n" + _("toget_help_write_/help"))
+	global chatcount
+	chatcount = 0
+	initialkb(chat_id,id)
 
     elif msg['text'] in ["/help", "hilfe", "help", "/hilfe"]:
 	hilfetext = _("info_commands") + "\n" + "/status " + _("status_help") + "\n" + "/help " + _("help_help") + "\n" + \
@@ -746,7 +762,7 @@ def on_chat_message(msg):
 		    ])
 	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
 	else:
-	    bot.sendMessage(chat_id,grantfehler)
+	    msgfuncgrantfehler(msg,chat_id)
 
     ### misc handler ###
     elif msg['text'] in ["/misc"]:
@@ -761,11 +777,14 @@ def on_chat_message(msg):
                 ],
                 [
                      InlineKeyboardButton(text=_('tbversion'), callback_data='/tbversion')
+                ],
+                [
+                     InlineKeyboardButton(text=_('externalip'), callback_data='/externalip')
                 ]
             ])
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
         else:
-            bot.sendMessage(chat_id, grantfehler)
+            msgfuncgrantfehler(msg,chat_id)
 
     ### Pi-Star Handle ###
     elif msg['text'] in ["/pistar"]:
@@ -809,7 +828,7 @@ def on_chat_message(msg):
             ])
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
         else:
-            bot.sendMessage(chat_id, grantfehler)
+            msgfuncgrantfehler(msg,chat_id)
 			
     elif msg['text'] in ["/tbversion"]:
         bot.sendMessage(chat_id, readfile(botpath + "/version"))
@@ -819,7 +838,13 @@ def on_chat_message(msg):
             ownerinfo(_("bye_msg_owner"),owner)
             os.system("sudo systemctl restart telebot.service")
         else:
-            bot.sendMessage(chat_id, grantfehler)
+            msgfuncgrantfehler(msg,chat_id)
+
+    elif msg['text'] in ["/externalip"]:
+        if id in grant:
+            bot.sendMessage(chat_id, subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
+        else:
+            msgfuncgrantfehler(msg,chat_id)
 
     elif msg['text'] in ["/tbupdate"]:
         if id in grant:
@@ -828,7 +853,7 @@ def on_chat_message(msg):
             os.system("cd " + botpath + " && git pull > " + botpath + "/update.log")
             bot.sendMessage(chat_id, readfile(botpath + "/update.log"))
         else:
-            bot.sendMessage(chat_id, grantfehler)
+            msgfuncgrantfehler(msg,chat_id)
 
     elif "/add" in msg['text']:
         if id in grant:
@@ -843,9 +868,9 @@ def on_chat_message(msg):
                 value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=ADD&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
                 bot.sendMessage(chat_id,value.text)
             else:
-                bot.sendMessage(chat_id,"write /add TS TG")
+                bot.sendMessage(chat_id,_("write ") + _("/add TS TG"))
         else:
-            bot.sendMessage(chat_id, grantfehler)	
+            msgfuncgrantfehler(msg,chat_id)
     elif "/del" in msg['text']:
         if id in grant:
             if "/del " in msg['text']:
@@ -859,9 +884,9 @@ def on_chat_message(msg):
                 value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=DEL&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
                 bot.sendMessage(chat_id,value.text)
             else:
-                bot.sendMessage(chat_id,"write /del TS TG")
+                bot.sendMessage(chat_id,_("write ") + _("/del TS TG"))
         else:
-            bot.sendMessage(chat_id, grantfehler)
+            msgfuncgrantfehler(msg,chat_id)
 			
     elif "/link" in msg['text']:
         if id in grant:
@@ -877,7 +902,7 @@ def on_chat_message(msg):
             else:
                 bot.sendMessage(chat_id,"write /add TS TG")
         else:
-            bot.sendMessage(chat_id, grantfehler)
+            msgfuncgrantfehler(msg,chat_id)
 
     elif "/unlink" in msg['text']:
         if id in grant:
@@ -891,7 +916,7 @@ def on_chat_message(msg):
             value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
             bot.sendMessage(chat_id,value.text)
         else:
-            bot.sendMessage(chat_id, grantfehler)			
+            msgfuncgrantfehler(msg,chat_id)
 
     elif msg['text'] in ["/gpio"]:
 	if gpioactive == 1:
@@ -905,7 +930,7 @@ def on_chat_message(msg):
 	        bot.sendMessage(chat_id,_('gpio'), reply_markup=keyboard)
 	        del keyboard, buttons
 	    else:
-                bot.sendMessage(chat_id,grantfehler)
+                msgfuncgrantfehler(msg,chat_id)
 	else:
 	    	bot.sendMessage(chat_id,_("not_activ"))
 
@@ -962,7 +987,7 @@ def on_chat_message(msg):
 	    bot.sendMessage(chat_id,_("rebooting_system"))
     	    os.system('sudo shutdown -r now')
 	else:
-            bot.sendMessage(chat_id,grantfehler)
+            msgfuncgrantfehler(msg,chat_id)
     else:
 	bot.sendMessage(chat_id, _("no_idea_command") + msg['text'] + " "  + vorname + "!\n" + _("cmd_list_with /help."))
 
