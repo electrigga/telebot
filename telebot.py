@@ -16,7 +16,7 @@ import gettext
 # Import Config
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
-		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs)
+		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs, backupfiles)
 
 # Import Commands
 from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlx, psstop_mmdvm_dmrxlx)
@@ -76,12 +76,12 @@ if gpioactive == 1:
 # Loggingfunktion
 def botlog(logtext):
     if ispistar == 1:
-        rpirw
+        os.system(rpirw)
     file = open(logfile, "a+")
     file.write(time.strftime("%d.%m. %H:%M:%S") + ": " + logtext + '\n')
     file.close()
     if ispistar == 1:
-        rpiro
+        os.system(rpiro)
 # function to read temp-sensors
 def read_sensor(path):
   value = "U"
@@ -409,8 +409,26 @@ def on_callback_query(msg):
         bot.answerCallbackQuery(query_id,readfile(botpath + "/version"))
 
     elif query_data == "/externalip":
-        bot.sendMessage(from_id,subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
-        bot.answerCallbackQuery(query_id,subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
+        if from_id in grant:
+            bot.sendMessage(from_id,subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
+            bot.answerCallbackQuery(query_id,subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif query_data == "/backup":
+        if from_id in grant:
+            backuparchive = botpath + '/backup-' + datetime.datetime.now().strftime("%Y-%m-%d") + '.zip'
+            os.system(rpirw)
+            for backupfile in backupfiles:
+                os.system('sudo zip ' + backuparchive + ' ' + backupfile)
+            file_data = open(backuparchive, 'rb')
+            ret_msg = bot.sendDocument(from_id, file_data)
+            bot.answerCallbackQuery(query_id,"Backup send")
+            os.system('sudo rm ' + backuparchive)
+            os.system(rpiro)
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
 
 ### Pi-Star Query Handler ###
     elif query_data == "/psupdate":
@@ -774,10 +792,11 @@ def on_chat_message(msg):
                      InlineKeyboardButton(text=_('btn_reboot'), callback_data='/reboot')
                 ],
                 [
-                     InlineKeyboardButton(text=_('tbversion'), callback_data='/tbversion')
+                     InlineKeyboardButton(text=_('btn_tbversion'), callback_data='/tbversion'),
+                     InlineKeyboardButton(text=_('btn_externalip'), callback_data='/externalip')
                 ],
                 [
-                     InlineKeyboardButton(text=_('externalip'), callback_data='/externalip')
+                     InlineKeyboardButton(text=_('btn_backup'), callback_data='/backup')
                 ]
             ])
             bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
@@ -913,6 +932,20 @@ def on_chat_message(msg):
             }
             value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
             bot.sendMessage(chat_id,value.text)
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+			
+    elif "/backup" in msg['text']:
+        if id in grant:
+            backuparchive = botpath + '/backup-' + datetime.datetime.now().strftime("%Y-%m-%d") + '.zip'
+            os.system(rpirw)
+            for backupfile in backupfiles:
+                os.system('sudo zip ' + backuparchive + ' ' + backupfile)
+            file_data = open(backuparchive, 'rb')
+            ret_msg = bot.sendDocument(chat_id, file_data)
+            assert ret_msg.message_id
+            os.system('sudo rm ' + backuparchive)
+            os.system(rpiro)
         else:
             msgfuncgrantfehler(msg,chat_id)
 
