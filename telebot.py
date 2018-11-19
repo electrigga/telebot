@@ -16,16 +16,14 @@ import gettext
 # Import Config
 from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, sensors, gwlogs, mmprefix, logfile, userfile, \
 		    mmdvmaufruf, dmrgwaufruf, ysfgw, ircdbbgw, dmrgwaktiv, ysfgwaktiv, ircdbbgwaktiv, gpioports, gpioactive, \
-		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs, botpath)
+		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs)
 
 # Import Commands
 from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlx, psstop_mmdvm_dmrxlx)
 
 
-if botpath == "":
-    trans = gettext.translation("telebot", "/locale", [language])
-else:
-    trans = gettext.translation("telebot", botpath + "/locale", [language])
+botpath = os.path.dirname(os.path.realpath(__file__))
+trans = gettext.translation("telebot", botpath + "/locale", [language])
 trans.install()
 
 		
