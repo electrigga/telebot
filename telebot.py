@@ -417,13 +417,14 @@ def on_callback_query(msg):
 
     elif query_data == "/backup":
         if from_id in grant:
-            backuparchive = botpath + '/backup-' + datetime.datetime.now().strftime("%Y-%m-%d") + '.zip'
+            backuparchive = botpath + '/backup-' + datetime.datetime.now().strftime("%Y.%m.%d-%H:%M") + '.zip'
             os.system(rpirw)
             for backupfile in backupfiles:
                 os.system('sudo zip ' + backuparchive + ' ' + backupfile)
             file_data = open(backuparchive, 'rb')
             ret_msg = bot.sendDocument(from_id, file_data)
-            bot.answerCallbackQuery(query_id,"Backup send")
+            bot.answerCallbackQuery(query_id,"Backup sent")
+            time.sleep(10)
             os.system('sudo rm ' + backuparchive)
             os.system(rpiro)
         else:
@@ -937,13 +938,13 @@ def on_chat_message(msg):
 			
     elif "/backup" in msg['text']:
         if id in grant:
-            backuparchive = botpath + '/backup-' + datetime.datetime.now().strftime("%Y-%m-%d") + '.zip'
+            backuparchive = botpath + '/backup-' + datetime.datetime.now().strftime("%Y.%m.%d-%H:%M") + '.zip'
             os.system(rpirw)
             for backupfile in backupfiles:
                 os.system('sudo zip ' + backuparchive + ' ' + backupfile)
             file_data = open(backuparchive, 'rb')
             ret_msg = bot.sendDocument(chat_id, file_data)
-            assert ret_msg.message_id
+            time.sleep(10)
             os.system('sudo rm ' + backuparchive)
             os.system(rpiro)
         else:
