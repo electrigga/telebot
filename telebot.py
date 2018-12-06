@@ -263,7 +263,7 @@ def readfile(filepath):
         return content
 
 def queryfuncgrantfehler(msg,query_id): ## not needed since the command for opening the query is already checked against grant, but leave it as a safequard against malicious clients
-    ownerinfo(_('Befehlsaufruf ohne Berechtigung von: ') + msg['from']['username'] + _(' Befehl: ') + msg['text'],owner)
+    ownerinfo(_('Commandcall without authorisation: ') + msg['from']['username'] + _(' Command: ') + msg['text'],owner)
     bot.answerCallbackQuery(query_id,grantfehler)
 
 def msgfuncgrantfehler(msg,chat_id):
@@ -430,6 +430,15 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
+    elif query_data == "/internalip":
+        if from_id in grant:
+            os.system(rpirw)
+            time.sleep(2)
+            os.system("ifconfig | egrep '([0-9]{1,3}\.){3}[0-9]{1,3}' > " + botpath + "/internalip.txt")
+            bot.sendMessage(from_id,readfile(botpath + "/internalip.txt").replace("          ",""))
+            bot.answerCallbackQuery(query_id,readfile(botpath + "/internalip.txt").replace("          ",""))
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
 
 ### Pi-Star Query Handler ###
     elif query_data == "/psupdate":
@@ -787,13 +796,14 @@ def on_chat_message(msg):
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [
                     InlineKeyboardButton(text=_('btn_tbrestart'), callback_data='/tbrestart'),
-                    InlineKeyboardButton(text=_('btn_tbupdate'), callback_data='/tbupdate')
+                    InlineKeyboardButton(text=_('btn_tbupdate'), callback_data='/tbupdate'),
+                    InlineKeyboardButton(text=_('btn_tbversion'), callback_data='/tbversion')
                 ],
                 [
                      InlineKeyboardButton(text=_('btn_reboot'), callback_data='/reboot')
                 ],
                 [
-                     InlineKeyboardButton(text=_('btn_tbversion'), callback_data='/tbversion'),
+                     InlineKeyboardButton(text=_('btn_internalip'), callback_data='/internalip'),
                      InlineKeyboardButton(text=_('btn_externalip'), callback_data='/externalip')
                 ],
                 [
@@ -863,6 +873,17 @@ def on_chat_message(msg):
             bot.sendMessage(chat_id, subprocess.check_output(["curl", "https://ipinfo.io/ip"]))
         else:
             msgfuncgrantfehler(msg,chat_id)
+
+    elif msg['text'] in ["/internalip"]:
+        if id in grant:
+            os.system(rpirw)
+            time.sleep(2)
+            os.system("ifconfig | egrep '([0-9]{1,3}\.){3}[0-9]{1,3}' > " + botpath + "/internalip.txt")
+            bot.sendMessage(chat_id, readfile(botpath + "/internalip.txt").replace("          ",""))
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+
+
 
     elif msg['text'] in ["/tbupdate"]:
         if id in grant:
