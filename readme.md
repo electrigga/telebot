@@ -43,10 +43,10 @@ Fragen, Anregungen, Wünsche und Hilfe bekommt ihr standesgemäß über Telegram
 
 Kurzanleitung zur Installation des telebot auf Pi-Star:
 
+	rpi-rw
 	sudo apt-get install python-pip
 	sudo pip install psutil telepot requests crudini
 	in /home/pi-star
-	rpi-rw
 	git clone https://github.com/electrigga/telebot.git
 	cd telebot
 	git checkout dev
