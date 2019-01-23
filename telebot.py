@@ -901,7 +901,7 @@ def on_chat_message(msg):
                 bmts = suche[1]
                 bmtg = suche[2]
                 datas= "talkgroup="+str(bmtg)+"&timeslot="+str(bmts)
-                header = {'Content-Length': len(datas),
+                header = {'Content-Length': str(len(datas)),
                 'Content-Type': 'application/x-www-form-urlencoded'
                 }
                 value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=ADD&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
@@ -917,7 +917,7 @@ def on_chat_message(msg):
                 bmts = suche[1]
                 bmtg = suche[2]
                 datas= "talkgroup="+str(bmtg)+"&timeslot="+str(bmts)
-                header = {'Content-Length': len(datas),
+                header = {'Content-Length': str(len(datas)),
                 'Content-Type': 'application/x-www-form-urlencoded'
                 }
                 value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action=DEL&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
@@ -933,7 +933,7 @@ def on_chat_message(msg):
                 suche = msg['text'].split(" ")
                 bmref = suche[1]
                 datas= "reflector="+str(bmref)
-                header = {'Content-Length': len(datas),
+                header = {'Content-Length': str(len(datas)),
                 'Content-Type': 'application/x-www-form-urlencoded'
                 }
                 value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
@@ -946,10 +946,10 @@ def on_chat_message(msg):
     elif "/unlink" in msg['text']:
         if id in grant:
             suche = msg['text'].split(" ")
-            bmref = 4000
+            bmref = str(4000)
             datas= "reflector="+str(bmref)
             print(datas)
-            header = {'Content-Length': len(datas),
+            header = {'Content-Length': str(len(datas)),
             'Content-Type': 'application/x-www-form-urlencoded'
             }
             value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
