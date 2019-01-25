@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2019-01-25 13:32+CET\n"
-"PO-Revision-Date: 2019-01-25 13:38+0100\n"
+"PO-Revision-Date: 2019-01-25 13:46+0100\n"
 "Last-Translator: Jens Bremeier\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -317,26 +317,18 @@ msgid "dropDynamicS2"
 msgstr "Entferne dyn TG TS2"
 
 #: telebot.py:832
-#, fuzzy
-#| msgid "kb_addbmtg"
 msgid "btn_addbmtg"
 msgstr "Add TG"
 
 #: telebot.py:833
-#, fuzzy
-#| msgid "kb_delbmtg"
 msgid "btn_delbmtg"
 msgstr "Del TG"
 
 #: telebot.py:836
-#, fuzzy
-#| msgid "kb_bmlink"
 msgid "btn_bmlink"
 msgstr "Link Reflector"
 
 #: telebot.py:837
-#, fuzzy
-#| msgid "kb_bmunlink"
 msgid "btn_bmunlink"
 msgstr "Unlink Reflector"
 
