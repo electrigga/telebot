@@ -6,7 +6,6 @@ from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboar
 from telepot.loop import MessageLoop
 from pprint import pprint
 from requests.auth import HTTPBasicAuth
-
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -21,11 +20,10 @@ from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, s
 # Import Commands
 from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlx, psstop_mmdvm_dmrxlx)
 
-
+user_states = {}
 botpath = os.path.dirname(os.path.realpath(__file__))
 trans = gettext.translation("telebot", botpath + "/locale", [language])
 trans.install()
-
 		
 # Include SVX-Logic
 if svxactive == 1:
@@ -269,11 +267,29 @@ def queryfuncgrantfehler(msg,query_id): ## not needed since the command for open
 def msgfuncgrantfehler(msg,chat_id):
     ownerinfo(_('Befehlsaufruf ohne Berechtigung von: ') + msg['from']['username'] + _(' Befehl: ') + msg['text'],owner)
     bot.sendMessage(chat_id, grantfehler)
-###### Callback-Query-Handler Start ######
 
+def bmtgaction(action,bmts,bmtg,source_id):
+    datas= "talkgroup="+str(bmtg)+"&timeslot="+str(bmts)
+    header = {'Content-Length': str(len(datas)),
+    'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    value = requests.post("https://api.brandmeister.network/v1.0/repeater/talkgroup/?action="+ action.upper() + "&id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+    bot.sendMessage(source_id,value.text)
+def bmrefaction(bmref,source_id):
+            datas= "reflector="+str(bmref)
+            print(datas)
+            header = {'Content-Length': str(len(datas)),
+            'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
+            bot.sendMessage(source_id,value.text)
+
+
+###### Callback-Query-Handler Start ######
 def on_callback_query(msg):
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
     print('Callback Query:', query_id, from_id, query_data)
+    global user_states
 
     command = query_data.split("_")
 
@@ -665,15 +681,92 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)	
 
-			
-			
+
+    elif "/tgbmadd" in query_data:#adde
+        if from_id in grant:
+            bot.answerCallbackQuery(query_id,_("set Timeslot"))
+            user_states[str(from_id)] = "bmadd"
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                     InlineKeyboardButton(text=_('0'), callback_data='0'),
+                     InlineKeyboardButton(text=_('1'), callback_data='1'),
+                     InlineKeyboardButton(text=_('2'), callback_data='2')
+                ]
+            ])
+            bot.sendMessage(from_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+    elif "/tgbmdel" in query_data:
+        if from_id in grant:
+            bot.answerCallbackQuery(query_id,_("set Timeslot"))
+            user_states[str(from_id)] = "bmdel"
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                     InlineKeyboardButton(text=_('0'), callback_data='0'),
+                     InlineKeyboardButton(text=_('1'), callback_data='1'),
+                     InlineKeyboardButton(text=_('2'), callback_data='2')
+                ]
+            ])
+            bot.sendMessage(from_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+    elif "/bmlink" in query_data:
+        if from_id in grant:
+            bot.sendMessage(from_id,"set Reflector")
+            bot.answerCallbackQuery(query_id,_("set Reflector"))
+            user_states[str(from_id)] = "bmlink"
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+    elif "/bmunlink" in query_data:
+        if from_id in grant:
+            bot.sendMessage(from_id,"unlinking Reflector")
+            bot.answerCallbackQuery(query_id,_("unlinking Reflector"))
+            bmrefaction("4000",from_id)
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+
+
+    elif str(from_id) in user_states:
+        if from_id in grant:
+            if user_states[str(from_id)] == "bmadd":
+                if 0 <= int(query_data) <= 2:
+                    user_states[str(from_id)] = "bmadd " + str(query_data)
+                    bot.sendMessage(from_id,"set Talkgroup")
+                    bot.answerCallbackQuery(query_id,"set talkgroup")
+                else:
+                    user_states[str(from_id)] = ""
+                    bot.sendMessage(from_id,"not possible, abort")
+                    bot.answerCallbackQuery(query_id,"not possible, abort")
+            elif user_states[str(from_id)] == "bmdel":
+                if 0 <= int(query_data) <= 2:
+                    user_states[str(from_id)] = "bmdel " + str(query_data)
+                    bot.sendMessage(from_id,"set Talkgroup")
+                    bot.answerCallbackQuery(query_id,"set talkgroup")
+                else:
+                    user_states[str(from_id)] = ""
+                    bot.sendMessage(from_id,"not possible, abort")
+                    bot.answerCallbackQuery(query_id,"not possible, abort")
+					
+            elif "bmadd " in user_states[str(from_id)] or "bmdel " in user_states[str(from_id)]:
+                suche = user_states[str(from_id)].split(" ")
+                action = suche[0]
+                bmts = suche[1]
+                bmtg = query_data
+                bmtgaction(action[2:],bmts,bmtg,from_id)
+                user_states[str(from_id)] = ""
+
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
+            msgfuncgrantfehler(msg,from_id)
+
 ###### Callback-Query-Handler End ######
 
 ###### Chat-Message-Handler Start ######
 
 def on_chat_message(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
-
+    global user_states
     vorname = msg['from']['first_name']
     username = msg['from']['username']
     id = msg['from']['id']
@@ -734,6 +827,14 @@ def on_chat_message(msg):
                     [
                         InlineKeyboardButton(text=_('dropCallS2'), callback_data='/dropCallS2'),
                         InlineKeyboardButton(text=_('dropDynamicS2'), callback_data='/dropDynamicS2')
+                    ],
+                    [
+                        InlineKeyboardButton(text=_('kb_addbmtg'), callback_data='/tgbmadd'),
+                        InlineKeyboardButton(text=_('kb_delbmtg'), callback_data='/tgbmdel')
+                    ],
+                    [
+                        InlineKeyboardButton(text=_('kb_bmlink'), callback_data='/bmlink'),
+                        InlineKeyboardButton(text=_('kb_bmunlink'), callback_data='/bmunlink')
                     ],
                     [
                         InlineKeyboardButton(text=_('dropRepeater'), callback_data='/dropRepeater')
@@ -883,8 +984,6 @@ def on_chat_message(msg):
         else:
             msgfuncgrantfehler(msg,chat_id)
 
-
-
     elif msg['text'] in ["/tbupdate"]:
         if id in grant:
             os.system(rpirw)
@@ -894,7 +993,89 @@ def on_chat_message(msg):
         else:
             msgfuncgrantfehler(msg,chat_id)
 
-    elif "/add" in msg['text']:
+    elif "/tgbmadd" in msg['text']:#adde
+        if id in grant:
+            bot.sendMessage(chat_id,"set Timeslot")
+            user_states[str(chat_id)] = "bmadd"
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                     InlineKeyboardButton(text=_('0'), callback_data='0'),
+                     InlineKeyboardButton(text=_('1'), callback_data='1'),
+                     InlineKeyboardButton(text=_('2'), callback_data='2')
+                ]
+            ])
+            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+    elif "/tgbmdel" in msg['text']: #lösche
+        if id in grant:
+            bot.sendMessage(chat_id,"set Timeslot")
+            user_states[str(chat_id)] = "bmdel"
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                [
+                     InlineKeyboardButton(text=_('0'), callback_data='0'),
+                     InlineKeyboardButton(text=_('1'), callback_data='1'),
+                     InlineKeyboardButton(text=_('2'), callback_data='2')
+                ]
+            ])
+            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+
+    elif "/bmlink" in msg['text']:
+        if id in grant:
+            
+            bot.sendMessage(chat_id,"set Reflector")
+            user_states[str(chat_id)] = "bmlink"
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+			
+    elif "/bmunlink" in msg['text']:
+        if id in grant:
+                bmrefaction("4000",chat_id)
+                bot.sendMessage(chat_id,"unlinking Reflector")
+                del user_states[str(chat_id)]
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+
+
+    elif str(chat_id) in user_states:
+        if id in grant:
+            if user_states[str(chat_id)] == "bmadd":
+                if 0 <= int(msg['text']) <= 2:
+                    user_states[str(chat_id)] = "bmadd " + msg['text']
+                    bot.sendMessage(chat_id,"set Talkgroup" + user_states[str(chat_id)])
+                else:
+                    user_states[str(chat_id)] = ""
+                    bot.sendMessage(chat_id,"not possible, abort")
+            elif user_states[str(chat_id)] == "bmdel":
+                if 0 <= int(msg['text']) <= 2:
+                    user_states[str(chat_id)] = "bmdel " + msg['text']
+                    bot.sendMessage(chat_id,"set Talkgroup")
+                else:
+                    user_states[str(chat_id)] = ""
+                    bot.sendMessage(chat_id,"not possible, abort")
+            elif user_states[str(chat_id)] == "bmlink":
+                if 0 <= int(msg['text']) <= 9999:
+                    bmrefaction(msg['text'],chat_id)
+                    del user_states[str(chat_id)]
+                else:
+                    user_states[str(chat_id)] = ""
+                    bot.sendMessage(chat_id,"not possible, abort")
+
+            elif "bmadd " in user_states[str(chat_id)] or "bmdel " in user_states[str(chat_id)]:
+                suche = user_states[str(chat_id)].split(" ")
+                action = suche[0]
+                bmts = suche[1]
+                bmtg = msg['text']
+                bmtgaction(action[2:],bmts,bmtg,chat_id)
+                user_states[str(chat_id)] = ""
+                del user_states[str(chat_id)]
+
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+
+    elif "/addbmtg" in msg['text']:
         if id in grant:
             if "/add " in msg['text']:
                 suche = msg['text'].split(" ")
@@ -910,7 +1091,8 @@ def on_chat_message(msg):
                 bot.sendMessage(chat_id,_("write ") + _("/add TS TG"))
         else:
             msgfuncgrantfehler(msg,chat_id)
-    elif "/del" in msg['text']:
+
+    elif "/delbmtg" in msg['text']:
         if id in grant:
             if "/del " in msg['text']:
                 suche = msg['text'].split(" ")
@@ -927,9 +1109,9 @@ def on_chat_message(msg):
         else:
             msgfuncgrantfehler(msg,chat_id)
 			
-    elif "/link" in msg['text']:
+    elif "/linkbmref" in msg['text']:
         if id in grant:
-            if "/link " in msg['text']:
+            if "/linkbmref " in msg['text']:
                 suche = msg['text'].split(" ")
                 bmref = suche[1]
                 datas= "reflector="+str(bmref)
@@ -939,11 +1121,11 @@ def on_chat_message(msg):
                 value = requests.post("https://api.brandmeister.network/v1.0/repeater/reflector/setActiveReflector.php?id=" + dmrid, data=datas, auth=HTTPBasicAuth(bmapi,''), headers=header)
                 bot.sendMessage(chat_id,value.text)
             else:
-                bot.sendMessage(chat_id,"write /add TS TG")
+                bot.sendMessage(chat_id,"write /linkbmref Reflectornumber")
         else:
             msgfuncgrantfehler(msg,chat_id)
 
-    elif "/unlink" in msg['text']:
+    elif "/unlinkbmref" in msg['text']:
         if id in grant:
             suche = msg['text'].split(" ")
             bmref = str(4000)
@@ -1041,6 +1223,7 @@ def on_chat_message(msg):
     	    os.system('sudo shutdown -r now')
 	else:
             msgfuncgrantfehler(msg,chat_id)
+
     else:
 	bot.sendMessage(chat_id, _("no_idea_command") + msg['text'] + " "  + vorname + "!\n" + _("cmd_list_with /help."))
 
