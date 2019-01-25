@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-12-06 18:03+CET\n"
-"PO-Revision-Date: 2018-12-06 18:04+0100\n"
+"POT-Creation-Date: 2019-01-25 13:32+CET\n"
+"PO-Revision-Date: 2019-01-25 13:38+0100\n"
 "Last-Translator: Jens Bremeier\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -14,478 +14,521 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: telebot.py:35
+#: telebot.py:33
 msgid "granterror"
 msgstr "Das darfst du nicht!"
 
-#: telebot.py:57 telebot.py:64
+#: telebot.py:55 telebot.py:62
 msgid "basic_commands"
 msgstr "Grundlegende Kommandos"
 
-#: telebot.py:143 telebot.py:163
+#: telebot.py:141 telebot.py:161
 msgid "not_seen_today"
 msgstr "Heute noch nicht aufgetaucht….."
 
-#: telebot.py:187
+#: telebot.py:185
 msgid "gw_error"
 msgstr "GW funktioniert nicht richtig"
 
-#: telebot.py:214 telebot.py:349 telebot.py:350
+#: telebot.py:212 telebot.py:365 telebot.py:366
 msgid "im"
 msgstr "im"
 
-#: telebot.py:215
+#: telebot.py:213
 msgid "every"
 msgstr "jeden"
 
-#: telebot.py:217
+#: telebot.py:215
 msgid "monday"
 msgstr "Montag"
 
-#: telebot.py:219
+#: telebot.py:217
 msgid "tuesday"
 msgstr "Dienstag"
 
-#: telebot.py:221
+#: telebot.py:219
 msgid "wednesday"
 msgstr "Mittwoch"
 
-#: telebot.py:223
+#: telebot.py:221
 msgid "thursday"
 msgstr "Donnerstag"
 
-#: telebot.py:225
+#: telebot.py:223
 msgid "friday"
 msgstr "Freitag"
 
-#: telebot.py:227
+#: telebot.py:225
 msgid "saturday"
 msgstr "Sonnabend"
 
-#: telebot.py:229
+#: telebot.py:227
 msgid "sunday"
 msgstr "Sonntag"
 
-#: telebot.py:230
+#: telebot.py:228
 msgid "subscribtion_starttime"
 msgstr "von"
 
-#: telebot.py:231
+#: telebot.py:229
 msgid "subscribtion_stoptime"
 msgstr "bis"
 
-#: telebot.py:232
+#: telebot.py:230
 msgid "subscribtion_startdate"
 msgstr "vom"
 
-#: telebot.py:233
+#: telebot.py:231
 msgid "subscribtion_enddate"
 msgstr "bis"
 
-#: telebot.py:237
+#: telebot.py:235
 msgid "no_static_tg"
 msgstr "Keine statischen Talkgroups."
 
-#: telebot.py:245
+#: telebot.py:243
 msgid "runs"
 msgstr ""
 
-#: telebot.py:247
+#: telebot.py:245
 msgid "runs not"
 msgstr ""
 
-#: telebot.py:266
+#: telebot.py:264 telebot.py:268
 msgid " Command: "
 msgstr "Befehl:"
 
-#: telebot.py:266
+#: telebot.py:264 telebot.py:268
 msgid "Commandcall without authorisation: "
 msgstr "Befehlsaufruf ohne Berechtigung von:"
 
-#: telebot.py:270
-msgid " Befehl: "
-msgstr ""
-
-#: telebot.py:270
-msgid "Befehlsaufruf ohne Berechtigung von: "
-msgstr ""
-
-#: telebot.py:311 telebot.py:314 telebot.py:329 telebot.py:1001 telebot.py:1009
+#: telebot.py:327 telebot.py:330 telebot.py:345 telebot.py:1170 telebot.py:1178
 msgid "is_on"
 msgstr "ist an."
 
-#: telebot.py:317 telebot.py:320 telebot.py:326 telebot.py:1003 telebot.py:1007
+#: telebot.py:333 telebot.py:336 telebot.py:342 telebot.py:1172 telebot.py:1176
 msgid "is_off"
 msgstr "ist aus."
 
-#: telebot.py:332 telebot.py:333
+#: telebot.py:348 telebot.py:349
 msgid "last_in_echolink"
 msgstr "Zuletzt gehört in Echolink"
 
-#: telebot.py:342
+#: telebot.py:358
 msgid "done"
 msgstr "Fertig"
 
-#: telebot.py:344
+#: telebot.py:360
 msgid "svx_failure"
 msgstr "SVX Fehler"
 
-#: telebot.py:349 telebot.py:350
+#: telebot.py:365 telebot.py:366
 msgid "last_heard"
 msgstr "Zuletzt gehört"
 
-#: telebot.py:356
+#: telebot.py:372
 msgid "stop_mmdvm"
 msgstr "Beende MMDVMHost…."
 
-#: telebot.py:363
+#: telebot.py:379
 msgid "start_mmdvm"
 msgstr "Starte MMDVMHost…."
 
-#: telebot.py:370
+#: telebot.py:386
 msgid "stop_dmrgw"
 msgstr "Beende das DMRGateway…."
 
-#: telebot.py:377
+#: telebot.py:393
 msgid "start_dmrgw"
 msgstr "Starte das DMRGateway…."
 
-#: telebot.py:384 telebot.py:1040
+#: telebot.py:400 telebot.py:1209
 msgid "rebooting_system"
 msgstr "Starte das System neu"
 
-#: telebot.py:391 telebot.py:866 telebot.py:1067
+#: telebot.py:407 telebot.py:967 telebot.py:1237
 msgid "bye_msg_owner"
 msgstr "Ich bin dann mal weg…."
 
-#: telebot.py:392
+#: telebot.py:408
 msgid "tbrestart"
 msgstr "Telebot startet neu"
 
-#: telebot.py:473
+#: telebot.py:489
 msgid "psstopmmdvmdmr"
 msgstr "Beende DMR..."
 
-#: telebot.py:475 telebot.py:489 telebot.py:503 telebot.py:517 telebot.py:531
-#: telebot.py:545 telebot.py:559 telebot.py:573 telebot.py:587 telebot.py:601
-#: telebot.py:615 telebot.py:628 telebot.py:642 telebot.py:655
+#: telebot.py:491 telebot.py:505 telebot.py:519 telebot.py:533 telebot.py:547
+#: telebot.py:561 telebot.py:575 telebot.py:589 telebot.py:603 telebot.py:617
+#: telebot.py:631 telebot.py:644 telebot.py:658 telebot.py:671
 msgid "rsp_noaction"
 msgstr "Keine Aktion"
 
-#: telebot.py:487
+#: telebot.py:503
 msgid "psstartmmdvmdmr"
 msgstr "Starte DMR..."
 
-#: telebot.py:501
+#: telebot.py:517
 msgid "psstopmmdvmysf"
 msgstr "Beende YSF..."
 
-#: telebot.py:515
+#: telebot.py:531
 msgid "psstartmmdvmysf"
 msgstr "Starte YSF..."
 
-#: telebot.py:529
+#: telebot.py:545
 msgid "psstopmmdvmdstar"
 msgstr "Beende D-Star..."
 
-#: telebot.py:543
+#: telebot.py:559
 msgid "psstartmmdvmdstar"
 msgstr "Starte D-Star..."
 
-#: telebot.py:557
+#: telebot.py:573
 msgid "psstopmmdvmp25"
 msgstr "Beende P25…."
 
-#: telebot.py:571
+#: telebot.py:587
 msgid "psstartmmdvmp25"
 msgstr "Starte P25…."
 
-#: telebot.py:585
+#: telebot.py:601
 msgid "psstopmmdvmysf2dmr"
 msgstr "Beende YSF2DMR…."
 
-#: telebot.py:599
+#: telebot.py:615
 msgid "psstartmmdvmysf2dmr"
 msgstr "Starte YSF2DMR…."
 
-#: telebot.py:613
+#: telebot.py:629
 msgid "psstartmmdvmpocsag"
 msgstr "Starte Dapnet…."
 
-#: telebot.py:626
+#: telebot.py:642
 msgid "psstopmmdvmpocsag"
 msgstr "Beende Dapnet…."
 
-#: telebot.py:640
+#: telebot.py:656
 msgid "psstartmmdvmdmrxlx"
 msgstr "Starte DMR XLX..."
 
-#: telebot.py:653
+#: telebot.py:669
 msgid "psstopmmdvmdmrxlx"
 msgstr "Beende DMR XLX..."
 
-#: telebot.py:664
+#: telebot.py:680
 msgid "psrestart_mmdvm"
 msgstr "MMDVMHost neustart…."
 
-#: telebot.py:690
-msgid "welcome"
-msgstr "Herzlich willkommen bei"
+#: telebot.py:687 telebot.py:701
+msgid "set Timeslot"
+msgstr ""
 
-#: telebot.py:691
-msgid "toget_help_write_/help"
-msgstr "Um Hilfe zu erhalten, gib /help ein."
+#: telebot.py:691 telebot.py:705 telebot.py:1002 telebot.py:1016
+msgid "0"
+msgstr ""
 
-#: telebot.py:697
-msgid "help_help"
-msgstr "Eine Liste der Kommandos und Funktionen."
+#: telebot.py:692 telebot.py:706 telebot.py:1003 telebot.py:1017
+msgid "1"
+msgstr ""
 
-#: telebot.py:697
-msgid "info_commands"
-msgstr "Informationen und Kommandos."
+#: telebot.py:693 telebot.py:707 telebot.py:1004 telebot.py:1018
+msgid "2"
+msgstr ""
 
-#: telebot.py:697
-msgid "status_help"
-msgstr "Gibt den Status des Repeaters aus."
-
-#: telebot.py:698
-msgid "lh_CALL_help"
-msgstr "Gibt aus, wann CALL heute das letzte mal gehört wurde."
-
-#: telebot.py:698
-msgid "lh_help"
-msgstr "Wer wurde heute als letztes lokal gehört."
-
-#: telebot.py:698
-msgid "tg_help"
-msgstr "Listet die statisch geschalteten TG auf."
-
-#: telebot.py:700
-msgid "bmadd_help"
-msgstr "Kann Brandmeister Talkgroups hinzufügen."
-
-#: telebot.py:700
-msgid "bmdel_help"
-msgstr "Kann Brandmeister Talkgroups entfernen."
-
-#: telebot.py:700
-msgid "gpio_help"
-msgstr "Funktionen zur Steuerung der GPIO"
-
-#: telebot.py:700
-msgid "svx_help"
-msgstr "Funktionen zur Steuerung von SVX-Link"
-
-#: telebot.py:700
-msgid "sw_help"
-msgstr "Funktionen zur Steuerung der Software"
-
-#: telebot.py:731
-msgid "dropCallS1"
-msgstr "Stoppe Ruf auf TS1"
-
-#: telebot.py:732
-msgid "dropDynamicS1"
-msgstr "Entferne dyn TG TS1"
-
-#: telebot.py:735
-msgid "dropCallS2"
-msgstr "Stoppe Ruf auf TS2"
-
-#: telebot.py:736
-msgid "dropDynamicS2"
-msgstr "Entferne dyn TG TS2"
-
-#: telebot.py:739
-msgid "dropRepeater"
-msgstr "Repeater Verbindung zurücksetzen"
-
-#: telebot.py:743 telebot.py:789 telebot.py:813 telebot.py:857
+#: telebot.py:696 telebot.py:710 telebot.py:844 telebot.py:890 telebot.py:914
+#: telebot.py:958 telebot.py:1007 telebot.py:1021
 msgid "keyboard_software"
 msgstr "Funktionen zur Steuerung der Software und des Rechners"
 
-#: telebot.py:750
+#: telebot.py:717
+msgid "set Reflector"
+msgstr ""
+
+#: telebot.py:724
+msgid "unlinking Reflector"
+msgstr ""
+
+#: telebot.py:783
+msgid "welcome"
+msgstr "Herzlich willkommen bei"
+
+#: telebot.py:784
+msgid "toget_help_write_/help"
+msgstr "Um Hilfe zu erhalten, gib /help ein."
+
+#: telebot.py:790
+msgid "help_help"
+msgstr "Eine Liste der Kommandos und Funktionen."
+
+#: telebot.py:790
+msgid "info_commands"
+msgstr "Informationen und Kommandos."
+
+#: telebot.py:790
+msgid "status_help"
+msgstr "Gibt den Status des Repeaters aus."
+
+#: telebot.py:791
+msgid "lh_CALL_help"
+msgstr "Gibt aus, wann CALL heute das letzte mal gehört wurde."
+
+#: telebot.py:791
+msgid "lh_help"
+msgstr "Wer wurde heute als letztes lokal gehört."
+
+#: telebot.py:791
+msgid "tg_help"
+msgstr "Listet die statisch geschalteten TG auf."
+
+#: telebot.py:793
+msgid "addbmtg_help"
+msgstr "Fügt Brandmeister Talkgroups  hinzu: /addbmtg TS TG"
+
+#: telebot.py:793
+msgid "gpio_help"
+msgstr "Funktionen zur Steuerung der GPIO"
+
+#: telebot.py:793
+msgid "svx_help"
+msgstr "Funktionen zur Steuerung von SVX-Link"
+
+#: telebot.py:793
+msgid "sw_help"
+msgstr "Funktionen zur Steuerung der Software"
+
+#: telebot.py:824
+msgid "dropCallS1"
+msgstr "Stoppe Ruf auf TS1"
+
+#: telebot.py:825
+msgid "dropDynamicS1"
+msgstr "Entferne dyn TG TS1"
+
+#: telebot.py:828
+msgid "dropCallS2"
+msgstr "Stoppe Ruf auf TS2"
+
+#: telebot.py:829
+msgid "dropDynamicS2"
+msgstr "Entferne dyn TG TS2"
+
+#: telebot.py:832
+#, fuzzy
+#| msgid "kb_addbmtg"
+msgid "btn_addbmtg"
+msgstr "Add TG"
+
+#: telebot.py:833
+#, fuzzy
+#| msgid "kb_delbmtg"
+msgid "btn_delbmtg"
+msgstr "Del TG"
+
+#: telebot.py:836
+#, fuzzy
+#| msgid "kb_bmlink"
+msgid "btn_bmlink"
+msgstr "Link Reflector"
+
+#: telebot.py:837
+#, fuzzy
+#| msgid "kb_bmunlink"
+msgid "btn_bmunlink"
+msgstr "Unlink Reflector"
+
+#: telebot.py:840
+msgid "dropRepeater"
+msgstr "Repeater Verbindung zurücksetzen"
+
+#: telebot.py:851
 msgid "btn_start_svxlink"
 msgstr "SVX Link starten"
 
-#: telebot.py:751
+#: telebot.py:852
 msgid "btn_stop_svxlink"
 msgstr "SVX Link stoppen"
 
-#: telebot.py:754
+#: telebot.py:855
 msgid "lh_echolink"
 msgstr "Zuletzt gehört Echolink"
 
-#: telebot.py:757 telebot.py:761 telebot.py:765
+#: telebot.py:858 telebot.py:862 telebot.py:866
 msgid "keyboard_svxlink"
 msgstr "SVXLink Sysop"
 
-#: telebot.py:767 telebot.py:988
+#: telebot.py:868 telebot.py:1157
 msgid "not_activ"
 msgstr "Nicht aktiv"
 
-#: telebot.py:774
+#: telebot.py:875
 msgid "btn_start_mmdvm"
 msgstr "MMDVM an"
 
-#: telebot.py:775
+#: telebot.py:876
 msgid "btn_stop_mmdvm"
 msgstr "MMDVM aus"
 
-#: telebot.py:778
+#: telebot.py:879
 msgid "btn_start_dmrgw"
 msgstr "DMRGw an"
 
-#: telebot.py:779
+#: telebot.py:880
 msgid "btn_stop_dmrgw"
 msgstr "DMRGw aus"
 
-#: telebot.py:782
+#: telebot.py:883
 msgid "btn_start_ysfgw"
 msgstr "YSFGw an"
 
-#: telebot.py:783
+#: telebot.py:884
 msgid "btn_stop_ysfgw"
 msgstr "YSFGw aus"
 
-#: telebot.py:786 telebot.py:803
+#: telebot.py:887 telebot.py:904
 msgid "btn_reboot"
 msgstr "Reboot"
 
-#: telebot.py:798
+#: telebot.py:899
 msgid "btn_tbrestart"
 msgstr "Telebot neu starten"
 
-#: telebot.py:799
+#: telebot.py:900
 msgid "btn_tbupdate"
 msgstr "Telebot aktualisieren"
 
-#: telebot.py:800
+#: telebot.py:901
 msgid "btn_tbversion"
 msgstr "Telebot Version"
 
-#: telebot.py:806
+#: telebot.py:907
 msgid "btn_internalip"
 msgstr "interne IPs anzeigen"
 
-#: telebot.py:807
+#: telebot.py:908
 msgid "btn_externalip"
 msgstr "externe IP anzeigen"
 
-#: telebot.py:810
+#: telebot.py:911
 msgid "btn_backup"
 msgstr "Backup"
 
-#: telebot.py:822
+#: telebot.py:923
 msgid "btn_psstart_mmdvm_dmr"
 msgstr "Pi-Star DMR an"
 
-#: telebot.py:823
+#: telebot.py:924
 msgid "btn_psstop_mmdvm_dmr"
 msgstr "Pi-Star DMR aus"
 
-#: telebot.py:826
+#: telebot.py:927
 msgid "btn_psstart_mmdvm_ysf"
 msgstr "Pi-Star YSF an"
 
-#: telebot.py:827
+#: telebot.py:928
 msgid "btn_psstop_mmdvm_ysf"
 msgstr "Pi-Star YSF aus"
 
-#: telebot.py:830
+#: telebot.py:931
 msgid "btn_psstart_mmdvm_dstar"
 msgstr "Pi-Star D-Star an"
 
-#: telebot.py:831
+#: telebot.py:932
 msgid "btn_psstop_mmdvm_dstar"
 msgstr "Pi-Star D-Star aus"
 
-#: telebot.py:834
+#: telebot.py:935
 msgid "btn_psstart_mmdvm_p25"
 msgstr "Pi-Star P25 an"
 
-#: telebot.py:835
+#: telebot.py:936
 msgid "btn_psstop_mmdvm_p25"
 msgstr "Pi-Star P25 aus"
 
-#: telebot.py:838
+#: telebot.py:939
 msgid "btn_psstart_mmdvm_pocsag"
 msgstr "Pi-Star Dapnet an"
 
-#: telebot.py:839
+#: telebot.py:940
 msgid "btn_psstop_mmdvm_pocsag"
 msgstr "Pi-Star Dapnet aus"
 
-#: telebot.py:842
+#: telebot.py:943
 msgid "btn_psstart_mmdvm_dmrxlx"
 msgstr "Pi-Star DMR XLX an"
 
-#: telebot.py:843
+#: telebot.py:944
 msgid "btn_psstop_mmdvm_dmrxlx"
 msgstr "Pi-Star DMR XLX aus"
 
-#: telebot.py:846
+#: telebot.py:947
 msgid "btn_psupdate"
 msgstr "Pi-Star aktualisieren"
 
-#: telebot.py:847
+#: telebot.py:948
 msgid "btn_psupgrade"
 msgstr "Pi-Star upgraden"
 
-#: telebot.py:854
+#: telebot.py:955
 msgid "btn_psrestart_mmdvm"
 msgstr "Pi-Star MMDVM neu starten"
 
-#: telebot.py:910
+#: telebot.py:1091
 msgid "/add TS TG"
 msgstr ""
 
-#: telebot.py:910 telebot.py:926
+#: telebot.py:1091 telebot.py:1108
 msgid "write "
 msgstr "schreibe"
 
-#: telebot.py:926
+#: telebot.py:1108
 msgid "/del TS TG"
 msgstr ""
 
-#: telebot.py:979
+#: telebot.py:1148
 msgid "on"
 msgstr "an"
 
-#: telebot.py:980
+#: telebot.py:1149
 msgid "off"
 msgstr "aus"
 
-#: telebot.py:983
+#: telebot.py:1152
 msgid "gpio"
 msgstr "Funktionen zur Steuerung der GPIO"
 
-#: telebot.py:1024
+#: telebot.py:1193
 msgid "cpu_temp"
 msgstr "CPU-Temperatur"
 
-#: telebot.py:1045
+#: telebot.py:1215
 msgid "cmd_list_with /help."
 msgstr "Eine Liste der Kommandos bekommst du mit /help"
 
-#: telebot.py:1045
+#: telebot.py:1215
 msgid "no_idea_command"
 msgstr "Ich weiß nicht, was du damit meinst: "
 
-#: telebot.py:1055
+#: telebot.py:1225
 msgid "start_msg_owner"
 msgstr "Ich bin wieder da…."
 
-#: telebot.py:1059
+#: telebot.py:1229
 msgid "bot_is_wrong"
 msgstr "Irgendwas stimmt mit dem Bot nicht."
 
-#: telebot.py:1066
+#: telebot.py:1236
 msgid "bot_shutdown"
 msgstr "Tschüss…."
+
+#~ msgid "bmadd_help"
+#~ msgstr "Kann Brandmeister Talkgroups hinzufügen."
+
+#~ msgid "bmdel_help"
+#~ msgstr "Kann Brandmeister Talkgroups entfernen."
 
 #~ msgid "Files were updates from github, please reboot manually."
 #~ msgstr "Dateien wurden von Github geladen, Telebot bitte manuell neu starten."
