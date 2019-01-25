@@ -693,7 +693,7 @@ def on_callback_query(msg):
                      InlineKeyboardButton(text=_('2'), callback_data='2')
                 ]
             ])
-            bot.sendMessage(from_id, _('keyboard_software'), reply_markup=keyboard)
+            bot.sendMessage(from_id, _('set Timeslot'), reply_markup=keyboard)
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
     elif "/tgbmdel" in query_data:
@@ -707,7 +707,7 @@ def on_callback_query(msg):
                      InlineKeyboardButton(text=_('2'), callback_data='2')
                 ]
             ])
-            bot.sendMessage(from_id, _('keyboard_software'), reply_markup=keyboard)
+            bot.sendMessage(from_id, _('set Timeslot'), reply_markup=keyboard)
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
 
@@ -736,8 +736,8 @@ def on_callback_query(msg):
                     bot.answerCallbackQuery(query_id,"set talkgroup")
                 else:
                     user_states[str(from_id)] = ""
-                    bot.sendMessage(from_id,rsp_noaction)
-                    bot.answerCallbackQuery(query_id,rsp_noaction)
+                    bot.sendMessage(from_id,"rsp_noaction")
+                    bot.answerCallbackQuery(query_id,"rsp_noaction")
             elif user_states[str(from_id)] == "bmdel":
                 if 0 <= int(query_data) <= 2:
                     user_states[str(from_id)] = "bmdel " + str(query_data)
@@ -745,8 +745,8 @@ def on_callback_query(msg):
                     bot.answerCallbackQuery(query_id,"set talkgroup")
                 else:
                     user_states[str(from_id)] = ""
-                    bot.sendMessage(from_id,rsp_noaction)
-                    bot.answerCallbackQuery(query_id,rsp_noaction)
+                    bot.sendMessage(from_id,"rsp_noaction")
+                    bot.answerCallbackQuery(query_id,"rsp_noaction")
 					
             elif "bmadd " in user_states[str(from_id)] or "bmdel " in user_states[str(from_id)]:
                 suche = user_states[str(from_id)].split(" ")
@@ -841,7 +841,7 @@ def on_chat_message(msg):
                     ]
                 ])
 
-	    bot.sendMessage(chat_id,_('keyboard_software'), reply_markup=keyboard)
+	    bot.sendMessage(chat_id,_('Brandmeister'), reply_markup=keyboard)
 
     ### SVX Handle ###
     elif msg['text'] in ["/svx"]:
@@ -911,7 +911,7 @@ def on_chat_message(msg):
                      InlineKeyboardButton(text=_('btn_backup'), callback_data='/backup')
                 ]
             ])
-            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+            bot.sendMessage(chat_id, _('Misc'), reply_markup=keyboard)
         else:
             msgfuncgrantfehler(msg,chat_id)
 
@@ -955,7 +955,7 @@ def on_chat_message(msg):
                      InlineKeyboardButton(text=_('btn_psrestart_mmdvm'), callback_data='/psrestartmmdvm')
                 ]
             ])
-            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+            bot.sendMessage(chat_id, _('Pi-Star Menue'), reply_markup=keyboard)
         else:
             msgfuncgrantfehler(msg,chat_id)
 			
@@ -993,9 +993,8 @@ def on_chat_message(msg):
         else:
             msgfuncgrantfehler(msg,chat_id)
 
-    elif "/tgbmadd" in msg['text']:#adde
+    elif "/tgbmadd" in msg['text']:
         if id in grant:
-            bot.sendMessage(chat_id,"set Timeslot")
             user_states[str(chat_id)] = "bmadd"
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [
@@ -1004,12 +1003,11 @@ def on_chat_message(msg):
                      InlineKeyboardButton(text=_('2'), callback_data='2')
                 ]
             ])
-            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+            bot.sendMessage(chat_id, _('set Timeslot'), reply_markup=keyboard)
         else:
             msgfuncgrantfehler(msg,chat_id)
-    elif "/tgbmdel" in msg['text']: #lösche
+    elif "/tgbmdel" in msg['text']:
         if id in grant:
-            bot.sendMessage(chat_id,"set Timeslot")
             user_states[str(chat_id)] = "bmdel"
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [
@@ -1018,7 +1016,7 @@ def on_chat_message(msg):
                      InlineKeyboardButton(text=_('2'), callback_data='2')
                 ]
             ])
-            bot.sendMessage(chat_id, _('keyboard_software'), reply_markup=keyboard)
+            bot.sendMessage(chat_id, _('set Timeslot'), reply_markup=keyboard)
         else:
             msgfuncgrantfehler(msg,chat_id)
 
@@ -1047,21 +1045,21 @@ def on_chat_message(msg):
                     bot.sendMessage(chat_id,"set Talkgroup")
                 else:
                     user_states[str(chat_id)] = ""
-                    bot.sendMessage(chat_id,rsp_noaction)
+                    bot.sendMessage(chat_id,"rsp_noaction")
             elif user_states[str(chat_id)] == "bmdel":
                 if 0 <= int(msg['text']) <= 2:
                     user_states[str(chat_id)] = "bmdel " + msg['text']
                     bot.sendMessage(chat_id,"set Talkgroup")
                 else:
                     user_states[str(chat_id)] = ""
-                    bot.sendMessage(chat_id,rsp_noaction)
+                    bot.sendMessage(chat_id,"rsp_noaction")
             elif user_states[str(chat_id)] == "bmlink":
                 if 4000 <= int(msg['text']) <= 4999:
                     bmrefaction(msg['text'],chat_id)
                     del user_states[str(chat_id)]
                 else:
                     user_states[str(chat_id)] = ""
-                    bot.sendMessage(chat_id,rsp_noaction)
+                    bot.sendMessage(chat_id,"rsp_noaction")
 
             elif "bmadd " in user_states[str(chat_id)] or "bmdel " in user_states[str(chat_id)]:
                 suche = user_states[str(chat_id)].split(" ")
