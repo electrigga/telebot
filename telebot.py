@@ -18,7 +18,7 @@ from config import (apikey, grant, owner, botcall, prozesse, dmrid, mmdvmlogs, s
 		    svxactive, language, bmapi, bmapiactive, ispistar, pistar_gwlogs, pistar_mmdvmlogs, backupfiles)
 
 # Import Commands
-from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlx, psstop_mmdvm_dmrxlx)
+from commands import (rpirw, rpiro, psstart, psstop, psstart_mmdvm_dmr, psstop_mmdvm_dmr, psstart_mmdvm_ysf, psstop_mmdvm_ysf, psstart_mmdvm_dstar, psstop_mmdvm_dstar, psstart_mmdvm_p25, psstop_mmdvm_p25, psstart_mmdvm_pocsag, psstop_mmdvm_pocsag, psstart_mmdvm_ysf2dmr, psstop_mmdvm_ysf2dmr, psstart_mmdvm_dmrxlx, psstop_mmdvm_dmrxlx, dapnetsend)
 
 user_states = {}
 botpath = os.path.dirname(os.path.realpath(__file__))
@@ -725,7 +725,13 @@ def on_callback_query(msg):
             bmrefaction("4000",from_id)
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
-
+    elif "dapnetsend" in query_data:
+        if from_id in grant:
+            bot.sendMessage(from_id,"input subscriber")
+            bot.answerCallbackQuery(query_id,_("input subscriber"))
+            user_states[str(from_id)] = "dapnetsend"
+        else:
+            bot.answerCallbackQuery(query_id,grantfehler)
 
     elif str(from_id) in user_states:
         if from_id in grant:
@@ -814,7 +820,14 @@ def on_chat_message(msg):
         #elif "lhecho" in msg['text']:
         else:
             bot.sendMessage(chat_id,"command unknown")
-
+			
+    elif '/senddapnet' in msg['text']:
+        if id in grant:
+            suche = msg['text'].split(" ")
+            subscriber = suche[1]
+            os.system(dapnetsend + " " + suche[1] + ' "' + msg['text'][msg['text'].find(str(suche[1]))+len(str(suche[1]))+1:] + '"')
+        else:
+            msgfuncgrantfehler(msg,chat_id)
     ### BM Handle ###
     elif "/bm" in msg['text']:
         if msg['text'] == "/bm":
@@ -952,6 +965,9 @@ def on_chat_message(msg):
 #                    InlineKeyboardButton(text=_('btn_psstop_mmdvm_ysf2dmr'), callback_data='/psstop_mmdvm_ysf2dmr')
 #                ],
                 [
+                     InlineKeyboardButton(text=_('btn_psdapnetsend'), callback_data='/dapnetsend')
+                ],
+                [
                      InlineKeyboardButton(text=_('btn_psrestart_mmdvm'), callback_data='/psrestartmmdvm')
                 ]
             ])
@@ -990,6 +1006,13 @@ def on_chat_message(msg):
             time.sleep(2)
             os.system("cd " + botpath + " && git pull > " + botpath + "/update.log")
             bot.sendMessage(chat_id, readfile(botpath + "/update.log"))
+        else:
+            msgfuncgrantfehler(msg,chat_id)
+
+    elif msg['text'] in ['/dapnetsend']:
+        if id in grant:
+            user_states[str(chat_id)] = "dapnetsend"
+            bot.sendMessage(chat_id,"input subscriber")
         else:
             msgfuncgrantfehler(msg,chat_id)
 
@@ -1039,6 +1062,7 @@ def on_chat_message(msg):
 
     elif str(chat_id) in user_states:
         if id in grant:
+#first step
             if user_states[str(chat_id)] == "bmadd":
                 if 0 <= int(msg['text']) <= 2:
                     user_states[str(chat_id)] = "bmadd " + msg['text']
@@ -1060,7 +1084,10 @@ def on_chat_message(msg):
                 else:
                     user_states[str(chat_id)] = ""
                     bot.sendMessage(chat_id,"rsp_noaction")
-
+            elif user_states[str(chat_id)] == "dapnetsend":
+                user_states[str(chat_id)] = "dapnetsend " + msg['text']
+                bot.sendMessage(chat_id,"input message")
+#second step
             elif "bmadd " in user_states[str(chat_id)] or "bmdel " in user_states[str(chat_id)]:
                 suche = user_states[str(chat_id)].split(" ")
                 action = suche[0]
@@ -1069,7 +1096,12 @@ def on_chat_message(msg):
                 bmtgaction(action[2:],bmts,bmtg,chat_id)
                 user_states[str(chat_id)] = ""
                 del user_states[str(chat_id)]
-
+            elif "dapnetsend " in user_states[str(chat_id)]:
+                suche = user_states[str(chat_id)].split(" ")
+                action = suche[0]
+                subscriber = suche[1]
+                os.system(dapnetsend + " " + subscriber + ' "' + msg['text'] + '"')
+                del user_states[str(chat_id)]
         else:
             msgfuncgrantfehler(msg,chat_id)
 
