@@ -802,6 +802,9 @@ def on_chat_message(msg):
     elif msg['text'] in ["/tg"]:
 	bot.sendMessage(chat_id, talkgroups())
 
+    elif msg['text'] in ["/get_my_id"]:
+	bot.sendMessage(chat_id, id)
+
     elif "/lh" in msg['text']:
         if msg['text'] == "/lhdn":
             heard = pslasthearddapnet('')
@@ -1050,7 +1053,7 @@ def on_chat_message(msg):
             user_states[str(chat_id)] = "bmlink"
         else:
             msgfuncgrantfehler(msg,chat_id)
-			
+
     elif "/bmunlink" in msg['text']:
         if id in grant:
                 bmrefaction("4000",chat_id)
