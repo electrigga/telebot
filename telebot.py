@@ -458,7 +458,7 @@ def on_callback_query(msg):
 
 ### Pi-Star Query Handler ###
     elif query_data == "/psupdate":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             os.system(rpirw)
             os.system("sudo rm /var/log/pi-star/pi-star_update.log")
             os.system("sudo pistar-update")
@@ -468,7 +468,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psupgrade":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             os.system(rpirw)
             os.system("sudo rm /var/log/pi-star/pi-star_upgrade.log")
             os.system("sudo pistar-upgrade")
@@ -479,7 +479,7 @@ def on_callback_query(msg):
 
 #DMR
     elif query_data == "/psstop_mmdvm_dmr":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","DMR","Enable")
             if value == True:
                 os.system(psstop)
@@ -493,7 +493,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_dmr":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","DMR","Enable")
             if value == False:
                 os.system(psstop)
@@ -507,7 +507,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 #YSF
     elif query_data == "/psstop_mmdvm_ysf":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","'System Fusion'","Enable")
             if value == True:
                 os.system(psstop)
@@ -521,7 +521,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_ysf":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","'System Fusion'","Enable")
             if value == False:
                 os.system(psstop)
@@ -535,7 +535,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)			
 #D-Star
     elif query_data == "/psstop_mmdvm_dstar":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","D-Star","Enable")
             if value == True:
                 os.system(psstop)
@@ -549,7 +549,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_dstar":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","D-Star","Enable")
             if value == False:
                 os.system(psstop)
@@ -563,7 +563,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 #P25
     elif query_data == "/psstop_mmdvm_p25":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","P25","Enable")
             if value == True:
                 os.system(psstop)
@@ -577,7 +577,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_p25":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","P25","Enable")
             if value == False:
                 os.system(psstop)
@@ -591,7 +591,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 #YSF2DMR			
     elif query_data == "/psstop_mmdvm_ysf2dmr":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/ysf2dmr","Enabled","Enabled")
             if value == True:
                 os.system(psstop)
@@ -605,7 +605,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 
     elif query_data == "/psstart_mmdvm_ysf2dmr":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/ysf2dmr","Enabled","Enabled")
             if value == False:
                 os.system(psstop)
@@ -619,7 +619,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 #POCSAG
     elif query_data == "/psstart_mmdvm_pocsag":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","POCSAG","Enable")
             if value == False:
                 os.system(psstop)
@@ -632,7 +632,7 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
     elif query_data == "/psstop_mmdvm_pocsag":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/mmdvmhost","POCSAG","Enable")
             if value == True:
                 os.system(psstop)
@@ -646,7 +646,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 #dmrXLX
     elif query_data == "/psstart_mmdvm_dmrxlx":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
             if value == False:
                 os.system(psstop)
@@ -659,7 +659,7 @@ def on_callback_query(msg):
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
     elif query_data == "/psstop_mmdvm_dmrxlx":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             value = psinicheck("/etc/dmrgateway","'XLX Network'","Enabled")
             if value == True:
                 os.system(psstop)
@@ -673,7 +673,7 @@ def on_callback_query(msg):
             bot.answerCallbackQuery(query_id,grantfehler)
 #nur Dienstneustart
     elif query_data == "/psrestart_mmdvm":
-        if from_id in grant:
+        if from_id in grant and ispistar == 1:
             os.system(psstop)
             time.sleep(7)
             os.system(psstart)
@@ -930,7 +930,7 @@ def on_chat_message(msg):
 
     ### Pi-Star Handle ###
     elif msg['text'] in ["/pistar"]:
-        if id in grant:
+        if id in grant and ispistar == 1:
             keyboard = InlineKeyboardMarkup(inline_keyboard=[
                 [
                     InlineKeyboardButton(text=_('btn_psstart_mmdvm_dmr'), callback_data='/psstart_mmdvm_dmr'),
