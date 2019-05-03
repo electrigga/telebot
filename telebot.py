@@ -398,6 +398,7 @@ def on_callback_query(msg):
     elif query_data == "/reboot":
         if from_id in grant:
             bot.answerCallbackQuery(query_id,_("rebooting_system"))
+            ownerinfo(_("bye_msg_owner"),owner)
             os.system('sudo shutdown -r now')
         else:
             bot.answerCallbackQuery(query_id,grantfehler)
@@ -1238,14 +1239,14 @@ def on_chat_message(msg):
         bot.sendMessage(parse_mode='Markdown',chat_id=chat_id, text=status)
 
     elif msg['text'] in ["/reboot"]:
-	if id in grant:
-	    bot.sendMessage(chat_id,_("rebooting_system"))
-    	    os.system('sudo shutdown -r now')
-	else:
+        if id in grant:
+            bot.sendMessage(chat_id,_("rebooting_system"))
+            os.system('sudo shutdown -r now')
+        else:
             msgfuncgrantfehler(msg,chat_id)
 
     else:
-	bot.sendMessage(chat_id, _("no_idea_command") + msg['text'] + " "  + vorname + "!\n" + _("cmd_list_with /help."))
+        bot.sendMessage(chat_id, _("no_idea_command") + msg['text'] + " "  + vorname + "!\n" + _("cmd_list_with /help."))
 
     # bot.sendMessage(chat_id, befehlsliste(id))
     initialkb(chat_id,id)
@@ -1263,7 +1264,7 @@ except:
 
 try:
     while 1:
-	# testgwmc()
+    # testgwmc()
         time.sleep(10)
 except:
     print(_("bot_shutdown"))
