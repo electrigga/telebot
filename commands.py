@@ -17,8 +17,8 @@ psstart_mmdvm_ysf2dmr="sudo crudini --set /etc/ysf2dmr Enabled Enabled 1"
 psstop_mmdvm_dmr = "sudo crudini --set /etc/mmdvmhost DMR enable 0 && sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 0"
 psstart_mmdvm_dmr = "sudo crudini --set /etc/mmdvmhost DMR enable 1 && sudo crudini --set /etc/mmdvmhost 'DMR Network' enable 1 && sudo crudini --set /etc/ysf2dmr Enabled Enabled 0"
 
-psstart_mmdvm_dmrxlx = "sudo crudini --set /etc/dmrgateway 'XLX Network' Enabled 1 && sudo crudini --set /etc/dmrgateway 'XLX Network 1' Enabled 1"
-psstop_mmdvm_dmrxlx = "sudo crudini --set /etc/dmrgateway 'XLX Network' Enabled 0 && sudo crudini --set /etc/dmrgateway 'XLX Network 1' Enabled 0"
+psstart_mmdvm_dmrxlx = "sudo crudini --set /etc/dmrgateway 'XLX Network' Enabled 1 && sudo crudini --set /etc/dmrgateway 'XLX Network' Enabled 1"
+psstop_mmdvm_dmrxlx = "sudo crudini --set /etc/dmrgateway 'XLX Network' Enabled 0 && sudo crudini --set /etc/dmrgateway 'XLX Network' Enabled 0"
 
 psstop_mmdvm_pocsag = "sudo crudini --set /etc/mmdvmhost POCSAG enable 0 && sudo crudini --set /etc/mmdvmhost 'POCSAG Network' enable 0"
 psstart_mmdvm_pocsag = "sudo crudini --set /etc/mmdvmhost POCSAG enable 1 && sudo crudini --set /etc/mmdvmhost 'POCSAG Network' enable 1"
