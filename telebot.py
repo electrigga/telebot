@@ -1241,6 +1241,7 @@ def on_chat_message(msg):
     elif msg['text'] in ["/reboot"]:
         if id in grant:
             bot.sendMessage(chat_id,_("rebooting_system"))
+            ownerinfobye(owner)
             os.system('sudo shutdown -r now')
         else:
             msgfuncgrantfehler(msg,chat_id)
